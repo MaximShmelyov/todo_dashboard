@@ -1,0 +1,155 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "client"
+}
+
+model User {
+  id               String       @id @default(cuid())
+  name             String?
+  email            String?      @unique
+  emailVerified    DateTime?
+  image            String?
+  hashedPass       String?
+  createdAt        DateTime     @default(now())
+  memberships      Membership[]
+  ownedCollections Collection[] @relation("OwnerCollections")
+  accounts         Account[]
+  // sessions         Session[]
+  Item             Item[]
+}
+
+model Family {
+  id          String       @id @default(uuid())
+  name        String
+  createdAt   DateTime     @default(now())
+  memberships Membership[]
+  collections Collection[]
+}
+
+model Membership {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  family    Family   @relation(fields: [familyId], references: [id])
+  familyId  String
+  roleId    Int
+  role      Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, familyId])
+}
+
+// enum Role {
+//   USER
+//   ADMIN
+// }
+
+model Role {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  Membership Membership[]
+}
+
+model Collection {
+  id          String         @id @default(uuid())
+  title       String
+  description String?
+  typeId      Int
+  type        CollectionType @relation(fields: [typeId], references: [id])
+  isPublic    Boolean        @default(false)
+  owner       User?          @relation("OwnerCollections", fields: [ownerId], references: [id])
+  ownerId     String?
+  family      Family?        @relation(fields: [familyId], references: [id])
+  familyId    String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  items       Item[]
+  tags        Tag[]
+}
+
+model CollectionType {
+  id         Int          @id @default(autoincrement())
+  name       String
+  Collection Collection[]
+}
+
+model Item {
+  id           String       @id @default(uuid())
+  collection   Collection   @relation(fields: [collectionId], references: [id])
+  collectionId String
+  createdBy    User?        @relation(fields: [createdById], references: [id])
+  createdById  String?
+  title        String
+  body         String?
+  metadata     Json?
+  position     Int?
+  done         Boolean      @default(false)
+  dueDate      DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  attachments  Attachment[]
+}
+
+model Attachment {
+  id        String   @id @default(uuid())
+  item      Item     @relation(fields: [itemId], references: [id])
+  itemId    String
+  url       String
+  filename  String
+  mimeType  String
+  size      Int
+  createdAt DateTime @default(now())
+}
+
+model Tag {
+  id          String       @id @default(uuid())
+  name        String
+  collections Collection[]
+}
+
+/**
+ * NextAuth models
+ * Docs: https://authjs.dev/reference/adapter/prisma
+ */
+
+model Account {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type              String
+  provider          String
+  providerAccountId String
+
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+  oauth_token_secret String?
+  oauth_token        String?
+
+  @@unique([provider, providerAccountId])
+}
+
+// model Session {
+//   id           String   @id @default(cuid())
+//   sessionToken String   @unique
+//   userId       String
+//   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   expires      DateTime
+// }
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

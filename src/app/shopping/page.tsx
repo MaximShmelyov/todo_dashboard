@@ -1,4 +1,7 @@
 import type {Metadata} from "next";
+import AddButton from "@/src/components/ui/buttons/AddButton";
+import VerticalList from "@/src/components/ui/list/VerticalList";
+import VerticalListItem from "@/src/components/ui/list/VerticalListItem";
 
 export const metadata: Metadata = {
   title: 'Shopping',
@@ -10,24 +13,28 @@ export default function Shopping() {
 
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold">🛍 Shopping list</h2>
-        <button className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">
+        <AddButton>
           + Add
-        </button>
+        </AddButton>
       </div>
 
-      <div className="space-y-3">
-
-        <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow border border-stone-100">
-          <span className="text-stone-800">Milk</span>
+      <VerticalList>
+        <VerticalListItem>
+          <div>
+            <input className="mr-4 w-6 h-6" type="checkbox"/>
+            <span className="text-stone-800">Milk</span>
+          </div>
           <span className="text-sm text-stone-500">(family)</span>
-        </div>
+        </VerticalListItem>
 
-        <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow border border-stone-100">
-          <span className="text-stone-800">Bread</span>
+        <VerticalListItem>
+          <div>
+            <input className="mr-4 w-6 h-6" type="checkbox"/>
+            <span className="text-stone-800">Bread</span>
+          </div>
           <span className="text-sm text-stone-500">(my list)</span>
-        </div>
-
-      </div>
+        </VerticalListItem>
+      </VerticalList>
     </div>
   );
 }

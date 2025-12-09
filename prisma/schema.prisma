@@ -58,8 +58,7 @@ model Collection {
   id          String         @id @default(uuid())
   title       String
   description String?
-  typeId      Int
-  type        CollectionType @relation(fields: [typeId], references: [id])
+  type        CollectionType
   isPublic    Boolean        @default(false)
   owner       User?          @relation("OwnerCollections", fields: [ownerId], references: [id])
   ownerId     String?
@@ -71,10 +70,10 @@ model Collection {
   tags        Tag[]
 }
 
-model CollectionType {
-  id         Int          @id @default(autoincrement())
-  name       String
-  Collection Collection[]
+enum CollectionType {
+  TODO
+  NOTE
+  SHOPPING
 }
 
 model Item {

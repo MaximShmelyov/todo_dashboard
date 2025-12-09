@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "CollectionType" AS ENUM ('TODO', 'NOTE', 'SHOPPING');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -44,7 +47,7 @@ CREATE TABLE "Collection" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT,
-    "typeId" INTEGER NOT NULL,
+    "type" "CollectionType" NOT NULL,
     "isPublic" BOOLEAN NOT NULL DEFAULT false,
     "ownerId" TEXT,
     "familyId" TEXT,
@@ -52,14 +55,6 @@ CREATE TABLE "Collection" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Collection_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "CollectionType" (
-    "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-
-    CONSTRAINT "CollectionType_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -164,9 +159,6 @@ ALTER TABLE "Membership" ADD CONSTRAINT "Membership_familyId_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "Membership" ADD CONSTRAINT "Membership_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Collection" ADD CONSTRAINT "Collection_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES "CollectionType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Collection" ADD CONSTRAINT "Collection_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;

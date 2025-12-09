@@ -2,11 +2,7 @@ import { z } from "zod";
 
 export const CreateCollectionBodySchema = z.object({
   title: z.string().min(1),
-  // Accepts "type" as string or number, coerces to int
-  type: z.preprocess(
-    (v) => (typeof v === "string" ? Number(v) : v),
-    z.number().int(),
-  ),
+  type: z.enum(["TODO", "NOTE", "SHOPPING"]),
   familyId: z.union([z.string().min(1), z.null()]).optional(),
   isPublic: z.boolean().optional().default(false),
 });
@@ -16,9 +12,7 @@ export type CreateCollectionBody = z.infer<typeof CreateCollectionBodySchema>;
 export const UpdateCollectionBodySchema = z
   .object({
     title: z.string().min(1).optional(),
-    type: z
-      .preprocess((v) => (typeof v === "string" ? Number(v) : v), z.number().int())
-      .optional(),
+    type: z.enum(["TODO", "NOTE", "SHOPPING"]).optional(),
     familyId: z.union([z.string().min(1), z.null()]).optional(),
     isPublic: z.boolean().optional(),
   })

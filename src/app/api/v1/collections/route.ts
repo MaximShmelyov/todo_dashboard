@@ -90,12 +90,12 @@ export async function POST(req: Request) {
     );
   }
 
-  const { title, type: typeId, familyId, isPublic } = parsed.data;
+  const { title, type, familyId, isPublic } = parsed.data;
 
   const collection = await prisma.collection.create({
     data: {
       title,
-      typeId,
+      type,
       isPublic: Boolean(isPublic),
       ownerId: session.user.id,
       familyId: familyId ?? null,

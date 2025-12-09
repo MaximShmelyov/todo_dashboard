@@ -11,7 +11,7 @@ export default function Login() {
 
   useEffect(() => {
     if (status === "authenticated") {
-      router.replace("/"); // укажите нужный путь
+      router.replace("/");
     }
   }, [status, router]);
 

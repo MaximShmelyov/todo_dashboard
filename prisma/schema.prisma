@@ -37,21 +37,16 @@ model Membership {
   family    Family   @relation(fields: [familyId], references: [id])
   familyId  String
   roleId    Int
-  role      Role     @relation(fields: [roleId], references: [id])
+  roleType  RoleType
   createdAt DateTime @default(now())
 
   @@unique([userId, familyId])
 }
 
-// enum Role {
-//   USER
-//   ADMIN
-// }
-
-model Role {
-  id         Int          @id @default(autoincrement())
-  name       String       @unique
-  Membership Membership[]
+enum RoleType {
+  ADMIN
+  MODERATOR
+  USER
 }
 
 model Collection {

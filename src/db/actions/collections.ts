@@ -55,5 +55,8 @@ export async function getCollections(type: CollectionType): Promise<Collection[]
       type,
     },
     orderBy: {createdAt: "desc"},
+    include: {
+      family: true,
+    },
   });
 }

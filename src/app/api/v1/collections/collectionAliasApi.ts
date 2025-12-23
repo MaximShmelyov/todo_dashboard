@@ -7,7 +7,7 @@ import { PaginationQuerySchema, CreateCollectionBodySchema } from "@/src/app/api
 
 export function createCollectionAliasApi(collectionType: CollectionType) {
   async function GET(req: Request) {
-    const session = await getSession(req);
+    const session = await getSession();
     if (!session) {
       return NextResponse.json<ApiError>({ success: false, error: "Unauthorized" }, { status: 401 });
     }
@@ -50,7 +50,7 @@ export function createCollectionAliasApi(collectionType: CollectionType) {
   }
 
   async function POST(req: Request) {
-    const session = await getSession(req);
+    const session = await getSession();
     if (!session) {
       return NextResponse.json<ApiError>({ success: false, error: "Unauthorized" }, { status: 401 });
     }
@@ -58,7 +58,8 @@ export function createCollectionAliasApi(collectionType: CollectionType) {
     let json: unknown;
     try {
       json = await req.json();
-    } catch {
+    } catch(e) {
+      console.error(e);
       return NextResponse.json<ApiError>({ success: false, error: "Invalid JSON" }, { status: 400 });
     }
 

@@ -1,40 +1,29 @@
-import type {Metadata} from "next";
-import AddButton from "@/src/components/ui/buttons/AddButton";
-import VerticalList from "@/src/components/ui/list/VerticalList";
-import VerticalListItem from "@/src/components/ui/list/VerticalListItem";
+import ShoppingClient from "./ShoppingClient"
+import CreateCollectionForm from "@/src/components/common/CreateCollectionForm"
+import {Collection} from "@prisma/client";
+import { getSession } from "@/src/lib/auth";
+import {getShoppingList} from "@/src/db/actions/shopping";
 
-export const metadata: Metadata = {
-  title: 'Shopping',
-};
+export default async function ShoppingPage({
+                                             searchParams,
+                                           }: {
+  searchParams: Promise<{ create?: string }>
+}) {
+  const params = await searchParams;
+  const showForm = params.create === "1";
+  const session = await getSession();
 
-export default function Shopping() {
+  async function getItems(): Promise<Collection[]> {
+    if (!session || !session.user) {
+      return [];
+    }
+    return getShoppingList(session.user.id);
+  }
+
   return (
-    <div className="space-y-6">
-
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">🛍 Shopping list</h2>
-        <AddButton>
-          + Add
-        </AddButton>
-      </div>
-
-      <VerticalList>
-        <VerticalListItem>
-          <div>
-            <input className="mr-4 w-6 h-6" type="checkbox"/>
-            <span className="text-stone-800">Milk</span>
-          </div>
-          <span className="text-sm text-stone-500">(family)</span>
-        </VerticalListItem>
-
-        <VerticalListItem>
-          <div>
-            <input className="mr-4 w-6 h-6" type="checkbox"/>
-            <span className="text-stone-800">Bread</span>
-          </div>
-          <span className="text-sm text-stone-500">(my list)</span>
-        </VerticalListItem>
-      </VerticalList>
-    </div>
-  );
+    <>
+      <ShoppingClient items={await getItems()}/>
+      {showForm && <CreateCollectionForm collectionType="SHOPPING" />}
+    </>
+  )
 }

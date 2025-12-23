@@ -3,8 +3,8 @@
 import {useRouter} from "next/navigation"
 import Form from "next/form"
 import {CollectionType, Family} from "@prisma/client";
-import {createCollection} from "@/src/db/actions/collections";
 import {createShopping} from "@/src/db/actions/shopping";
+import Input from "@/src/components/ui/Input";
 
 function getLabelOfCollectionType(collectionType: CollectionType): string {
   const exhaustiveGuard = (_: never): never => {
@@ -46,8 +46,7 @@ export default function CreateCollectionFormClient({collectionType, families}: {
         >
           <h3 className="text-lg mb-4">Create a {getLabelOfCollectionType(collectionType)}</h3>
           {/*<label htmlFor="create_form_title">Name</label>*/}
-          <input
-            className="rounded-lg px-2 hover:bg-stone-100"
+          <Input
             id="create_form_title"
             name="title"
             placeholder="Title"

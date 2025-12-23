@@ -2,6 +2,7 @@ import CreateCollectionForm from "@/src/components/common/CreateCollectionForm"
 import {getNoteList} from "@/src/db/actions/notes";
 import CollectionsClient from "@/src/app/CollectionsClient";
 import {CollectionType} from "@prisma/client";
+import {getSession} from "@/src/lib/auth";
 
 export default async function Notes({
                                              searchParams,
@@ -10,6 +11,10 @@ export default async function Notes({
 }) {
   const params = await searchParams;
   const showForm = params.create === "1";
+  const session = await getSession();
+  if (!session || !session.user) {
+    return <div>Please log in</div>;
+  }
 
   return (
     <>

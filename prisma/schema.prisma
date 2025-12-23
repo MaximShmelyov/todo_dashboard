@@ -36,7 +36,6 @@ model Membership {
   userId    String
   family    Family   @relation(fields: [familyId], references: [id])
   familyId  String
-  roleId    Int
   roleType  RoleType
   createdAt DateTime @default(now())
 

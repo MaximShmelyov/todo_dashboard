@@ -5,21 +5,20 @@ import Form from "next/form"
 import {CollectionType, Family} from "@prisma/client";
 import {createShopping} from "@/src/db/actions/shopping";
 import Input from "@/src/components/ui/Input";
+import {createNote} from "@/src/db/actions/notes";
+import {getCollectionRoute, getLabelOfCollectionType} from "@/src/lib/utils";
 
-function getLabelOfCollectionType(collectionType: CollectionType): string {
-  const exhaustiveGuard = (_: never): never => {
-    throw new Error('Got unexpected value here.');
-  };
-
+function createCollection(collectionType: CollectionType, title: string, familyId?: string): Promise<void> {
   switch (collectionType) {
     case "NOTE":
-      return "note"
+      return createNote(title, familyId);
     case "SHOPPING":
-      return "shopping list"
+      return createShopping(title, familyId);
     case "TODO":
-      return "todo list";
+      return;
+    // return createTodo(title, familyId);
     default:
-      return exhaustiveGuard(collectionType);
+      return exhaustiveGuardCollectionType(collectionType);
   }
 }
 
@@ -37,10 +36,11 @@ export default function CreateCollectionFormClient({collectionType, families}: {
       <div className="rounded-xl bg-white shadow-lg p-6" onClick={e => e.stopPropagation()}>
         <Form
           action={async (formData) => {
-            await createShopping(
+            await createCollection(
+              collectionType,
               formData.get('title').toString(),
               formData.get('familyId')?.toString() || null);
-            router.push("/shopping");
+            router.push(getCollectionRoute(collectionType));
           }}
           className="flex flex-col gap-4"
         >

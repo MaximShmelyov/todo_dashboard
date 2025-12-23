@@ -1,8 +1,7 @@
-import ShoppingClient from "./ShoppingClient"
 import CreateCollectionForm from "@/src/components/common/CreateCollectionForm"
-import {Collection} from "@prisma/client";
-import { getSession } from "@/src/lib/auth";
+import {CollectionType} from "@prisma/client";
 import {getShoppingList} from "@/src/db/actions/shopping";
+import CollectionsClient from "@/src/app/CollectionsClient";
 
 export default async function ShoppingPage({
                                              searchParams,
@@ -11,19 +10,11 @@ export default async function ShoppingPage({
 }) {
   const params = await searchParams;
   const showForm = params.create === "1";
-  const session = await getSession();
-
-  async function getItems(): Promise<Collection[]> {
-    if (!session || !session.user) {
-      return [];
-    }
-    return getShoppingList(session.user.id);
-  }
 
   return (
     <>
-      <ShoppingClient items={await getItems()}/>
-      {showForm && <CreateCollectionForm collectionType="SHOPPING" />}
+      <CollectionsClient label="Shopping list" collectionType={CollectionType.SHOPPING} items={await getShoppingList()}/>
+      {showForm && <CreateCollectionForm collectionType={CollectionType.SHOPPING} />}
     </>
   )
 }

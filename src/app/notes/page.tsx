@@ -1,13 +1,20 @@
-import type {Metadata} from "next";
+import CreateCollectionForm from "@/src/components/common/CreateCollectionForm"
+import {getNoteList} from "@/src/db/actions/notes";
+import CollectionsClient from "@/src/app/CollectionsClient";
+import {CollectionType} from "@prisma/client";
 
-export const metadata: Metadata = {
-  title: 'Notes',
-};
+export default async function Notes({
+                                             searchParams,
+                                           }: {
+  searchParams: Promise<{ create?: string }>
+}) {
+  const params = await searchParams;
+  const showForm = params.create === "1";
 
-export default function Notes() {
   return (
-    <div>
-      <span>Notes</span>
-    </div>
-  );
+    <>
+      <CollectionsClient label="Notes" collectionType={CollectionType.NOTE} items={await getNoteList()}/>
+      {showForm && <CreateCollectionForm collectionType={CollectionType.NOTE} />}
+    </>
+  )
 }

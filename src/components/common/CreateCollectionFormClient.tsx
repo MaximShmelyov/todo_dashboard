@@ -59,7 +59,7 @@ export default function CreateCollectionFormClient({collectionType, families}: {
           >
             <option value="">Private</option>
             {families.map(family => (
-              <option key={family.id}>
+              <option key={family.id} value={family.id}>
                 {family.name}
               </option>
             ))}

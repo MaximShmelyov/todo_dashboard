@@ -30,7 +30,11 @@ export default function CollectionsClient({label, collectionType, items}: {
             onClick={() => router.push(`${getCollectionRoute(collectionType)}/${item.id}`)}
           >
             <div>
-              <input className="mr-4 w-6 h-6" type="checkbox"/>
+              <input
+                onClick={(e) => e.stopPropagation()}
+                className="mr-4 w-6 h-6"
+                type="checkbox"
+              />
               <span>{item.title}</span>
             </div>
             <span className="text-sm text-stone-500">

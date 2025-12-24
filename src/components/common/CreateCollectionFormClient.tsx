@@ -7,6 +7,7 @@ import {createShopping} from "@/src/db/actions/shopping";
 import Input from "@/src/components/ui/Input";
 import {createNote} from "@/src/db/actions/notes";
 import {getCollectionRoute, getLabelOfCollectionType} from "@/src/lib/utils";
+import {createTodo} from "@/src/db/actions/todos";
 
 function createCollection(collectionType: CollectionType, title: string, familyId?: string): Promise<void> {
   switch (collectionType) {
@@ -15,8 +16,7 @@ function createCollection(collectionType: CollectionType, title: string, familyI
     case "SHOPPING":
       return createShopping(title, familyId);
     case "TODO":
-      return;
-    // return createTodo(title, familyId);
+      return createTodo(title, familyId);
     default:
       return exhaustiveGuardCollectionType(collectionType);
   }

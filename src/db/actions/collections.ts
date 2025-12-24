@@ -38,7 +38,42 @@ export async function getCollection(id: string, type: CollectionType): Promise<C
       ownerId: session.user.id,
       id,
       type,
-    }
+    },
+    include: {
+      items: {
+        select: {
+          id: true,
+          title: true,
+          body: true,
+          done: true,
+          position: true,
+          createdBy: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+            },
+          },
+          updatedAt: true,
+          dueDate: true,
+        },
+      },
+      family: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      owner: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+        },
+      },
+    },
   });
 }
 

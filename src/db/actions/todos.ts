@@ -1,3 +1,5 @@
+"use server"
+
 import {Collection, CollectionType} from "@prisma/client";
 import {createCollection, getCollection, getCollections} from "@/src/db/actions/collections";
 

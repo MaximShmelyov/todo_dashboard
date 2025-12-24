@@ -59,7 +59,7 @@ model Collection {
   family      Family?        @relation(fields: [familyId], references: [id])
   familyId    String?
   createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  updatedAt   DateTime?      @updatedAt
   items       Item[]
   tags        Tag[]
 }
@@ -74,8 +74,8 @@ model Item {
   id           String       @id @default(uuid())
   collection   Collection   @relation(fields: [collectionId], references: [id])
   collectionId String
-  createdBy    User?        @relation(fields: [createdById], references: [id])
-  createdById  String?
+  createdBy    User         @relation(fields: [createdById], references: [id])
+  createdById  String
   title        String
   body         String?
   metadata     Json?
@@ -83,7 +83,7 @@ model Item {
   done         Boolean      @default(false)
   dueDate      DateTime?
   createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  updatedAt    DateTime?    @updatedAt
   attachments  Attachment[]
 }
 

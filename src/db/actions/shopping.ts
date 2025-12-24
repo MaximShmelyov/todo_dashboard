@@ -9,7 +9,7 @@ export async function createShopping(title: string, familyId?: string): Promise<
   return createCollection(title, collectionType, familyId);
 }
 
-export async function getShopping(id: string): Promise<Collection> {
+export async function getShopping(id: Collection['id']): Promise<Collection> {
   return getCollection(id, collectionType);
 }
 

@@ -5,11 +5,11 @@ import {createCollection, getCollection, getCollections} from "@/src/db/actions/
 
 const collectionType = CollectionType.NOTE;
 
-export async function createNote(title: string, familyId?: string): Promise<void> {
+export async function createNote(title: Collection['title'], familyId: Collection['familyId']): Promise<void> {
   return createCollection(title, collectionType, familyId);
 }
 
-export async function getNote(id: string): Promise<Collection> {
+export async function getNote(id: Collection['id']): Promise<Collection> {
   return getCollection(id, collectionType);
 }
 

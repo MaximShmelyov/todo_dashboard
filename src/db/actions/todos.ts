@@ -5,11 +5,11 @@ import {createCollection, getCollection, getCollections} from "@/src/db/actions/
 
 const collectionType = CollectionType.TODO;
 
-export async function createTodo(title: string, familyId?: string): Promise<void> {
+export async function createTodo(title: Collection['title'], familyId: Collection['familyId']): Promise<void> {
   return createCollection(title, collectionType, familyId);
 }
 
-export async function getTodo(id: string): Promise<Collection> {
+export async function getTodo(id: Collection['id']): Promise<Collection> {
   return getCollection(id, collectionType);
 }
 

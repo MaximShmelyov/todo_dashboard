@@ -4,7 +4,9 @@ import {Collection, CollectionType} from "@prisma/client";
 import {prisma} from "@/src/db";
 import {getSession} from "@/src/lib/auth"
 
-export async function createCollection(title: string, type: CollectionType, familyId?: string): Promise<void> {
+export async function createCollection(title: Collection['title'],
+                                       type: CollectionType,
+                                       familyId: Collection['familyId']): Promise<void> {
   const session = await getSession();
 
   if (!session?.user?.id) {
@@ -26,7 +28,7 @@ export async function createCollection(title: string, type: CollectionType, fami
 }
 
 
-export async function getCollection(id: string, type: CollectionType): Promise<Collection> {
+export async function getCollection(id: Collection['id'], type: CollectionType): Promise<Collection> {
   const session = await getSession();
 
   if (!session?.user?.id) {

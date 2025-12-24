@@ -1,29 +1,38 @@
 import "./globals.css";
-import {Inter} from "next/font/google";
-import Sidebar from "@/src/components/layout/Sidebar";
+import {DesktopSidebar} from "@/src/components/layout/sidebar/DesktopSidebar";
 import Header from "@/src/components/layout/Header";
 import SessionProviderWrapper from "@/src/app/auth/SessionProviderWrapper";
-
-const inter = Inter({subsets: ["latin"]});
+import {MobileSidebar} from "@/src/components/layout/sidebar/MobileSidebar";
 
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode }>) {
 
   return (
     <html lang="en">
-    <body className={`${inter.className} bg-stone-50 text-stone-800`}>
+    <body className="bg-stone-50 text-stone-800">
+
     <div className="flex min-h-screen">
-      <Sidebar/>
+      <div>
+        {/* DESKTOP SIDEBAR */}
+        <aside className="hidden md:block w-64">
+          <DesktopSidebar/>
+        </aside>
+      </div>
 
-      {/* MAIN */}
-      <main className="flex-1 flex flex-col">
-        <SessionProviderWrapper>
-          <Header/>
-        </SessionProviderWrapper>
+      <div className="flex-1">
+        <div className="flex flex-row w-full">
+          <MobileSidebar/>
+          <SessionProviderWrapper>
+            <Header/>
+          </SessionProviderWrapper>
+        </div>
 
-        {/* CONTENT */}
-        <div className="flex-1 p-8">{children}</div>
-      </main>
+        {/* MAIN */}
+        <main className="flex-1 px-4">
+          <div className="p-8">{children}</div>
+        </main>
+      </div>
     </div>
+
     </body>
     </html>
   );

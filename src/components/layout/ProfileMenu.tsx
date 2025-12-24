@@ -55,7 +55,7 @@ export default function ProfileMenu() {
   }, []);
 
   return (
-    <div className="flex items-center gap-3" ref={menuRef}>
+    <div className="flex items-center gap-3 ml-auto" ref={menuRef}>
       <span className="text-sm text-stone-600">{session ? session.user?.name : "Logged out"}</span>
       <button className="w-8 h-8 rounded-full bg-stone-300"
               onClick={() => setOpen(prev => !prev)}>

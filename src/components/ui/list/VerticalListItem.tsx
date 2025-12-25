@@ -1,14 +1,15 @@
 'use client'
 
 import React from "react";
+import Link from "next/link";
 
-export default function VerticalListItem({ children, onClick }: { children: React.ReactNode[], onClick: () => void }) {
+type AnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement>;
+
+export default function VerticalListItem(props: AnchorProps) {
   return (
-    <button
+    <Link
       className="flex justify-between items-center bg-white p-4 rounded-xl shadow border border-stone-100 hover:bg-gray-100 w-full"
-      onClick={onClick}
-    >
-      {children}
-    </button>
+      {...props}
+    />
   );
 }

@@ -2,15 +2,12 @@
 
 import AddButton from "@/src/components/ui/buttons/AddButton";
 import {Collection} from "@prisma/client";
-import {useRouter} from "next/navigation";
 import {getCollectionRoute} from "@/src/lib/utils";
 import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
 
 export default function CollectionClient({collection}: {
   collection: Collection
 }) {
-  const router = useRouter();
-
   return (
     <div className="">
       <BackNavigation href={getCollectionRoute(collection.type)}/>

@@ -1,6 +1,5 @@
 'use client'
 
-import {useRouter} from "next/navigation"
 import AddButton from "@/src/components/ui/buttons/AddButton"
 import {Collection, CollectionType} from "@prisma/client";
 import VerticalList from "@/src/components/ui/list/VerticalList";
@@ -13,8 +12,6 @@ export default function CollectionsClient({label, collectionType, items}: {
   collectionType: CollectionType,
   items: Collection[]
 }) {
-  const router = useRouter();
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between">
@@ -34,7 +31,7 @@ export default function CollectionsClient({label, collectionType, items}: {
         {items.map(item => (
           <VerticalListItem
             key={item.id}
-            onClick={() => router.push(`${getCollectionRoute(collectionType)}/${item.id}`)}
+            href={`${getCollectionRoute(collectionType)}/${item.id}`}
           >
             <div>
               <input

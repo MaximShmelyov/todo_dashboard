@@ -6,6 +6,7 @@ import {Collection, CollectionType} from "@prisma/client";
 import VerticalList from "@/src/components/ui/list/VerticalList";
 import VerticalListItem from "@/src/components/ui/list/VerticalListItem";
 import {getCollectionRoute} from "@/src/lib/utils";
+import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
 
 export default function CollectionsClient({label, collectionType, items}: {
   label: string,
@@ -17,8 +18,13 @@ export default function CollectionsClient({label, collectionType, items}: {
   return (
     <div className="space-y-6">
       <div className="flex justify-between">
-        <h2 className="text-2xl font-semibold">🛍 {label}</h2>
-        <AddButton onClick={() => router.push("?create=1")}>
+        <div className="font-semibold">
+          <BackNavigation href="/"/>
+          <h2 className="inline text-2xl">🛍 {label}</h2>
+        </div>
+        <AddButton
+          onClick={() => router.push("?create=1")}
+        >
           + Add
         </AddButton>
       </div>

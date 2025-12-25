@@ -3,6 +3,7 @@ import {getNoteList} from "@/src/db/actions/notes";
 import CollectionsClient from "@/src/app/CollectionsClient";
 import {CollectionType} from "@prisma/client";
 import {getSession} from "@/src/lib/auth";
+import PleaseLogIn from "@/src/components/common/PleaseLogIn";
 
 export default async function Notes({
                                              searchParams,
@@ -13,12 +14,12 @@ export default async function Notes({
   const showForm = params.create === "1";
   const session = await getSession();
   if (!session || !session.user) {
-    return <div>Please log in</div>;
+    return <PleaseLogIn/>;
   }
 
   return (
     <>
-      <CollectionsClient label="Notes" collectionType={CollectionType.NOTE} items={await getNoteList()}/>
+      <CollectionsClient label="📝 Notes" collectionType={CollectionType.NOTE} items={await getNoteList()}/>
       {showForm && <CreateCollectionForm collectionType={CollectionType.NOTE} />}
     </>
   )

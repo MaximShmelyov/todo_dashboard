@@ -17,7 +17,7 @@ export default function CollectionsClient({label, collectionType, items}: {
       <div className="flex justify-between">
         <div className="font-semibold">
           <BackNavigation href="/"/>
-          <h2 className="inline text-2xl">🛍 {label}</h2>
+          <h2 className="inline text-2xl">{label}</h2>
         </div>
         <AddButton
           href="?create=1"

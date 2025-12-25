@@ -4,8 +4,20 @@ const exhaustiveGuardCollectionType = (_: never): never => {
   throw new Error('Got unexpected value here.');
 };
 
-export function getLabelOfCollectionType(collectionType: CollectionType): string {
+export function getCategoryLabelOfCollectionType(collectionType: CollectionType): string {
+  switch (collectionType) {
+    case "NOTE":
+      return "📝 Notes"
+    case "SHOPPING":
+      return "🛍 Shopping"
+    case "TODO":
+      return "✔️ Todo";
+    default:
+      return exhaustiveGuardCollectionType(collectionType);
+  }
+}
 
+export function getLabelOfCollectionType(collectionType: CollectionType): string {
   switch (collectionType) {
     case "NOTE":
       return "note"

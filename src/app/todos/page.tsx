@@ -3,6 +3,7 @@ import {CollectionType} from "@prisma/client";
 import CollectionsClient from "@/src/app/CollectionsClient";
 import {getSession} from "@/src/lib/auth";
 import {getTodoList} from "@/src/db/actions/todos";
+import PleaseLogIn from "@/src/components/common/PleaseLogIn";
 
 const collectionType: CollectionType = CollectionType.TODO;
 
@@ -15,12 +16,12 @@ export default async function Todos({
   const showForm = params.create === "1";
   const session = await getSession();
   if (!session || !session.user) {
-    return <div>Please log in</div>;
+    return <PleaseLogIn/>;
   }
 
   return (
     <>
-      <CollectionsClient label="Todos" collectionType={collectionType} items={await getTodoList()}/>
+      <CollectionsClient label="✔️ Todos" collectionType={collectionType} items={await getTodoList()}/>
       {showForm && <CreateCollectionForm collectionType={collectionType} />}
     </>
   )

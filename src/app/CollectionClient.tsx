@@ -35,7 +35,7 @@ export default function CollectionClient({collection}: {
         </ul>
         <div className="flex flex-row mx-auto justify-center">
           <AddButton
-            onClick={() => router.push("?create=1")}
+            href="?create=1"
             aria-label="Add item"
           >
             +

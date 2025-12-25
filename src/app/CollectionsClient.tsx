@@ -23,7 +23,8 @@ export default function CollectionsClient({label, collectionType, items}: {
           <h2 className="inline text-2xl">🛍 {label}</h2>
         </div>
         <AddButton
-          onClick={() => router.push("?create=1")}
+          href="?create=1"
+          aria-label="Create"
         >
           + Add
         </AddButton>

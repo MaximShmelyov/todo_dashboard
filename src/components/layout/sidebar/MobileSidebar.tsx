@@ -9,15 +9,17 @@ export function MobileSidebar() {
   return (
     <div className="md:hidden">
       {/* HEADER */}
-      <header className="md:hidden flex items-center p-4 bg-white shadow-sm">
+      <header
+        onClick={() => setOpen(true)}
+        className="md:hidden bg-amber-50 shadow-sm"
+      >
         <button
-          onClick={() => setOpen(true)}
-          className="text-2xl"
+          className="flex items-center p-4 "
           aria-label="Open menu"
         >
-          ☰
+          <span className="text-2xl">☰</span>
+          <span className="ml-4 font-semibold"> Menu</span>
         </button>
-        <span className="ml-4 font-semibold">Menu</span>
       </header>
 
       {/* Overlay */}

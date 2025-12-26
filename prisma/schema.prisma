@@ -32,9 +32,9 @@ model Family {
 
 model Membership {
   id        String   @id @default(uuid())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  family    Family   @relation(fields: [familyId], references: [id])
+  family    Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
   familyId  String
   roleType  RoleType
   createdAt DateTime @default(now())
@@ -54,9 +54,9 @@ model Collection {
   description String?
   type        CollectionType
   isPublic    Boolean        @default(false)
-  owner       User?          @relation("OwnerCollections", fields: [ownerId], references: [id])
+  owner       User?          @relation("OwnerCollections", fields: [ownerId], references: [id], onDelete: SetNull)
   ownerId     String?
-  family      Family?        @relation(fields: [familyId], references: [id])
+  family      Family?        @relation(fields: [familyId], references: [id], onDelete: SetNull)
   familyId    String?
   createdAt   DateTime       @default(now())
   updatedAt   DateTime?      @updatedAt
@@ -72,9 +72,9 @@ enum CollectionType {
 
 model Item {
   id           String       @id @default(uuid())
-  collection   Collection   @relation(fields: [collectionId], references: [id])
+  collection   Collection   @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   collectionId String
-  createdBy    User         @relation(fields: [createdById], references: [id])
+  createdBy    User         @relation(fields: [createdById], references: [id], onDelete: Cascade)
   createdById  String
   title        String
   body         String?
@@ -89,7 +89,7 @@ model Item {
 
 model Attachment {
   id        String   @id @default(uuid())
-  item      Item     @relation(fields: [itemId], references: [id])
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
   itemId    String
   url       String
   filename  String

@@ -35,3 +35,19 @@ export async function deleteItem(id: Item['id']) {
     },
   });
 }
+
+export async function deleteItems(ids: Imte['id'][]) {
+  const session = await getSession();
+
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  await prisma.item.deleteMany({
+    where: {
+      id: {
+        in: ids,
+      },
+    },
+  });
+}

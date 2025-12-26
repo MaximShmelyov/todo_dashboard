@@ -48,6 +48,8 @@ export async function deleteItems(ids: Imte['id'][]) {
       id: {
         in: ids,
       },
+      // @TODO: check family as well
+      createdById: session.user.id,
     },
   });
 }

@@ -2,12 +2,13 @@
 
 import AddButton from "@/src/components/ui/buttons/AddButton";
 import {Collection} from "@prisma/client";
-import {getCollectionRoute} from "@/src/lib/utils";
+import {getCollectionRoute, getLabelOfCollectionType} from "@/src/lib/utils";
 import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
 import {useReducer, useState} from "react";
 import ConfirmPopup from "@/src/components/layout/ConfirmPopup";
 import {deleteItem, deleteItems} from "@/src/db/actions/item";
 import {useRouter} from "next/navigation";
+import {deleteCollection} from "@/src/db/actions/collections";
 
 type AddAction = { id: string, type: 'ADD' };
 type RemoveAction = { id: string, type: 'REMOVE' };
@@ -29,27 +30,41 @@ function idsToDeleteReducer(state: string[], action: AddAction & RemoveAction & 
 export default function CollectionClient({collection}: {
   collection: Collection
 }) {
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showCollectionDeleteDialog, setShowCollectionDeleteDialog] = useState(false);
+  const [showSingleDeleteDialog, setShowSingleDeleteDialog] = useState(false);
   const [showMultiDeleteDialog, setShowMultiDeleteDialog] = useState(false);
   const [deletingId, setDeletingId] = useState<string>("");
   const [idsToDeleteState, idsToDeleteDispatch] = useReducer(idsToDeleteReducer, initialIdsToDelete);
   const router = useRouter();
 
-  // Single delete
-  const onDelete = (id: string) => {
-    setDeletingId(id);
-    setShowDeleteDialog(true);
+  // Collection delete
+  const onCollectionDelete = () => {
+    setShowCollectionDeleteDialog(true);
   };
-  const onDeleteConfirm = async (id: string) => {
+  const onCollectionDeleteConfirm = async () => {
+    await deleteCollection(collection.id);
+    router.replace(getCollectionRoute(collection.type));
+    setShowCollectionDeleteDialog(false);
+  };
+  const onCollectionDeleteCancel = () => {
+    setShowCollectionDeleteDialog(false);
+  }
+
+  // Single delete
+  const onSingleDelete = (id: string) => {
+    setDeletingId(id);
+    setShowSingleDeleteDialog(true);
+  };
+  const onSingleDeleteConfirm = async (id: string) => {
     console.warn(`Deleting ${id} item`);
     await deleteItem(id);
     router.refresh();
     setDeletingId("");
-    setShowDeleteDialog(false);
+    setShowSingleDeleteDialog(false);
   };
-  const onDeleteCancel = () => {
+  const onSingleDeleteCancel = () => {
     setDeletingId("");
-    setShowDeleteDialog(false);
+    setShowSingleDeleteDialog(false);
   }
 
   // Multi delete
@@ -69,8 +84,10 @@ export default function CollectionClient({collection}: {
 
   return (
     <>
-      {showDeleteDialog &&
-        <ConfirmPopup title="Are you sure?" onConfirm={() => onDeleteConfirm(deletingId)} onCancel={onDeleteCancel}/>}
+      {showCollectionDeleteDialog &&
+        <ConfirmPopup title={`Delete ${getLabelOfCollectionType(collection.type)}`} onCancel={onCollectionDeleteCancel} onConfirm={onCollectionDeleteConfirm}/>}
+      {showSingleDeleteDialog &&
+        <ConfirmPopup title="Are you sure?" onConfirm={() => onSingleDeleteConfirm(deletingId)} onCancel={onSingleDeleteCancel}/>}
       {showMultiDeleteDialog &&
         <ConfirmPopup title="Are you sure?" onConfirm={onMultiDeleteConfirm} onCancel={onMultiDeleteCancel}/>}
       <div className="">
@@ -108,7 +125,7 @@ export default function CollectionClient({collection}: {
                   <div className="flex-1 font-semibold">• {item.title}</div>
                   <button
                     className="rounded-xl bg-red-400 w-10 text-white hover:bg-red-600"
-                    onClick={() => onDelete(item.id)}
+                    onClick={() => onSingleDelete(item.id)}
                     aria-label="Delete"
                   >
                     X
@@ -128,6 +145,14 @@ export default function CollectionClient({collection}: {
             >
               +
             </AddButton>
+          </div>
+          <div className="flex mt-8 px-2">
+            <button
+              onClick={onCollectionDelete}
+              className="ml-auto rounded-lg bg-red-400 hover:bg-red-600 px-1 text-white"
+            >
+              {`Delete ${getLabelOfCollectionType(collection.type)}`}
+            </button>
           </div>
         </div>
       </div>

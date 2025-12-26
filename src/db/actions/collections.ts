@@ -97,3 +97,19 @@ export async function getCollections(type: CollectionType): Promise<Collection[]
     },
   });
 }
+
+export async function deleteCollection(id: Collection['id']) {
+  const session = await getSession();
+
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  return prisma.collection.deleteMany({
+    where: {
+      id,
+      // @TODO: check family as well
+      ownerId: session.user.id,
+    },
+  });
+}

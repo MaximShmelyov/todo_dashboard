@@ -28,7 +28,7 @@ export default async function Home() {
           <Card
             key={type}
             title={getCategoryLabelOfCollectionType(type)}>
-            <VerticalList>
+            {collections.length > 0 ? <VerticalList>
               {collections.map(collection => (
                 <VerticalListItem
                   key={collection.id}
@@ -36,7 +36,8 @@ export default async function Home() {
                   <div>{collection.title}</div>
                 </VerticalListItem>
               ))}
-            </VerticalList>
+            </VerticalList> : 'No recent items'}
+            <a className="block mt-2 underline" href={getCollectionRoute(type)}>See all items -&gt;</a>
           </Card>
         ))}
       </div>

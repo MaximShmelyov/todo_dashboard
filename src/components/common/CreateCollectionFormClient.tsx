@@ -33,7 +33,10 @@ export default function CreateCollectionFormClient({collectionType, families}: {
       className="fixed inset-0 bg-black/40 flex justify-center items-center"
       onClick={() => router.back()}
     >
-      <div className="rounded-xl bg-white shadow-lg p-6" onClick={e => e.stopPropagation()}>
+      <div
+        className="rounded-xl bg-white shadow-lg p-6"
+        onClick={e => e.stopPropagation()}
+      >
         <Form
           action={async (formData) => {
             await createCollection(
@@ -50,6 +53,7 @@ export default function CreateCollectionFormClient({collectionType, families}: {
             id="create_form_title"
             name="title"
             placeholder="Title"
+            maxLength={30}
             required/>
 
           <select

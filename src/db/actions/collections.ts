@@ -60,6 +60,9 @@ export async function getCollection(id: Collection['id'], type: CollectionType):
           updatedAt: true,
           dueDate: true,
         },
+        orderBy: {
+          id: 'desc',
+        },
       },
       family: {
         select: {

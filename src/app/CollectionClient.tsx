@@ -1,12 +1,12 @@
 'use client'
 
 import AddButton from "@/src/components/ui/buttons/AddButton";
-import {Collection} from "@prisma/client";
+import {Collection, Item} from "@prisma/client";
 import {getCollectionRoute, getLabelOfCollectionType} from "@/src/lib/utils";
 import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
 import {useReducer, useState} from "react";
 import ConfirmPopup from "@/src/components/layout/ConfirmPopup";
-import {deleteItem, deleteItems} from "@/src/db/actions/item";
+import {deleteItem, deleteItems, updateItem} from "@/src/db/actions/item";
 import {useRouter} from "next/navigation";
 import {deleteCollection} from "@/src/db/actions/collections";
 
@@ -25,6 +25,10 @@ function idsToDeleteReducer(state: string[], action: AddAction & RemoveAction & 
     case 'CLEAR':
       return [];
   }
+}
+
+const toggleItemDone = async (item: Item): Promise<void> => {
+  await updateItem({ id: item.id, done: !item.done });
 }
 
 export default function CollectionClient({collection}: {
@@ -85,9 +89,11 @@ export default function CollectionClient({collection}: {
   return (
     <>
       {showCollectionDeleteDialog &&
-        <ConfirmPopup title={`Delete ${getLabelOfCollectionType(collection.type)}`} onCancel={onCollectionDeleteCancel} onConfirm={onCollectionDeleteConfirm}/>}
+        <ConfirmPopup title={`Delete ${getLabelOfCollectionType(collection.type)}`} onCancel={onCollectionDeleteCancel}
+                      onConfirm={onCollectionDeleteConfirm}/>}
       {showSingleDeleteDialog &&
-        <ConfirmPopup title="Are you sure?" onConfirm={() => onSingleDeleteConfirm(deletingId)} onCancel={onSingleDeleteCancel}/>}
+        <ConfirmPopup title="Are you sure?" onConfirm={() => onSingleDeleteConfirm(deletingId)}
+                      onCancel={onSingleDeleteCancel}/>}
       {showMultiDeleteDialog &&
         <ConfirmPopup title="Are you sure?" onConfirm={onMultiDeleteConfirm} onCancel={onMultiDeleteCancel}/>}
       <div className="">
@@ -107,12 +113,12 @@ export default function CollectionClient({collection}: {
           <ul className="flex flex-col gap-2 p-2">
             {collection.items.map(item => (
               <li
-                className="hover:bg-gray-100 p-2 rounded-sm"
+                className="hover:bg-gray-100 p-2 rounded-sm shadow-xs"
                 key={item.id}
               >
-                <div className="flex flex-row justify-between gap-2">
+                <div className="flex flex-row justify-between gap-2 h-20 items-start overflow-clip">
                   <input
-                    className="w-5"
+                    className="w-5 h-5"
                     type="checkbox"
                     onChange={(e) => {
                       idsToDeleteDispatch(
@@ -122,19 +128,27 @@ export default function CollectionClient({collection}: {
                         });
                     }}
                   />
-                  <div className="flex-1 font-semibold">• {item.title}</div>
+                  <div className={`flex-3 ${item.done ? '' : 'font-semibold'}`}>{item.title}</div>
                   <button
-                    className="rounded-xl bg-red-400 w-10 text-white hover:bg-red-600"
-                    onClick={() => onSingleDelete(item.id)}
-                    aria-label="Delete"
+                    className={`flex-1 rounded-xl px-1 h-8 ${item.done ? `bg-green-200 hover:bg-green-300` : `bg-sky-200 hover:bg-sky-300`}`}
+                    onClick={async () => { await toggleItemDone(item); router.refresh(); }}
                   >
-                    X
+                    {item.done ? 'Done' : 'Todo'}
                   </button>
                 </div>
                 <div className="ml-4">{item.body}</div>
-                <div className="ml-4">{item.dueDate && <div>Due date:{item.dueDate}</div>}</div>
-                <div className="ml-4">{item.updatedAt && ("Modified at: " + item.updatedAt?.toISOString())}</div>
-                <div className="text-right w-full">{"by " + item.createdBy.name}</div>
+                {/*<div className="ml-4">{item.dueDate && <div>Due date:{item.dueDate.toLocaleString()}</div>}</div>*/}
+                {/*<div className="ml-4">{item.updatedAt && ("Modified at: " + item.updatedAt.toLocaleString())}</div>*/}
+                <div className="flex flex-row mt-4 justify-between items-end">
+                  <button
+                    className="rounded-xl bg-red-400 px-1 text-white hover:bg-red-600"
+                    onClick={() => onSingleDelete(item.id)}
+                    aria-label="Delete"
+                  >
+                    Delete
+                  </button>
+                  <div className="ml-auto">{"by " + item.createdBy.name}</div>
+                </div>
               </li>
             ))}
           </ul>

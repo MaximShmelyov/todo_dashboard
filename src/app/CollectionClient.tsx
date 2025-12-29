@@ -108,7 +108,7 @@ export default function CollectionClient({collection}: {
           </button>}
         </div>
         <div>{collection.description}</div>
-        <div>{collection.family?.title ?? '(private)'}</div>
+        <div>{collection.family?.name ?? '(private)'}</div>
         <div className="mt-2 py-2 shadow-sm rounded-sm">
           <ul className="flex flex-col gap-2 p-2">
             {collection.items.length > 0 ? collection.items.map(item => (

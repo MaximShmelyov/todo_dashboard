@@ -111,7 +111,7 @@ export default function CollectionClient({collection}: {
         <div>{collection.family?.title ?? '(private)'}</div>
         <div className="mt-2 py-2 shadow-sm rounded-sm">
           <ul className="flex flex-col gap-2 p-2">
-            {collection.items.map(item => (
+            {collection.items.length > 0 ? collection.items.map(item => (
               <li
                 className="hover:bg-gray-100 p-2 rounded-sm shadow-xs"
                 key={item.id}
@@ -150,7 +150,7 @@ export default function CollectionClient({collection}: {
                   <div className="ml-auto">{"by " + item.createdBy.name}</div>
                 </div>
               </li>
-            ))}
+            )) : 'No items yet'}
           </ul>
           <div className="flex flex-row mx-auto justify-center">
             <AddButton

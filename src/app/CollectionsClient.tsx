@@ -23,7 +23,7 @@ export default function CollectionsClient({label, collectionType, items}: {
           href="?create=1"
           aria-label="Create"
         >
-          + Add
+          New
         </AddButton>
       </div>
 

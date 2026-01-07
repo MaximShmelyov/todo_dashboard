@@ -19,7 +19,7 @@ export default function FamilyFormClient({family}: { family?: [familyId: string,
         <Form
           className="flex flex-col gap-4"
           action={async (formData) => {
-            const name = formData.get('familyName').toString();
+            const name = formData.get('familyName')!.toString();
             if (family) {
               await updateFamily(
                 {

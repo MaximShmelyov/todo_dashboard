@@ -1,0 +1,60 @@
+'use server'
+
+import {getFamily} from "@/src/db/actions/family";
+import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
+import VerticalList from "@/src/components/ui/list/VerticalList";
+import VerticalListItem from "@/src/components/ui/list/VerticalListItem";
+import {RoleType} from "@prisma/client";
+import {getMembership} from "@/src/db/actions/membership";
+import FamilyMemberFormClient from "@/src/app/family/FamilyMemberFormClient";
+
+export default async function FamilyPage({searchParams, params}: {
+  searchParams: Promise<{ updateMembership: string, invite: string }>,
+  params: Promise<{ id: string }>
+}) {
+  const paramsObj = await params;
+  const family = await getFamily(paramsObj.id);
+  const {updateMembership} = await searchParams;
+  const membership = updateMembership ? await getMembership(updateMembership) : null;
+
+  if (!family) return <div>404 Not Found</div>;
+
+  return (
+    <>
+      {membership && membership.roleType !== RoleType.ADMIN &&
+        <FamilyMemberFormClient membership={membership} onSuccessPath={`/family/${paramsObj.id}`}/>}
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div className="flex flex-row items-center justify-between">
+          <BackNavigation href={"/family"}/>
+          <div className="text-lg font-semibold mr-auto">{family.name}</div>
+        </div>
+        <p className="mt-2">Members:</p>
+        <VerticalList>
+          {family.memberships.map(membership => (
+            <VerticalListItem
+              key={membership.id}
+              href={membership.roleType !== RoleType.ADMIN ? `?updateMembership=${membership.id}` : ''}
+            >
+              <div>{membership.user.name} : {membership.roleType}</div>
+            </VerticalListItem>
+          ))}
+        </VerticalList>
+        <p className="mt-2">Invites:</p>
+        {family.familyInvite.length > 0 ? <VerticalList>
+          {family.familyInvite.map(familyInvite => (
+            <VerticalListItem
+              key={familyInvite.id}
+              href={''}
+            >
+              <div>{familyInvite.roleType} - <span
+                className="font-semibold">{familyInvite.usedBy?.email ?? 'Available'}</span> created
+                at {familyInvite.createdAt.toLocaleString()}</div>
+            </VerticalListItem>
+          ))}
+        </VerticalList> : 'No invites'}
+      </div>
+    </>
+  );
+}

@@ -1,20 +1,10 @@
 "use server"
 
 import { prisma } from "@/src/db";
-import {getSession} from "@/src/lib/auth";
 import {Optional} from "@prisma/client/runtime/client";
 import {$Enums, Family} from "@prisma/client";
 import RoleType = $Enums.RoleType;
-
-async function getAuthorId(): Promise<string> {
-  const session = await getSession();
-
-  if (!session?.user?.id) {
-    throw new Error("Unauthorized");
-  }
-
-  return session.user.id;
-}
+import {getAuthorId} from "@/src/db/actions/util";
 
 export async function getFamilies() {
   const userId = await getAuthorId();
@@ -63,6 +53,9 @@ export async function getFamily(id: Family['id']) {
             },
           },
           roleType: true,
+        },
+        orderBy: {
+          roleType: 'desc',
         },
       },
       familyInvite: {

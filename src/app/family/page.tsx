@@ -6,18 +6,14 @@ import Card from "@/src/components/ui/Card";
 import VerticalList from "@/src/components/ui/list/VerticalList";
 import VerticalListItem from "@/src/components/ui/list/VerticalListItem";
 import FamilyFormClient from "@/src/app/family/FamilyFormClient";
-import {Family} from "@prisma/client";
+import {RoleType} from "@prisma/client";
 import {getSession} from "@/src/lib/auth";
 import PleaseLogIn from "@/src/components/common/PleaseLogIn";
+import FamilyMemberFormClient from "@/src/app/family/FamilyMemberFormClient";
+import {getMembership} from "@/src/db/actions/membership";
 
-function getFamily(families: Family[], id: Family['id']): [string, string] {
-  const family = families.find(family => family.id === id);
-  if (!family) return ["", ""];
-  return [family.id, family.name];
-}
-
-export default async function Family({searchParams}: {
-  searchParams: Promise<{ create?: string, edit?: string }>
+export default async function Families({searchParams}: {
+  searchParams: Promise<{ create?: string, /*edit?: string,*/ updateMembership?: string }>
 }) {
   const session = await getSession();
 
@@ -28,20 +24,21 @@ export default async function Family({searchParams}: {
   const families = await getFamilies();
   const params = await searchParams;
   const showCreateForm = params.create === "1";
-  const familyToEdit = params.edit ? getFamily(families, params.edit) : null;
+  const updateMembership = params.updateMembership ? await getMembership(params.updateMembership) : null;
 
   return (
     <>
+      {updateMembership && updateMembership.roleType !== RoleType.ADMIN &&
+        <FamilyMemberFormClient membership={updateMembership} onSuccessPath={`/family`}/>}
       {showCreateForm && <FamilyFormClient/>}
-      {familyToEdit && <FamilyFormClient family={familyToEdit}/>}
       <div className="flex flex-col gap-4">
         {families.map(family => (
             <Card key={family.id}
                   title={family.name}
                   cardActions={[
                     {
-                      title: 'Edit',
-                      href: `?edit=${family.id}`,
+                      title: 'Details',
+                      href: `family/${family.id}`,
                     }
                   ]}
             >
@@ -50,7 +47,7 @@ export default async function Family({searchParams}: {
                 {family.memberships.map(membership => (
                   <VerticalListItem
                     key={membership.id}
-                    href={""}
+                    href={membership.roleType !== RoleType.ADMIN ? `?updateMembership=${membership.id}` : ''}
                   >
                     <div>{membership.user.name} : {membership.roleType}</div>
                   </VerticalListItem>

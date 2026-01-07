@@ -1,16 +1,17 @@
 'use client'
 
 import AddButton from "@/src/components/ui/buttons/AddButton"
-import {Collection, CollectionType} from "@prisma/client";
+import {CollectionType} from "@prisma/client";
 import VerticalList from "@/src/components/ui/list/VerticalList";
 import VerticalListItem from "@/src/components/ui/list/VerticalListItem";
 import {getCollectionRoute} from "@/src/lib/utils";
 import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
+import {CollectionsExtended} from "@/src/db/actions/collections";
 
 export default function CollectionsClient({label, collectionType, items}: {
   label: string,
   collectionType: CollectionType,
-  items: Collection[]
+  items: CollectionsExtended,
 }) {
   return (
     <div className="space-y-6">

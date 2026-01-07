@@ -1,14 +1,14 @@
 'use client'
 
 import AddButton from "@/src/components/ui/buttons/AddButton";
-import {Collection, Item} from "@prisma/client";
+import {Item} from "@prisma/client";
 import {getCollectionRoute, getLabelOfCollectionType} from "@/src/lib/utils";
 import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
 import {useReducer, useState} from "react";
 import ConfirmPopup from "@/src/components/layout/ConfirmPopup";
 import {deleteItem, deleteItems, updateItem} from "@/src/db/actions/item";
 import {useRouter} from "next/navigation";
-import {deleteCollection} from "@/src/db/actions/collections";
+import {CollectionExtended, deleteCollection} from "@/src/db/actions/collections";
 
 type AddAction = { id: string, type: 'ADD' };
 type RemoveAction = { id: string, type: 'REMOVE' };
@@ -16,7 +16,7 @@ type ClearAction = { type: 'CLEAR' };
 
 const initialIdsToDelete: string[] = [];
 
-function idsToDeleteReducer(state: string[], action: AddAction & RemoveAction & ClearAction): string[] {
+function idsToDeleteReducer(state: string[], action: AddAction | RemoveAction | ClearAction): string[] {
   switch (action.type) {
     case 'ADD':
       return [...state, action.id];
@@ -27,12 +27,12 @@ function idsToDeleteReducer(state: string[], action: AddAction & RemoveAction & 
   }
 }
 
-const toggleItemDone = async (item: Item): Promise<void> => {
-  await updateItem({ id: item.id, done: !item.done });
+const toggleItemDone = async (item: Pick<Item, "id" | "done">): Promise<void> => {
+  await updateItem({id: item.id, done: !item.done});
 }
 
 export default function CollectionClient({collection}: {
-  collection: Collection
+  collection: NonNullable<CollectionExtended>,
 }) {
   const [showCollectionDeleteDialog, setShowCollectionDeleteDialog] = useState(false);
   const [showSingleDeleteDialog, setShowSingleDeleteDialog] = useState(false);
@@ -131,7 +131,10 @@ export default function CollectionClient({collection}: {
                   <div className={`flex-3 ${item.done ? '' : 'font-semibold'}`}>{item.title}</div>
                   <button
                     className={`flex-1 rounded-xl px-1 h-8 ${item.done ? `bg-green-200 hover:bg-green-300` : `bg-sky-200 hover:bg-sky-300`}`}
-                    onClick={async () => { await toggleItemDone(item); router.refresh(); }}
+                    onClick={async () => {
+                      await toggleItemDone(item);
+                      router.refresh();
+                    }}
                   >
                     {item.done ? 'Done' : 'Todo'}
                   </button>

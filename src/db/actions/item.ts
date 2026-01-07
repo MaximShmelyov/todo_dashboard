@@ -1,18 +1,8 @@
 "use server"
 
-import {Item} from "@prisma/client";
+import {Item, Prisma} from "@prisma/client";
 import {prisma} from "@/src/db"
-import {getSession} from "@/src/lib/auth";
-
-async function getAuthorId() : Promise<string> {
-  const session = await getSession();
-
-  if (!session?.user?.id) {
-    throw new Error("Unauthorized");
-  }
-
-  return session.user.id;
-}
+import {getAuthorId} from "@/src/db/actions/util";
 
 export async function createItem(
   item: Pick<Item, "title" | "body" | "collectionId" | "createdById" | "dueDate">
@@ -43,7 +33,7 @@ export async function deleteItem(id: Item['id']) {
 }
 
 export async function deleteItems(ids: Item['id'][]) {
-  const createdById = getAuthorId();
+  const createdById = await getAuthorId();
 
   await prisma.item.deleteMany({
     where: {
@@ -56,17 +46,20 @@ export async function deleteItems(ids: Item['id'][]) {
   });
 }
 
-export async function updateItem(item: Partial<Omit<Item, 'id'>> & Pick<Item, 'id'>) {
+export async function updateItem(
+  item: Partial<Pick<Item, "done" | "position" | "body" | "title" | "dueDate">> & {
+    metadata?: Prisma.InputJsonValue | null
+  } & Pick<Item, "id">
+) {
   const createdById = await getAuthorId();
+  const {id, ...data} = item;
 
   await prisma.item.update({
     where: {
-      id: item.id,
+      id,
       // @TODO: check family as well
       createdById,
     },
-    data: {
-      ...item,
-    },
+    data,
   });
 }

@@ -27,8 +27,8 @@ export async function createCollection(title: Collection['title'],
   })
 }
 
-
-export async function getCollection(id: Collection['id'], type: CollectionType): Promise<Collection> {
+export type CollectionExtended = Awaited<ReturnType<typeof getCollection>>;
+export async function getCollection(id: Collection['id'], type: CollectionType) {
   const session = await getSession();
 
   if (!session?.user?.id) {
@@ -82,7 +82,8 @@ export async function getCollection(id: Collection['id'], type: CollectionType):
   });
 }
 
-export async function getCollections(type: CollectionType): Promise<Collection[]> {
+export type CollectionsExtended = Awaited<ReturnType<typeof getCollections>>;
+export async function getCollections(type: CollectionType) {
   const session = await getSession();
 
   if (!session?.user?.id) {

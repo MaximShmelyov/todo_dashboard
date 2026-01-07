@@ -45,6 +45,47 @@ export async function getFamilies() {
   });
 }
 
+export async function getFamily(id: Family['id']) {
+  return await prisma.family.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      memberships: {
+        select: {
+          id: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+            },
+          },
+          roleType: true,
+        },
+      },
+      familyInvite: {
+        select: {
+          id: true,
+          usedBy: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+            },
+          },
+          disabled: true,
+          roleType: true,
+          createdAt: true,
+          usedAt: true,
+        },
+      },
+    },
+  });
+}
+
 export async function updateFamily(family: Optional<Omit<Family, 'id'>> & Required<Pick<Family, 'id'>>) {
   await prisma.family.update({
     where: {
@@ -56,7 +97,7 @@ export async function updateFamily(family: Optional<Omit<Family, 'id'>> & Requir
   });
 }
 
-export async function createFamily(name: Family['name']): Promise<string | undefined> {
+export async function createFamily(name: Family['name']): Promise<string | null> {
   const authorId = await getAuthorId();
 
   await prisma.$transaction(async (transaction) => {

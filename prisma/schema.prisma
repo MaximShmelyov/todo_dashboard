@@ -8,26 +8,28 @@ generator client {
 }
 
 model User {
-  id               String       @id @default(cuid())
+  id               String         @id @default(cuid())
   name             String?
-  email            String?      @unique
+  email            String?        @unique
   emailVerified    DateTime?
   image            String?
   hashedPass       String?
-  createdAt        DateTime     @default(now())
+  createdAt        DateTime       @default(now())
   memberships      Membership[]
-  ownedCollections Collection[] @relation("OwnerCollections")
+  ownedCollections Collection[]   @relation("OwnerCollections")
   accounts         Account[]
   // sessions         Session[]
   Item             Item[]
+  FamilyInvite     FamilyInvite[]
 }
 
 model Family {
-  id          String       @id @default(uuid())
-  name        String
-  createdAt   DateTime     @default(now())
-  memberships Membership[]
-  collections Collection[]
+  id           String         @id @default(uuid())
+  name         String
+  createdAt    DateTime       @default(now())
+  memberships  Membership[]
+  collections  Collection[]
+  familyInvite FamilyInvite[]
 }
 
 model Membership {
@@ -102,6 +104,18 @@ model Tag {
   id          String       @id @default(uuid())
   name        String
   collections Collection[]
+}
+
+model FamilyInvite {
+  id        String    @id @default(uuid())
+  disabled  Boolean   @default(false)
+  usedById  String?
+  usedBy    User?     @relation(fields: [usedById], references: [id])
+  familyId  String
+  family    Family    @relation(fields: [familyId], references: [id])
+  roleType  RoleType  @default(USER)
+  createdAt DateTime  @default(now())
+  usedAt    DateTime?
 }
 
 /**

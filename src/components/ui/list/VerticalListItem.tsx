@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 
-type AnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement>;
+type AnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {href: string};
 
 export default function VerticalListItem(props: AnchorProps) {
   return (

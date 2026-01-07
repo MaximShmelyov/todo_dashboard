@@ -20,7 +20,8 @@ model User {
   accounts         Account[]
   // sessions         Session[]
   Item             Item[]
-  FamilyInvite     FamilyInvite[]
+  usedInvites      FamilyInvite[] @relation("UsedInvites")
+  issuedInvites    FamilyInvite[] @relation("IssuedInvites")
 }
 
 model Family {
@@ -107,15 +108,17 @@ model Tag {
 }
 
 model FamilyInvite {
-  id        String    @id @default(uuid())
-  disabled  Boolean   @default(false)
-  usedById  String?
-  usedBy    User?     @relation(fields: [usedById], references: [id])
-  familyId  String
-  family    Family    @relation(fields: [familyId], references: [id])
-  roleType  RoleType  @default(USER)
-  createdAt DateTime  @default(now())
-  usedAt    DateTime?
+  id         String    @id @default(uuid())
+  disabled   Boolean   @default(false)
+  usedById   String?
+  usedBy     User?     @relation(name: "UsedInvites", fields: [usedById], references: [id])
+  familyId   String
+  family     Family    @relation(fields: [familyId], references: [id])
+  roleType   RoleType  @default(USER)
+  createdAt  DateTime  @default(now())
+  usedAt     DateTime?
+  issuedById String
+  issuedBy   User      @relation(name: "IssuedInvites", fields: [issuedById], references: [id])
 }
 
 /**

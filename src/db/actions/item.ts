@@ -48,7 +48,7 @@ export async function deleteItems(ids: Item['id'][]) {
 
 export async function updateItem(
   item: Partial<Pick<Item, "done" | "position" | "body" | "title" | "dueDate">> & {
-    metadata?: Prisma.InputJsonValue | null
+    metadata?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue | undefined
   } & Pick<Item, "id">
 ) {
   const createdById = await getAuthorId();

@@ -79,7 +79,7 @@ export async function getFamily(id: Family['id']) {
   });
 }
 
-export async function updateFamily(family: Optional<Omit<Family, 'id'>> & Required<Pick<Family, 'id'>>) {
+export async function updateFamily(family: Partial<Omit<Family, 'id'>> & Required<Pick<Family, 'id'>>) {
   await prisma.family.update({
     where: {
       id: family.id,

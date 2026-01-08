@@ -22,8 +22,8 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
   const families: Family[] | null = props.mode === 'create' ? props.families : null;
 
   useEffect(() => {
-    if (!invite && (!families || families.length === 0))
-    router.replace("/family");
+    if ((!invite && (!families || families.length === 0)) || (invite && !!invite.usedBy))
+      router.replace("/family");
   }, [families, invite, props, router]);
 
   if (!invite && (!families || families.length === 0)) {
@@ -82,7 +82,8 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
               ))}
             </select>
           </label>
-          <label>Disabled: <input type="checkbox" name="disabled" defaultChecked={invite ? invite.disabled : false}/></label>
+          <label>Disabled: <input type="checkbox" name="disabled"
+                                  defaultChecked={invite ? invite.disabled : false}/></label>
           <button
             className="hover:bg-stone-200 rounded-xl"
             type="submit"

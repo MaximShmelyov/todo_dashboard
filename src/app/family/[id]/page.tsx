@@ -52,7 +52,7 @@ export default async function FamilyPage({searchParams, params}: {
           {family.familyInvite.map(familyInvite => (
             <VerticalListItem
               key={familyInvite.id}
-              href={`?inviteEdit=${familyInvite.id}`}
+              href={`${!familyInvite.usedBy ? `?inviteEdit=${familyInvite.id}` : ''}`}
             >
               <div
                 className={familyInvite.disabled ? 'bg-red-50' : ''}

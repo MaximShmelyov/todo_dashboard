@@ -21,6 +21,7 @@ export async function createInvite(disabled: FamilyInvite['disabled'],
 }
 
 export type FamilyInviteExtended = Awaited<ReturnType<typeof getInvite>>;
+
 export async function getInvite(id: FamilyInvite['id']) {
   const authorId = await getAuthorId();
 
@@ -79,6 +80,80 @@ export async function updateInvite(invite: Pick<FamilyInvite, 'id'> & Partial<Pi
     },
     data: {
       ...invite,
+    },
+  });
+}
+
+export async function activateInvite(id: FamilyInvite['id']): Promise<boolean> {
+  const usedById = await getAuthorId();
+
+  return await prisma.$transaction(async (transaction) => {
+    const invite = await transaction.familyInvite.findUnique({
+      where: {
+        id,
+        disabled: false,
+        usedById: null,
+        usedAt: null,
+      },
+      include: {
+        family: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!invite) return false;
+
+    if (!!await transaction.membership.findFirst({
+      where: {
+        userId: usedById,
+        familyId: invite.family.id,
+      },
+    })) {
+      console.debug('Already family member');
+      return false;
+    }
+
+    if (!!await transaction.familyInvite.update({
+      where: {
+        id,
+      },
+      data: {
+        usedById,
+        usedAt: new Date(),
+      },
+    })) {
+      return !!await transaction.membership.create({
+        data: {
+          userId: usedById,
+          familyId: invite.family.id,
+          roleType: invite.roleType,
+        },
+      });
+    }
+    return false;
+  });
+}
+
+export type FamilyInvitePublic = Awaited<ReturnType<typeof getInvitePublic>>;
+
+export async function getInvitePublic(id: FamilyInvite['id']) {
+  return await prisma.familyInvite.findUnique({
+    where: {
+      id,
+      disabled: false,
+      usedById: null,
+      usedAt: null,
+    },
+    include: {
+      family: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   });
 }

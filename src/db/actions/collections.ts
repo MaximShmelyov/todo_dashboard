@@ -2,16 +2,12 @@
 
 import {Collection, CollectionType} from "@prisma/client";
 import {prisma} from "@/src/db";
-import {getSession} from "@/src/lib/auth"
+import {getAuthorId, getFamiliesIds} from "@/src/db/actions/util";
 
 export async function createCollection(title: Collection['title'],
                                        type: CollectionType,
                                        familyId: Collection['familyId']): Promise<void> {
-  const session = await getSession();
-
-  if (!session?.user?.id) {
-    throw new Error("Unauthorized");
-  }
+  const ownerId = await getAuthorId();
 
   if (!title) {
     throw new Error("Missing required title field");
@@ -22,22 +18,28 @@ export async function createCollection(title: Collection['title'],
       title,
       type,
       familyId,
-      ownerId: session.user.id,
+      ownerId,
     },
   })
 }
 
 export type CollectionExtended = Awaited<ReturnType<typeof getCollection>>;
-export async function getCollection(id: Collection['id'], type: CollectionType) {
-  const session = await getSession();
 
-  if (!session?.user?.id) {
-    throw new Error("Unauthorized");
-  }
+export async function getCollection(id: Collection['id'], type: CollectionType) {
+  const ownerId = await getAuthorId();
 
   return prisma.collection.findFirst({
     where: {
-      ownerId: session.user.id,
+      OR: [
+        {
+          ownerId,
+        },
+        {
+          familyId: {
+            in: await getFamiliesIds(),
+          },
+        },
+      ],
       id,
       type,
     },
@@ -83,16 +85,22 @@ export async function getCollection(id: Collection['id'], type: CollectionType) 
 }
 
 export type CollectionsExtended = Awaited<ReturnType<typeof getCollections>>;
+
 export async function getCollections(type: CollectionType) {
-  const session = await getSession();
+  const ownerId = await getAuthorId();
 
-  if (!session?.user?.id) {
-    throw new Error("Unauthorized");
-  }
-
-  return prisma.collection.findMany({
+  return await prisma.collection.findMany({
     where: {
-      ownerId: session.user.id,
+      OR: [
+        {
+          ownerId,
+        },
+        {
+          familyId: {
+            in: await getFamiliesIds(),
+          },
+        },
+      ],
       type,
     },
     orderBy: {createdAt: "desc"},
@@ -103,17 +111,21 @@ export async function getCollections(type: CollectionType) {
 }
 
 export async function deleteCollection(id: Collection['id']) {
-  const session = await getSession();
-
-  if (!session?.user?.id) {
-    throw new Error("Unauthorized");
-  }
+  const ownerId = await getAuthorId();
 
   return prisma.collection.deleteMany({
     where: {
       id,
-      // @TODO: check family as well
-      ownerId: session.user.id,
+      OR: [
+        {
+          ownerId,
+        },
+        {
+          familyId: {
+            in: await getFamiliesIds(),
+          },
+        },
+      ],
     },
   });
 }

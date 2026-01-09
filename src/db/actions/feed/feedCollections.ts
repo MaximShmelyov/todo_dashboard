@@ -1,6 +1,6 @@
 import {prisma} from "@/src/db";
 import {Collection, CollectionType} from "@prisma/client";
-import {getSession} from "@/src/lib/auth";
+import {getAuthorId, getFamiliesIds} from "@/src/db/actions/util";
 
 function startOfDayUTC(date: Date): Date {
   return new Date(Date.UTC(
@@ -11,11 +11,7 @@ function startOfDayUTC(date: Date): Date {
 }
 
 export async function getFeedCollections(daysBefore: number = 0): Promise<Record<CollectionType, Collection[]>> {
-  const session = await getSession();
-
-  if (!session?.user?.id) {
-    throw new Error("Unauthorized");
-  }
+  const ownerId = await getAuthorId();
 
   const now = new Date();
   const fromDate = startOfDayUTC(
@@ -32,13 +28,23 @@ export async function getFeedCollections(daysBefore: number = 0): Promise<Record
         type,
         await prisma.collection.findMany({
           where: {
-            ownerId: session.user.id,
+            OR: [
+              {
+                ownerId,
+              },
+              {
+                familyId:
+                  {
+                    in: await getFamiliesIds(),
+                  },
+              },
+            ],
             type,
             updatedAt: {
               gte: fromDate,
             },
           },
-          orderBy: { updatedAt: 'desc' },
+          orderBy: {updatedAt: 'desc'},
           take: 3,
         }),
       ])

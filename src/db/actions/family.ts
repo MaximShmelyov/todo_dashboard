@@ -1,7 +1,6 @@
 "use server"
 
 import { prisma } from "@/src/db";
-import {Optional} from "@prisma/client/runtime/client";
 import {$Enums, Family} from "@prisma/client";
 import RoleType = $Enums.RoleType;
 import {getAuthorId} from "@/src/db/actions/util";

@@ -2,7 +2,7 @@
 
 import {Item, Prisma} from "@prisma/client";
 import {prisma} from "@/src/db"
-import {getAuthorId} from "@/src/db/actions/util";
+import {getAuthorId, getFamiliesIds} from "@/src/db/actions/util";
 
 export async function createItem(
   item: Pick<Item, "title" | "body" | "collectionId" | "createdById" | "dueDate">
@@ -20,12 +20,14 @@ export async function deleteItem(id: Item['id']) {
       id,
       OR: [
         {
-          AND: [
-            {
-              createdById,
+          createdById,
+        },
+        {
+          collection: {
+            familyId: {
+              in: await getFamiliesIds(),
             },
-            // @TODO: check family
-          ],
+          },
         },
       ],
     },
@@ -40,8 +42,18 @@ export async function deleteItems(ids: Item['id'][]) {
       id: {
         in: ids,
       },
-      // @TODO: check family as well
-      createdById,
+      OR: [
+        {
+          createdById,
+        },
+        {
+          collection: {
+            familyId: {
+              in: await getFamiliesIds(),
+            },
+          }
+        },
+      ],
     },
   });
 }
@@ -57,8 +69,18 @@ export async function updateItem(
   await prisma.item.update({
     where: {
       id,
-      // @TODO: check family as well
-      createdById,
+      OR: [
+        {
+          createdById,
+        },
+        {
+          collection: {
+            familyId: {
+              in: await getFamiliesIds(),
+            },
+          },
+        },
+      ],
     },
     data,
   });

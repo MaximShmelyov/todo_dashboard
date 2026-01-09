@@ -11,13 +11,16 @@ type FamilyInviteFormProps =
   | {
   mode: 'create',
   families: Family[],
+  inviteRoleTypes: RoleType[],
 }
   | {
   mode: 'edit',
   invite: FamilyInviteExtended,
+  inviteRoleTypes: RoleType[],
 };
 export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
   const router = useRouter();
+  const inviteRoleTypes = props.inviteRoleTypes;
   const invite: FamilyInviteExtended = props.mode === 'edit' ? props.invite : null;
   const families: Family[] | null = props.mode === 'create' ? props.families : null;
 
@@ -77,7 +80,7 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
           <label>
             Role:
             <select name="roleType" defaultValue={invite ? invite.roleType : RoleType.USER}>
-              {Object.values(RoleType).filter(r => r !== RoleType.ADMIN).map(roleType => (
+              {inviteRoleTypes.map(roleType => (
                 <option key={roleType} value={roleType}>{roleType}</option>
               ))}
             </select>

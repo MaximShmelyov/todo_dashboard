@@ -8,11 +8,12 @@ import {MembershipExtended, type RoleTypeLimited, updateMembership} from "@/src/
 type FamilyMemberFormProps = {
   membership: MembershipExtended,
   onSuccessPath: string,
+  inviteRoleTypes: RoleType[],
 };
 
 export default function FamilyMemberFormClient(props: FamilyMemberFormProps) {
   const router = useRouter();
-  const {membership, onSuccessPath} = props;
+  const {membership, onSuccessPath, inviteRoleTypes} = props;
 
   return (
     <div
@@ -41,7 +42,7 @@ export default function FamilyMemberFormClient(props: FamilyMemberFormProps) {
               className="hover:bg-stone-100"
               name="roleType" defaultValue={membership.roleType}
             >
-              {Object.values(RoleType).filter(roleType => roleType !== 'ADMIN').map(roleType => (
+              {inviteRoleTypes.map(roleType => (
                 <option
                   key={roleType}
                   value={roleType}

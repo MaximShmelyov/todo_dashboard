@@ -2,12 +2,18 @@
 
 import {FamilyInvite, RoleType} from "@prisma/client";
 import {prisma} from "@/src/db";
-import {getAuthorId} from "@/src/db/actions/util";
+import {getAuthorId, getFamilyMemberRole} from "@/src/db/actions/util";
+import {getAllowedRoleTypesForInviteIssuer} from "@/src/lib/utils";
 
 export async function createInvite(disabled: FamilyInvite['disabled'],
                                    familyId: FamilyInvite['familyId'],
                                    roleType: FamilyInvite['roleType']): Promise<string | null> {
   const authorId = await getAuthorId();
+
+  const allowedRoleTypes: RoleType[] = getAllowedRoleTypesForInviteIssuer(await getFamilyMemberRole(familyId));
+  if (!allowedRoleTypes.some(allowedRoleType => allowedRoleType === roleType)) {
+    return null;
+  }
 
   const invite = await prisma.familyInvite.create({
     data: {

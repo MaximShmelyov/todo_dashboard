@@ -1,4 +1,4 @@
-import {CollectionType} from "@prisma/client";
+import {CollectionType, RoleType} from "@prisma/client";
 
 const exhaustiveGuardCollectionType = (_: never): never => {
   throw new Error('Got unexpected value here.');
@@ -40,5 +40,14 @@ export function getCollectionRoute(collectionType: CollectionType): string {
       return "/todos";
     default:
       return exhaustiveGuardCollectionType(collectionType);
+  }
+}
+
+export function getAllowedRoleTypesForInviteIssuer(roleType: RoleType | undefined): RoleType[] {
+  switch(roleType) {
+    case RoleType.ADMIN: return [RoleType.USER, RoleType.MODERATOR];
+    case RoleType.MODERATOR: return [RoleType.USER];
+    case RoleType.USER: return [];
+    default: return [];
   }
 }

@@ -1,6 +1,6 @@
 'use server'
 
-import {getFamily} from "@/src/db/actions/family";
+import {FamilyExtended, getFamily} from "@/src/db/actions/family";
 import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
 import VerticalList from "@/src/components/ui/list/VerticalList";
 import VerticalListItem from "@/src/components/ui/list/VerticalListItem";
@@ -10,25 +10,33 @@ import FamilyMemberFormClient from "@/src/app/family/FamilyMemberFormClient";
 import FamilyInviteFormClient from "@/src/app/family/[id]/FamilyInviteFormClient";
 import {getInvite} from "@/src/db/actions/invite";
 import AddButton from "@/src/components/ui/buttons/AddButton";
+import {getFamilyMemberRole} from "@/src/db/actions/util";
+import {getAllowedRoleTypesForInviteIssuer} from "@/src/lib/utils";
+import FamilyInviteListItem from "@/src/app/family/[id]/FamilyInviteListItem";
 
 export default async function FamilyPage({searchParams, params}: {
   searchParams: Promise<{ updateMembership: string, inviteEdit: string, issueInvite: boolean }>,
   params: Promise<{ id: string }>
 }) {
   const paramsObj = await params;
-  const family = await getFamily(paramsObj.id);
+  const family: FamilyExtended = await getFamily(paramsObj.id);
   const {updateMembership, inviteEdit, issueInvite} = await searchParams;
   const membership = updateMembership ? await getMembership(updateMembership) : null;
 
   if (!family) return <div>404 Not Found</div>;
 
+  const issuerFamilyRole: RoleType | undefined = await getFamilyMemberRole(family.id);
+  if (!issuerFamilyRole) throw new Error('Not a family member');
+  const hasAccessToEdit = issuerFamilyRole === RoleType.ADMIN;
+  const inviteRoleTypes: RoleType[] = getAllowedRoleTypesForInviteIssuer(issuerFamilyRole);
+
   return (
     <>
       {/* @TODO: only one popup at the moment */}
-      {membership && membership.roleType !== RoleType.ADMIN &&
-        <FamilyMemberFormClient membership={membership} onSuccessPath={`/family/${paramsObj.id}`}/>}
-      {inviteEdit && <FamilyInviteFormClient mode="edit" invite={await getInvite(inviteEdit)}/>}
-      {issueInvite && <FamilyInviteFormClient mode="create" families={[family]}/>}
+      {canIssueInvite(inviteRoleTypes) && membership && isEditableRole(membership.roleType, issuerFamilyRole, inviteRoleTypes) &&
+        <FamilyMemberFormClient membership={membership} onSuccessPath={`/family/${paramsObj.id}`} inviteRoleTypes={inviteRoleTypes}/>}
+      {canIssueInvite(inviteRoleTypes) && inviteEdit && <FamilyInviteFormClient mode="edit" invite={await getInvite(inviteEdit)} inviteRoleTypes={inviteRoleTypes}/>}
+      {canIssueInvite(inviteRoleTypes) && issueInvite && <FamilyInviteFormClient mode="create" families={[family]} inviteRoleTypes={inviteRoleTypes}/>}
       <div
         className="flex flex-col gap-2"
       >
@@ -41,7 +49,7 @@ export default async function FamilyPage({searchParams, params}: {
           {family.memberships.map(membership => (
             <VerticalListItem
               key={membership.id}
-              href={membership.roleType !== RoleType.ADMIN ? `?updateMembership=${membership.id}` : ''}
+              href={(/*hasAccessToEdit && */isEditableRole(membership.roleType, issuerFamilyRole, inviteRoleTypes)) ? `?updateMembership=${membership.id}` : ''}
             >
               <div>{membership.user.name} : {membership.roleType}</div>
             </VerticalListItem>
@@ -50,24 +58,21 @@ export default async function FamilyPage({searchParams, params}: {
         <p className="mt-2">Invites:</p>
         {family.familyInvite.length > 0 ? <VerticalList>
           {family.familyInvite.map(familyInvite => (
-            <VerticalListItem
-              key={familyInvite.id}
-              href={`${!familyInvite.usedBy ? `?inviteEdit=${familyInvite.id}` : ''}`}
-            >
-              <div
-                className={familyInvite.disabled ? 'bg-red-50' : ''}
-              >
-                {familyInvite.roleType} - <span
-                className="font-semibold">{familyInvite.usedBy?.email ?? 'Available'}</span> created
-                at {familyInvite.createdAt.toLocaleString()}{familyInvite.disabled ? <span> - disabled</span> : <></>}
-              </div>
-            </VerticalListItem>
+            <FamilyInviteListItem key={familyInvite.id} hasAccessToEdit={hasAccessToEdit} familyInvite={familyInvite}/>
           ))}
         </VerticalList> : 'No invites'}
-        <AddButton href="?issueInvite=true">
+        {canIssueInvite(inviteRoleTypes) && <AddButton href="?issueInvite=true">
           Issue invite
-        </AddButton>
+        </AddButton>}
       </div>
     </>
   );
+}
+
+function isEditableRole(roleTypeToEdit: RoleType, issuerFamilyRole: RoleType, inviteRoleTypes: RoleType[]): boolean {
+  return issuerFamilyRole !== roleTypeToEdit && inviteRoleTypes.some(role => role === roleTypeToEdit);
+}
+
+function canIssueInvite(inviteRoleTypes: RoleType[]): boolean {
+  return inviteRoleTypes.length > 0;
 }

@@ -34,6 +34,8 @@ export async function getFamilies() {
   });
 }
 
+export type FamilyExtended = Awaited<ReturnType<typeof getFamily>>;
+
 export async function getFamily(id: Family['id']) {
   return await prisma.family.findUnique({
     where: {

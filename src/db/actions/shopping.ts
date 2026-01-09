@@ -1,7 +1,13 @@
 "use server"
 
 import {Collection, CollectionType} from "@prisma/client";
-import {CollectionExtended, createCollection, getCollection, getCollections} from "@/src/db/actions/collections";
+import {
+  CollectionExtended,
+  CollectionsExtended,
+  createCollection,
+  getCollection,
+  getCollections
+} from "@/src/db/actions/collections";
 
 const collectionType = CollectionType.SHOPPING;
 
@@ -13,6 +19,6 @@ export async function getShopping(id: Collection['id']): Promise<CollectionExten
   return getCollection(id, collectionType);
 }
 
-export async function getShoppingList(): Promise<Collection[]> {
+export async function getShoppingList(): Promise<CollectionsExtended> {
   return getCollections(collectionType);
 }

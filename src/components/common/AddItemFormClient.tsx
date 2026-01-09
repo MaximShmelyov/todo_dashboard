@@ -23,8 +23,8 @@ export default function AddItemFormClient({collectionType, collectionId, ownerId
         <Form
           action={async (formData) => {
             await createItem({
-              title: formData.get('title').toString(),
-              body: formData.get('body').toString() ?? null,
+              title: formData.get('title')!.toString(),
+              body: formData.get('body')!.toString(),
               collectionId,
               createdById: ownerId,
             });

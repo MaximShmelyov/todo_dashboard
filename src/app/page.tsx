@@ -7,6 +7,7 @@ import VerticalList from "@/src/components/ui/list/VerticalList";
 import VerticalListItem from "@/src/components/ui/list/VerticalListItem";
 import {getSession} from "@/src/lib/auth";
 import PleaseLogIn from "@/src/components/common/PleaseLogIn";
+import {CollectionType} from "@prisma/client";
 
 export default async function Home() {
   const session = await getSession();
@@ -27,17 +28,17 @@ export default async function Home() {
         {Object.entries(feeds).map(([type, collections]) => (
           <Card
             key={type}
-            title={getCategoryLabelOfCollectionType(type)}>
+            title={getCategoryLabelOfCollectionType(type as CollectionType)}>
             {collections.length > 0 ? <VerticalList>
               {collections.map(collection => (
                 <VerticalListItem
                   key={collection.id}
-                  href={`${getCollectionRoute(type)}/${collection.id}`}>
+                  href={`${getCollectionRoute(type as CollectionType)}/${collection.id}`}>
                   <div>{collection.title}</div>
                 </VerticalListItem>
               ))}
             </VerticalList> : 'No recent items'}
-            <a className="block mt-2 underline" href={getCollectionRoute(type)}>See all items -&gt;</a>
+            <a className="block mt-2 underline" href={getCollectionRoute(type as CollectionType)}>See all items -&gt;</a>
           </Card>
         ))}
       </div>

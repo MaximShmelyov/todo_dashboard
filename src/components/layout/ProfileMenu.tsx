@@ -15,7 +15,7 @@ function getActionItems(signedIn: boolean): PopupMenuItemWithAction[] {
       {
         id: "0",
         title: 'Sign-out',
-        action: () => signOut('google').then(() => console.log('logged out'))
+        action: () => signOut().then(() => console.log('logged out'))
       }
     ];
   }
@@ -61,7 +61,7 @@ export default function ProfileMenu() {
               onClick={() => setOpen(prev => !prev)}>
         {session && session.user &&
           <Image className="rounded-full"
-                 src={session.user.image}
+                 src={session.user.image ?? ""}
                  alt="Profile image"
                  width={100}
                  height={100}/>}

@@ -5,7 +5,7 @@ import {prisma} from "@/src/db"
 import {getAuthorId, getFamiliesIds} from "@/src/db/actions/util";
 
 export async function createItem(
-  item: Pick<Item, "title" | "body" | "collectionId" | "createdById" | "dueDate">
+  item: Pick<Item, "title" | "body" | "collectionId" | "createdById"> & { dueDate?: Date }
 ) {
   await prisma.item.create({
     data: item

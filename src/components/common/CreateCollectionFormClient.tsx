@@ -9,14 +9,18 @@ import {createNote} from "@/src/db/actions/notes";
 import {getCollectionRoute, getLabelOfCollectionType} from "@/src/lib/utils";
 import {createTodo} from "@/src/db/actions/todos";
 
+const exhaustiveGuardCollectionType = (_: never): never => {
+  throw new Error('Got unexpected value here.');
+};
+
 function createCollection(collectionType: CollectionType, title: string, familyId?: string): Promise<void> {
   switch (collectionType) {
     case "NOTE":
-      return createNote(title, familyId);
+      return createNote(title, familyId ?? null);
     case "SHOPPING":
-      return createShopping(title, familyId);
+      return createShopping(title, familyId ?? null);
     case "TODO":
-      return createTodo(title, familyId);
+      return createTodo(title, familyId ?? null);
     default:
       return exhaustiveGuardCollectionType(collectionType);
   }
@@ -41,8 +45,8 @@ export default function CreateCollectionFormClient({collectionType, families}: {
           action={async (formData) => {
             await createCollection(
               collectionType,
-              formData.get('title').toString(),
-              formData.get('familyId')?.toString() || null);
+              formData.get('title')!.toString(),
+              formData.get('familyId')?.toString() || undefined);
             router.push(getCollectionRoute(collectionType));
           }}
           className="flex flex-col gap-4"

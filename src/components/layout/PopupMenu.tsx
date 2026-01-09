@@ -25,7 +25,7 @@ export default function PopupMenu({
         {popupMenuItems.map(item => (
             <button
             key={item.id}
-            className="px-4 mx-4 hover:bg-gray-200"
+            className="px-4 mx-4 hover:bg-gray-200 cursor-pointer"
             onClick={() => onItemSelected(item)}>
             {item.title}
           </button>

@@ -13,6 +13,7 @@ import AddButton from "@/src/components/ui/buttons/AddButton";
 import {getFamilyMemberRole} from "@/src/db/actions/util";
 import {getAllowedRoleTypesForInviteIssuer} from "@/src/lib/utils";
 import FamilyInviteListItem from "@/src/app/family/[id]/FamilyInviteListItem";
+import LeaveFamilyWidget from "@/src/app/family/[id]/LeaveFamilyWidget";
 
 export default async function FamilyPage({searchParams, params}: {
   searchParams: Promise<{ updateMembership: string, inviteEdit: string, issueInvite: boolean }>,
@@ -34,15 +35,19 @@ export default async function FamilyPage({searchParams, params}: {
     <>
       {/* @TODO: only one popup at the moment */}
       {canIssueInvite(inviteRoleTypes) && membership && isEditableRole(membership.roleType, issuerFamilyRole, inviteRoleTypes) &&
-        <FamilyMemberFormClient membership={membership} onSuccessPath={`/family/${paramsObj.id}`} inviteRoleTypes={inviteRoleTypes}/>}
-      {canIssueInvite(inviteRoleTypes) && inviteEdit && <FamilyInviteFormClient mode="edit" invite={await getInvite(inviteEdit)} inviteRoleTypes={inviteRoleTypes}/>}
-      {canIssueInvite(inviteRoleTypes) && issueInvite && <FamilyInviteFormClient mode="create" families={[family]} inviteRoleTypes={inviteRoleTypes}/>}
+        <FamilyMemberFormClient membership={membership} onSuccessPath={`/family/${paramsObj.id}`}
+                                inviteRoleTypes={inviteRoleTypes}/>}
+      {canIssueInvite(inviteRoleTypes) && inviteEdit &&
+        <FamilyInviteFormClient mode="edit" invite={await getInvite(inviteEdit)} inviteRoleTypes={inviteRoleTypes}/>}
+      {canIssueInvite(inviteRoleTypes) && issueInvite &&
+        <FamilyInviteFormClient mode="create" families={[family]} inviteRoleTypes={inviteRoleTypes}/>}
       <div
         className="flex flex-col gap-2"
       >
         <div className="flex flex-row items-center justify-between">
           <BackNavigation href={"/family"}/>
           <div className="text-lg font-semibold mr-auto">{family.name}</div>
+          {issuerFamilyRole !== RoleType.ADMIN && <LeaveFamilyWidget familyName={family.name} familyId={family.id}/>}
         </div>
         <p className="mt-2">Members:</p>
         <VerticalList>

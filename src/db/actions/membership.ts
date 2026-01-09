@@ -1,7 +1,7 @@
 "use server"
 
 import {prisma} from '@/src/db';
-import {Membership, RoleType} from "@prisma/client";
+import {Family, Membership, RoleType} from "@prisma/client";
 import {getAuthorId} from "@/src/db/actions/util";
 
 export type MembershipExtended = NonNullable<Awaited<ReturnType<typeof getMembership>>>;
@@ -30,7 +30,8 @@ export async function getMembership(id: Membership['id']) {
 }
 
 export type RoleTypeLimited = Exclude<keyof typeof RoleType, 'ADMIN'>;
-export async function updateMembership(membership: {roleType: RoleTypeLimited} & Pick<Membership, 'id'>) {
+
+export async function updateMembership(membership: { roleType: RoleTypeLimited } & Pick<Membership, 'id'>) {
   const authorId = await getAuthorId();
 
   await prisma.$transaction(async (tx) => {
@@ -62,4 +63,17 @@ export async function updateMembership(membership: {roleType: RoleTypeLimited} &
       },
     });
   });
+}
+
+export async function deleteMembership(familyId: Family['id']): Promise<boolean> {
+  const userId = await getAuthorId();
+  return (await prisma.membership.deleteMany({
+    where: {
+      familyId,
+      userId,
+      NOT: {
+        roleType: RoleType.ADMIN,
+      },
+    },
+  })).count > 0;
 }

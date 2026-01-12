@@ -3,16 +3,42 @@
 import React from "react";
 import Link from "next/link";
 
-type AnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
+type Common = {
+  className?: string;
+  children?: React.ReactNode;
+};
 
-export default function VerticalListItem(props: AnchorProps) {
-  const isEmptyHref = props.href.length <= 0;
+type DivProps = Common &
+  React.ComponentPropsWithoutRef<'div'> & {
+  href?: null | undefined | '';
+};
 
+type LinkProps = Common & {
+  href: string;
+} & Omit<React.ComponentPropsWithoutRef<typeof Link>, 'href' | 'className' | 'children'>;
+
+export default function VerticalListItem(props: DivProps | LinkProps) {
+  const baseStyle: string = 'flex justify-between items-center bg-white p-4 rounded-xl shadow border border-stone-100 w-full';
+
+  const isEmptyHref: boolean = !('href' in props) || props.href == null || props.href === '';
+
+  if (isEmptyHref) {
+    const {className, children, ...divProps} = props as DivProps;
+    return (
+      <div className={`${baseStyle} ${className ?? ''}`} {...divProps}>
+        {children}
+      </div>
+    );
+  }
+
+  const {className, children, href, ...linkProps} = props as LinkProps;
   return (
     <Link
-      className={`flex justify-between items-center bg-white p-4 rounded-xl shadow border border-stone-100 w-full
-        ${isEmptyHref ? 'cursor-default' : 'hover:bg-gray-100'}`}
-      {...props}
-    />
+      href={href}
+      className={`${baseStyle} hover:bg-gray-100 ${className ?? ''}`}
+      {...linkProps}
+    >
+      {children}
+    </Link>
   );
 }

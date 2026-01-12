@@ -56,7 +56,7 @@ export default async function Families({searchParams}: {
                       getAllowedRoleTypesForInviteIssuer(
                         family.memberships
                           .find(m => m.user.id === session.user.id)!.roleType)
-                        .some(role => role === membership.roleType) ? `?updateMembership=${membership.id}` : ''}
+                        .some(role => role === membership.roleType) ? `?updateMembership=${membership.id}` : null}
                   >
                     <div>{membership.user.name} : {membership.roleType}</div>
                   </VerticalListItem>

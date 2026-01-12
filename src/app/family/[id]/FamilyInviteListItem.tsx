@@ -16,7 +16,7 @@ export default function FamilyInviteListItem({familyInvite, hasAccessToEdit}: {
   return (
     <VerticalListItem
       key={familyInvite.id}
-      href={(!isInviteUsed(familyInvite) && hasAccessToEdit /* @TODO: allow MODERATORs edit their invites */) ? `?inviteEdit=${familyInvite.id}` : ''}
+      href={(!isInviteUsed(familyInvite) && hasAccessToEdit /* @TODO: allow MODERATORs edit their invites */) ? `?inviteEdit=${familyInvite.id}` : null}
     >
       <div
         className={familyInvite.disabled ? 'bg-red-50' : ''}

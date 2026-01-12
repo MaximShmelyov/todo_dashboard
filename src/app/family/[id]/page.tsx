@@ -28,7 +28,7 @@ export default async function FamilyPage({searchParams, params}: {
 
   const issuerFamilyRole: RoleType | undefined = await getFamilyMemberRole(family.id);
   if (!issuerFamilyRole) throw new Error('Not a family member');
-  const hasAccessToEdit = issuerFamilyRole === RoleType.ADMIN;
+  const hasAccessToEdit = issuerFamilyRole === RoleType.ADMIN || issuerFamilyRole === RoleType.MODERATOR;
   const inviteRoleTypes: RoleType[] = getAllowedRoleTypesForInviteIssuer(issuerFamilyRole);
 
   return (
@@ -54,7 +54,7 @@ export default async function FamilyPage({searchParams, params}: {
           {family.memberships.map(membership => (
             <VerticalListItem
               key={membership.id}
-              href={(/*hasAccessToEdit && */isEditableRole(membership.roleType, issuerFamilyRole, inviteRoleTypes)) ? `?updateMembership=${membership.id}` : ''}
+              href={(hasAccessToEdit && isEditableRole(membership.roleType, issuerFamilyRole, inviteRoleTypes)) ? `?updateMembership=${membership.id}` : null}
             >
               <div>{membership.user.name} : {membership.roleType}</div>
             </VerticalListItem>

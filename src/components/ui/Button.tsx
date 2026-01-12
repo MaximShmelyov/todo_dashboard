@@ -1,8 +1,12 @@
 import React from "react";
 import styles from "./Button.module.css";
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+type ButtonVariant = "primary" | "secondary";
 
-export default function Button(props: ButtonProps) {
-  return <button className={styles.button} {...props} />;
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: ButtonVariant,
+};
+
+export default function Button({variant = "primary", className, ...props}: ButtonProps) {
+  return <button className={`${styles.button} ${styles[variant]} ${className}`} {...props} />;
 }

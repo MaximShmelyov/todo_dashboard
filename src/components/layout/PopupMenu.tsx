@@ -1,3 +1,5 @@
+import Button from "@/src/components/ui/Button";
+
 export interface PopupMenuItem {
   readonly id: string;
   readonly title: string;
@@ -23,12 +25,12 @@ export default function PopupMenu({
       {open && <div className="absolute rounded-xl right-0 py-4 mt-8 w-56 shadow-lg bg-white divide-x divide-gray-300 ring-1 ring-black/5">
         <ul className="flex flex-col ">
         {popupMenuItems.map(item => (
-            <button
+            <Button
             key={item.id}
-            className="px-4 mx-4 hover:bg-gray-200 cursor-pointer"
+            className="mx-4"
             onClick={() => onItemSelected(item)}>
             {item.title}
-          </button>
+          </Button>
         ))}
         </ul>
       </div>

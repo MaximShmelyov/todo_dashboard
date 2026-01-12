@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link";
+import LinkButton from "@/src/components/ui/LinkButton";
 
 export type CardAction = {
   title: string,
@@ -17,13 +17,12 @@ export default function Card({title, cardActions, children}: Readonly<{
         <h3 className="text-lg font-semibold mb-3">{title}</h3>
         <div className='flex flex-row justify-around'>
           {cardActions && cardActions.length > 0 && cardActions.map(cardAction => (
-            <Link
+            <LinkButton
               key={cardAction.title}
               href={cardAction.href}
-              className="rounded-xl bg-stone-100 hover:bg-stone-200 text-sm px-2 inline-flex justify-center items-center"
             >
               {cardAction.title}
-            </Link>
+            </LinkButton>
           ))}
         </div>
       </div>

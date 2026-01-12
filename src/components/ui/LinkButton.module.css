@@ -1,0 +1,26 @@
+@reference "tailwindcss";
+
+.linkButton {
+  @apply rounded-xl bg-stone-100 hover:bg-stone-200 text-sm py-1 px-2 inline-flex justify-center items-center;
+  transition: background-color 0.2s;
+}
+
+.primary {
+
+}
+
+.secondary {
+
+}
+
+.add {
+ @apply bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg;
+}
+
+.delete-primary {
+
+}
+
+.delete-secondary {
+
+}

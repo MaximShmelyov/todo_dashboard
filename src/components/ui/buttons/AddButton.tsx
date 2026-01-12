@@ -1,12 +1,11 @@
 import React from "react";
-import Link from "next/link";
+import LinkButton from "@/src/components/ui/LinkButton";
 
 type AnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
 
 export default function AddButton(props: AnchorProps) {
   return (
-    <Link
-      className="flex items-center justify-center inline-flex px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
+    <LinkButton variant={'add'}  className="!px-4 !py-2"
       {...props}
     />
   );

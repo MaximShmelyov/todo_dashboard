@@ -6,6 +6,7 @@ import {Family, RoleType} from "@prisma/client";
 import {createInvite, FamilyInviteExtended, updateInvite} from "@/src/db/actions/invite";
 import {RoleTypeLimited} from "@/src/db/actions/membership";
 import {useEffect} from "react";
+import Button from "@/src/components/ui/Button";
 
 type FamilyInviteFormProps =
   | {
@@ -67,7 +68,7 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
           <h3 className="text-lg text-center">{invite ? `invite` : 'Create invite'}</h3>
           <label>
             Family:
-            <select name="familyId" defaultValue={invite ? invite.family.id : ""} required>
+            <select className="hover:bg-stone-100" name="familyId" defaultValue={invite ? invite.family.id : ""} required>
               {invite ? <option value={invite.family.id}>{invite.family.name}</option>
                 : <>
                   <option value="" disabled>-</option>
@@ -79,7 +80,7 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
           </label>
           <label>
             Role:
-            <select name="roleType" defaultValue={invite ? invite.roleType : RoleType.USER}>
+            <select className="hover:bg-stone-100" name="roleType" defaultValue={invite ? invite.roleType : RoleType.USER}>
               {inviteRoleTypes.map(roleType => (
                 <option key={roleType} value={roleType}>{roleType}</option>
               ))}
@@ -87,12 +88,11 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
           </label>
           <label>Disabled: <input type="checkbox" name="disabled"
                                   defaultChecked={invite ? invite.disabled : false}/></label>
-          <button
-            className="hover:bg-stone-200 rounded-xl"
+          <Button
             type="submit"
           >
             Submit
-          </button>
+          </Button>
         </Form>
       </div>
     </div>

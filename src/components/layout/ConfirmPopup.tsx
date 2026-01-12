@@ -1,10 +1,12 @@
 'use client'
 
-export default function ConfirmPopup({title, onCancel, onConfirm}: { title: string, onCancel: () => void, onConfirm: () => void }) {
+import Button from "@/src/components/ui/Button";
+
+export default function ConfirmPopup({title, onCancelAction, onConfirmAction}: { title: string, onCancelAction: () => void, onConfirmAction: () => void }) {
   return (
     <div
       className="fixed inset-0 bg-black/40 flex justify-center items-center"
-      onClick={() => onCancel()}
+      onClick={() => onCancelAction()}
     >
       <div
         className="flex flex-col gap-8 bg-white p-6 rounded-sm shadow-xl w-60"
@@ -12,18 +14,17 @@ export default function ConfirmPopup({title, onCancel, onConfirm}: { title: stri
       >
         <div className="font-bold text-center">{title}</div>
         <div className="flex flex-row justify-around">
-          <button
-            className="bg-red-400 hover:bg-red-600 text-white py-2 px-4 rounded-xl"
-            onClick={() => onConfirm()}
+          <Button
+            variant={'delete'}
+            onClick={() => onConfirmAction()}
           >
             Yes
-          </button>
-          <button
-            className="bg-stone-400 hover:bg-stone-500 text-white py-2 px-4 rounded-xl"
-            onClick={() => onCancel()}
+          </Button>
+          <Button
+            onClick={() => onCancelAction()}
           >
             No
-          </button>
+          </Button>
         </div>
       </div>
     </div>

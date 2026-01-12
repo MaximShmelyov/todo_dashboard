@@ -5,6 +5,7 @@ import {Family} from "@prisma/client";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
 import LeaveFamilyWidgetDialog from "@/src/app/family/[id]/LeaveFamilyWidgetDialog";
+import Button from "@/src/components/ui/Button";
 
 export default function LeaveFamilyWidget({familyName, familyId}: {
   familyName: Family['name'],
@@ -27,14 +28,14 @@ export default function LeaveFamilyWidget({familyName, familyId}: {
 
   return (
     <>
-      {showDialog && <LeaveFamilyWidgetDialog onConfirm={handleConfirmLeave} onCancel={() => setShowDialog(false)}
+      {showDialog && <LeaveFamilyWidgetDialog onConfirmAction={handleConfirmLeave} onCancelAction={() => setShowDialog(false)}
                                               familyName={familyName}/>}
-      <button
-        className="px-2 py-1 rounded-lg bg-amber-100 hover:bg-amber-200"
+      <Button
+        variant={'secondary'}
         onClick={handleLeaveClick}
       >
         Leave
-      </button>
+      </Button>
     </>
   )
     ;

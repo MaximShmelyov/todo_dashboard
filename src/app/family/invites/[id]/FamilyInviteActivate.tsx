@@ -2,6 +2,7 @@
 
 import {activateInvite, FamilyInvitePublic} from "@/src/db/actions/invite";
 import {useRouter} from "next/navigation";
+import Button from "@/src/components/ui/Button";
 
 export default function FamilyInviteActivate({invite, isMemberAlready}: {
   readonly invite: NonNullable<FamilyInvitePublic>,
@@ -30,28 +31,26 @@ export default function FamilyInviteActivate({invite, isMemberAlready}: {
         <h3 className="text-lg text-center">Do you want to join <span
           className="font-semibold">{`'${invite.family.name}'`}</span> family?</h3>
         <div className="flex flex-row gap-8 w-full justify-center">
-          <button
-            className="bg-green-100 hover:bg-green-200 font-semibold px-2 rounded-lg"
+          <Button
+            variant={'secondary'}
             onClick={handleActivateInvite}
           >
             Join {`'${invite.family.name}'`}
-          </button>
-          <button
-            className="bg-stone-100 hover:bg-stone-200 px-2 rounded-lg"
+          </Button>
+          <Button
             onClick={handleCancel}
           >
             Cancel
-          </button>
+          </Button>
         </div>
       </>}
       {isMemberAlready && <>
         <h3 className="text-lg text-center">Sorry, you are a family member already.</h3>
-        <button
-          className="bg-stone-100 hover:bg-stone-200 px-2 rounded-lg"
+        <Button
           onClick={handleCancel}
         >
           Go to the family page
-        </button>
+        </Button>
       </>}
     </div>
   );

@@ -4,6 +4,7 @@ import Form from "next/form";
 import {createFamily, updateFamily} from "@/src/db/actions/family";
 import Input from "@/src/components/ui/Input";
 import {useRouter} from "next/navigation";
+import Button from "@/src/components/ui/Button";
 
 export default function FamilyFormClient({family}: { family?: [familyId: string, familyName: string] }) {
   const router = useRouter();
@@ -35,12 +36,11 @@ export default function FamilyFormClient({family}: { family?: [familyId: string,
         >
           <h3 className="text-lg text-center">{family ? 'Update' : 'Create'}</h3>
           <Input name='familyName' maxLength={25} defaultValue={family ? family[1] : ''} placeholder="Family name" required/>
-          <button
-            className="rounded-lg border border-stone-100 hover:bg-stone-200"
+          <Button
             type='submit'
           >
             Submit
-          </button>
+          </Button>
         </Form>
       </div>
     </div>

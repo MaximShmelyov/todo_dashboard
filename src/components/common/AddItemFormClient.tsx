@@ -6,6 +6,7 @@ import Input from "@/src/components/ui/Input";
 import {getCollectionRoute, getLabelOfCollectionType} from "@/src/lib/utils";
 import {createItem} from "@/src/db/actions/item";
 import {CollectionType} from "@prisma/client";
+import Button from "@/src/components/ui/Button";
 
 export default function AddItemFormClient({collectionType, collectionId, ownerId}: {
   collectionType: CollectionType,
@@ -43,12 +44,11 @@ export default function AddItemFormClient({collectionType, collectionId, ownerId
             name="body"
             placeholder="Body"/>
 
-          <button
-            className="rounded-lg border border-stone-100 hover:bg-stone-200"
+          <Button
             type="submit"
           >
             Submit
-          </button>
+          </Button>
         </Form>
       </div>
     </div>

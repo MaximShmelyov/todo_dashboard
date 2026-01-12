@@ -3,6 +3,7 @@
 import VerticalListItem from "@/src/components/ui/list/VerticalListItem";
 import {FamilyInvite} from "@prisma/client";
 import {FamilyExtended} from "@/src/db/actions/family";
+import Button from "@/src/components/ui/Button";
 
 export default function FamilyInviteListItem({familyInvite, hasAccessToEdit}: {
   familyInvite: NonNullable<FamilyExtended>['familyInvite'][number],
@@ -25,8 +26,7 @@ export default function FamilyInviteListItem({familyInvite, hasAccessToEdit}: {
         className="font-semibold">{familyInvite.usedBy?.email ?? 'Available'}</span> created
         at {familyInvite.createdAt.toLocaleString()}{familyInvite.disabled ? <span> - disabled</span> : <></>}
       </div>
-      <button
-        className="bg-stone-100 hover:bg-stone-200 cursor-pointer px-2 py-1 rounded-lg"
+      <Button
         hidden={isInviteUsed(familyInvite)}
         onClick={async (e) => {
           e.preventDefault();
@@ -35,7 +35,7 @@ export default function FamilyInviteListItem({familyInvite, hasAccessToEdit}: {
         } }
       >
         Copy
-      </button>
+      </Button>
     </VerticalListItem>
   );
 }

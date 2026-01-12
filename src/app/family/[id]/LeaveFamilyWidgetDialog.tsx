@@ -1,14 +1,16 @@
 'use client'
 
-export default function LeaveFamilyWidgetDialog({onConfirm, onCancel, familyName}: {
-  onConfirm: () => void,
-  onCancel: () => void,
+import Button from "@/src/components/ui/Button";
+
+export default function LeaveFamilyWidgetDialog({onConfirmAction, onCancelAction, familyName}: {
+  onConfirmAction: () => void,
+  onCancelAction: () => void,
   familyName: string
 }) {
   return (
     <div
       className="fixed inset-0 bg-black/40 flex justify-center items-center"
-      onClick={onCancel}
+      onClick={onCancelAction}
     >
       <div
         className="bg-white rounded-xl p-4 flex flex-col gap-4"
@@ -16,18 +18,17 @@ export default function LeaveFamilyWidgetDialog({onConfirm, onCancel, familyName
       >
         <h3 className="fong-lg">Do you want to leave <span className="font-semibold">{familyName}</span>?</h3>
         <div className="flex flex-row justify-around">
-          <button
-            className="bg-amber-100 hover:bg-amber-200 px-2 py-1 rounded-xl cursor-pointer"
-            onClick={onConfirm}
+          <Button
+            variant={'secondary'}
+            onClick={onConfirmAction}
           >
             Confirm
-          </button>
-          <button
-            className="bg-stone-100 hover-bg-stone-200 px-2 py-1 rounded-xl cursor-pointer"
-            onClick={onCancel}
+          </Button>
+          <Button
+            onClick={onCancelAction}
           >
             Cancel
-          </button>
+          </Button>
         </div>
       </div>
     </div>

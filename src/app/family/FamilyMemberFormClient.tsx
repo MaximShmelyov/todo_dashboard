@@ -4,6 +4,7 @@ import {useRouter} from "next/navigation";
 import {RoleType} from "@prisma/client";
 import Form from "next/form";
 import {MembershipExtended, type RoleTypeLimited, updateMembership} from "@/src/db/actions/membership";
+import Button from "@/src/components/ui/Button";
 
 type FamilyMemberFormProps = {
   membership: MembershipExtended,
@@ -36,10 +37,9 @@ export default function FamilyMemberFormClient(props: FamilyMemberFormProps) {
           }}
         >
           <h3 className="text-lg text-center">{membership.user.name} in {membership.family.name}</h3>
-          <div className="flex flex-row gap-2">
-            <label htmlFor="roleType">Role:</label>
+          <label>Role:
             <select
-              className="hover:bg-stone-100"
+              className="ml-1 hover:bg-stone-100"
               name="roleType" defaultValue={membership.roleType}
             >
               {inviteRoleTypes.map(roleType => (
@@ -51,13 +51,12 @@ export default function FamilyMemberFormClient(props: FamilyMemberFormProps) {
                 </option>
               ))}
             </select>
-          </div>
-          <button
-            className="rounded-lg hover:bg-stone-200"
+          </label>
+          <Button
             type="submit"
           >
             Submit
-          </button>
+          </Button>
         </Form>
       </div>
 

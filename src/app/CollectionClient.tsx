@@ -9,6 +9,7 @@ import ConfirmPopup from "@/src/components/layout/ConfirmPopup";
 import {deleteItem, deleteItems, updateItem} from "@/src/db/actions/item";
 import {useRouter} from "next/navigation";
 import {CollectionExtended, deleteCollection} from "@/src/db/actions/collections";
+import Button from "@/src/components/ui/Button";
 
 type AddAction = { id: string, type: 'ADD' };
 type RemoveAction = { id: string, type: 'REMOVE' };
@@ -89,23 +90,23 @@ export default function CollectionClient({collection}: {
   return (
     <>
       {showCollectionDeleteDialog &&
-        <ConfirmPopup title={`Delete ${getLabelOfCollectionType(collection.type)}`} onCancel={onCollectionDeleteCancel}
-                      onConfirm={onCollectionDeleteConfirm}/>}
+        <ConfirmPopup title={`Delete ${getLabelOfCollectionType(collection.type)}`} onCancelAction={onCollectionDeleteCancel}
+                      onConfirmAction={onCollectionDeleteConfirm}/>}
       {showSingleDeleteDialog &&
-        <ConfirmPopup title="Are you sure?" onConfirm={() => onSingleDeleteConfirm(deletingId)}
-                      onCancel={onSingleDeleteCancel}/>}
+        <ConfirmPopup title="Are you sure?" onConfirmAction={() => onSingleDeleteConfirm(deletingId)}
+                      onCancelAction={onSingleDeleteCancel}/>}
       {showMultiDeleteDialog &&
-        <ConfirmPopup title="Are you sure?" onConfirm={onMultiDeleteConfirm} onCancel={onMultiDeleteCancel}/>}
+        <ConfirmPopup title="Are you sure?" onConfirmAction={onMultiDeleteConfirm} onCancelAction={onMultiDeleteCancel}/>}
       <div className="">
         <BackNavigation href={getCollectionRoute(collection.type)}/>
         <div className="flex flex-row justify-between">
           <div className="text-lg font-semibold">{collection.title}</div>
-          {idsToDeleteState.length !== 0 && <button
+          {idsToDeleteState.length !== 0 && <Button
             onClick={onMultiDelete}
-            className="rounded-lg bg-red-500 hover:bg-red-600 px-2 text-white"
+            variant={'delete'}
           >
             Delete selected
-          </button>}
+          </Button>}
         </div>
         <div>{collection.description}</div>
         <div>{collection.family?.name ?? '(private)'}</div>
@@ -129,27 +130,29 @@ export default function CollectionClient({collection}: {
                     }}
                   />
                   <div className={`flex-3 ${item.done ? '' : 'font-semibold'}`}>{item.title}</div>
-                  <button
-                    className={`flex-1 rounded-xl px-1 h-8 ${item.done ? `bg-green-200 hover:bg-green-300` : `bg-sky-200 hover:bg-sky-300`}`}
+                  <Button
+                    variant={item.done ? 'itemDone' : 'itemTodo'}
+                    className="flex-1 h-8 leading-4"
                     onClick={async () => {
                       await toggleItemDone(item);
                       router.refresh();
                     }}
                   >
                     {item.done ? 'Done' : 'Todo'}
-                  </button>
+                  </Button>
                 </div>
                 <div className="ml-4">{item.body}</div>
                 {/*<div className="ml-4">{item.dueDate && <div>Due date:{item.dueDate.toLocaleString()}</div>}</div>*/}
                 {/*<div className="ml-4">{item.updatedAt && ("Modified at: " + item.updatedAt.toLocaleString())}</div>*/}
                 <div className="flex flex-row mt-4 justify-between items-end">
-                  <button
-                    className="rounded-xl bg-red-400 px-1 text-white hover:bg-red-600"
+                  <Button
+                    variant={'delete'}
+                    className={'!p-1 !rounded-xl'}
                     onClick={() => onSingleDelete(item.id)}
                     aria-label="Delete"
                   >
                     Delete
-                  </button>
+                  </Button>
                   <div className="ml-auto">{"by " + item.createdBy.name}</div>
                 </div>
               </li>
@@ -164,12 +167,13 @@ export default function CollectionClient({collection}: {
             </AddButton>
           </div>
           <div className="flex mt-8 px-2">
-            <button
+            <Button
               onClick={onCollectionDelete}
-              className="ml-auto rounded-lg bg-red-400 hover:bg-red-600 px-1 text-white"
+              variant={'delete'}
+              className={"ml-auto"}
             >
               {`Delete ${getLabelOfCollectionType(collection.type)}`}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

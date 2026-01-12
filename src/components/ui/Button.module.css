@@ -5,7 +5,6 @@
   padding: 0.5rem 1rem;
   font-size: 1rem;
   font-weight: 500;
-  border: 1px solid #ccc;
   cursor: pointer;
   transition: background 0.2s, border 0.2s;
   outline: none;
@@ -15,14 +14,27 @@
 .primary {
   color: #222;
   background: #f5f5f5;
+  border: 1px solid #ccc;
 }
 
 .secondary {
-
+  @apply px-2 py-1 rounded-lg bg-amber-100 hover:bg-amber-200;
 }
 
-.button:hover,
-.button:focus {
+.delete {
+  @apply bg-red-400 hover:bg-red-600 px-2 text-white;
+}
+
+.itemTodo {
+  @apply rounded-xl px-1 bg-sky-200 hover:bg-sky-300;
+}
+
+.itemDone {
+  @apply rounded-xl px-1 bg-green-200 hover:bg-green-300;
+}
+
+.button.primary:hover,
+.button.primary:focus {
   background: #e0e0e0;
   border-color: #888;
 }

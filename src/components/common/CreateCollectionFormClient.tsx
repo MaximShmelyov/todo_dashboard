@@ -8,6 +8,7 @@ import Input from "@/src/components/ui/Input";
 import {createNote} from "@/src/db/actions/notes";
 import {getCollectionRoute, getLabelOfCollectionType} from "@/src/lib/utils";
 import {createTodo} from "@/src/db/actions/todos";
+import Button from "@/src/components/ui/Button";
 
 const exhaustiveGuardCollectionType = (_: never): never => {
   throw new Error('Got unexpected value here.');
@@ -73,12 +74,11 @@ export default function CreateCollectionFormClient({collectionType, families}: {
             ))}
           </select>
 
-          <button
-            className="rounded-lg border border-stone-100 hover:bg-stone-200"
+          <Button
             type="submit"
           >
             Create
-          </button>
+          </Button>
         </Form>
       </div>
     </div>

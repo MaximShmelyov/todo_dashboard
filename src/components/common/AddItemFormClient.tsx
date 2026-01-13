@@ -17,6 +17,7 @@ export default function AddItemFormClient({collectionType, collectionId, ownerId
 
   return (
     <div
+      data-testid="overlay"
       className="fixed inset-0 bg-black/40 flex justify-center items-center"
       onClick={() => router.back()}
     >

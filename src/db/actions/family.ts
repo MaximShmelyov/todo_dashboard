@@ -91,24 +91,25 @@ export async function updateFamily(family: Partial<Omit<Family, 'id'>> & Require
   });
 }
 
-export async function createFamily(name: Family['name']): Promise<string | null> {
+export async function createFamily(name: Family['name']): Promise<string> {
   const authorId = await getAuthorId();
 
-  await prisma.$transaction(async (transaction) => {
-      const createdFamily = await transaction.family.create({
-        data: {
-          name,
-        },
-      });
-      await transaction.membership.create({
-        data: {
-          familyId: createdFamily.id,
-          userId: authorId,
-          roleType: RoleType.ADMIN,
-        },
-      });
-      return createdFamily.id;
-    }
-  );
-  return null;
+  return prisma.$transaction(async (transaction) => {
+    const createdFamily = await transaction.family.create(
+      {
+      data: {
+        name,
+      },
+    });
+
+    await transaction.membership.create({
+      data: {
+        familyId: createdFamily.id,
+        userId: authorId,
+        roleType: RoleType.ADMIN,
+      },
+    });
+
+    return createdFamily.id;
+  });
 }

@@ -3,8 +3,7 @@ import "@testing-library/jest-dom";
 
 import React from "react";
 import {describe, it, expect, vi, beforeEach} from "vitest";
-import {getByTestId, render, screen} from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import {render, screen, fireEvent, getByTestId, waitFor} from "@testing-library/react";
 
 import AddItemFormClient from "@/src/components/common/AddItemFormClient";
 import {CollectionType} from "@prisma/client";
@@ -81,32 +80,32 @@ describe("AddItemFormClient", () => {
       />
     );
 
-  it("closes on overlay click", async () => {
-    const user = userEvent.setup();
+  it("closes on overlay click", () => {
     const {container} = renderCmp();
-
     const overlay = getByTestId(container, 'overlay');
-    await user.click(overlay);
 
+    fireEvent.click(overlay);
     expect(backMock).toHaveBeenCalledOnce();
   });
 
-  it("does NOT close when clicking inside modal", async () => {
-    const user = userEvent.setup();
+  it("does NOT close when clicking inside modal", () => {
     renderCmp();
 
-    await user.click(screen.getByRole("button", {name: /submit/i}));
+    fireEvent.click(screen.getByRole("button", {name: /submit/i}));
     expect(backMock).not.toHaveBeenCalled();
   });
 
   it("submits form and navigates", async () => {
-    const user = userEvent.setup();
     renderCmp();
 
-    await user.type(screen.getByPlaceholderText("Title"), "Milk");
-    await user.type(screen.getByPlaceholderText("Body"), "2L");
+    fireEvent.change(screen.getByPlaceholderText("Title"), {target: {value: "Milk"}});
+    fireEvent.change(screen.getByPlaceholderText("Body"), {target: {value: "2L"}});
 
-    await user.click(screen.getByRole("button", {name: /submit/i}));
+    fireEvent.click(screen.getByRole("button", {name: /submit/i}));
+
+    await waitFor(() => {
+      expect(pushMock).toHaveBeenCalledWith("/collections/col-123");
+    });
 
     expect(createItemMock).toHaveBeenCalledWith({
       title: "Milk",
@@ -114,8 +113,6 @@ describe("AddItemFormClient", () => {
       collectionId: "col-123",
       createdById: "user-1",
     });
-
-    expect(pushMock).toHaveBeenCalledWith("/collections/col-123");
   });
 
   it("renders collection label in title", () => {

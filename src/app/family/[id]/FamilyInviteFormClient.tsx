@@ -1,29 +1,29 @@
-'use client'
+"use client";
 
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import Form from "next/form";
-import {Family, RoleType} from "@prisma/client";
-import {createInvite, FamilyInviteExtended, updateInvite} from "@/src/db/actions/invite";
-import {RoleTypeLimited} from "@/src/db/actions/membership";
-import {useEffect} from "react";
+import { Family, RoleType } from "@prisma/client";
+import { createInvite, FamilyInviteExtended, updateInvite } from "@/src/db/actions/invite";
+import { RoleTypeLimited } from "@/src/db/actions/membership";
+import { useEffect } from "react";
 import Button from "@/src/components/ui/Button";
 
 type FamilyInviteFormProps =
   | {
-  mode: 'create',
-  families: Family[],
-  inviteRoleTypes: RoleType[],
-}
+      mode: "create";
+      families: Family[];
+      inviteRoleTypes: RoleType[];
+    }
   | {
-  mode: 'edit',
-  invite: FamilyInviteExtended,
-  inviteRoleTypes: RoleType[],
-};
+      mode: "edit";
+      invite: FamilyInviteExtended;
+      inviteRoleTypes: RoleType[];
+    };
 export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
   const router = useRouter();
   const inviteRoleTypes = props.inviteRoleTypes;
-  const invite: FamilyInviteExtended = props.mode === 'edit' ? props.invite : null;
-  const families: Family[] | null = props.mode === 'create' ? props.families : null;
+  const invite: FamilyInviteExtended = props.mode === "edit" ? props.invite : null;
+  const families: Family[] | null = props.mode === "create" ? props.families : null;
 
   useEffect(() => {
     if ((!invite && (!families || families.length === 0)) || (invite && !!invite.usedBy))
@@ -39,23 +39,16 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
       className="fixed inset-0 bg-black/40 flex justify-center items-center"
       onClick={() => router.back()}
     >
-      <div
-        className="rounded-xl bg-white shadow-lg p-6"
-        onClick={e => e.stopPropagation()}
-      >
+      <div className="rounded-xl bg-white shadow-lg p-6" onClick={(e) => e.stopPropagation()}>
         <Form
           className="flex flex-col gap-4"
           action={async (formData) => {
-            const familyId = formData.get('familyId')!.toString();
-            const disabled = formData.has('disabled');
-            const roleType = formData.get('roleType')!.toString() as RoleTypeLimited;
-            if (props.mode === 'create') {
-              await createInvite(
-                disabled,
-                familyId,
-                roleType,
-              );
-            } else if (props.mode === 'edit') {
+            const familyId = formData.get("familyId")!.toString();
+            const disabled = formData.has("disabled");
+            const roleType = formData.get("roleType")!.toString() as RoleTypeLimited;
+            if (props.mode === "create") {
+              await createInvite(disabled, familyId, roleType);
+            } else if (props.mode === "edit") {
               await updateInvite({
                 id: invite!.id,
                 disabled,
@@ -65,34 +58,54 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
             router.replace(`/family/${familyId}`);
           }}
         >
-          <h3 className="text-lg text-center">{invite ? `invite` : 'Create invite'}</h3>
+          <h3 className="text-lg text-center">{invite ? `invite` : "Create invite"}</h3>
           <label>
             Family:
-            <select className="hover:bg-stone-100" name="familyId" defaultValue={invite ? invite.family.id : ""} required>
-              {invite ? <option value={invite.family.id}>{invite.family.name}</option>
-                : <>
-                  <option value="" disabled>-</option>
-                  {families!.map(family => (
-                    <option key={family.id} value={family.id}>{family.name}</option>
+            <select
+              className="hover:bg-stone-100"
+              name="familyId"
+              defaultValue={invite ? invite.family.id : ""}
+              required
+            >
+              {invite ? (
+                <option value={invite.family.id}>{invite.family.name}</option>
+              ) : (
+                <>
+                  <option value="" disabled>
+                    -
+                  </option>
+                  {families!.map((family) => (
+                    <option key={family.id} value={family.id}>
+                      {family.name}
+                    </option>
                   ))}
-                </>}
+                </>
+              )}
             </select>
           </label>
           <label>
             Role:
-            <select className="hover:bg-stone-100" name="roleType" defaultValue={invite ? invite.roleType : RoleType.USER}>
-              {inviteRoleTypes.map(roleType => (
-                <option key={roleType} value={roleType}>{roleType}</option>
+            <select
+              className="hover:bg-stone-100"
+              name="roleType"
+              defaultValue={invite ? invite.roleType : RoleType.USER}
+            >
+              {inviteRoleTypes.map((roleType) => (
+                <option key={roleType} value={roleType}>
+                  {roleType}
+                </option>
               ))}
             </select>
           </label>
-          <label>Disabled: <input type="checkbox" name="disabled"
-                                  defaultChecked={invite ? invite.disabled : false}/></label>
-          <Button
-            type="submit"
-          >
-            Submit
-          </Button>
+          <label>
+            Disabled:{" "}
+            <input
+              type="checkbox"
+              name="disabled"
+              defaultChecked={invite ? invite.disabled : false}
+            />
+          </label>
+          <Button type="submit">Submit</Button>
         </Form>
       </div>
     </div>

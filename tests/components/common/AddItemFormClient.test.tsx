@@ -2,13 +2,13 @@
 import "@testing-library/jest-dom";
 
 import React from "react";
-import {describe, it, expect, vi, beforeEach} from "vitest";
-import {render, screen, fireEvent, getByTestId, waitFor} from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent, getByTestId, waitFor } from "@testing-library/react";
 
 import AddItemFormClient from "@/src/components/common/AddItemFormClient";
-import {CollectionType} from "@prisma/client";
-import {ButtonVariant} from "@/src/components/ui/Button";
-import {createItem} from "@/src/db/actions/item";
+import { CollectionType } from "@prisma/client";
+import { ButtonVariant } from "@/src/components/ui/Button";
+import { createItem } from "@/src/db/actions/item";
 
 /* ------------------ mocks ------------------ */
 
@@ -16,11 +16,15 @@ const backMock = vi.fn();
 const pushMock = vi.fn();
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({back: backMock, push: pushMock}),
+  useRouter: () => ({ back: backMock, push: pushMock }),
 }));
 
 vi.mock("next/form", () => ({
-  default: ({action, children, ...props}: React.ComponentProps<"form"> & {
+  default: ({
+    action,
+    children,
+    ...props
+  }: React.ComponentProps<"form"> & {
     action: (formData: FormData) => Promise<unknown>;
   }) => (
     <form
@@ -40,11 +44,12 @@ vi.mock("@/src/components/ui/Input", () => ({
 }));
 
 vi.mock("@/src/components/ui/Button", () => ({
-  default: ({children, ...props}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    variant?: ButtonVariant,
-  }) => (
-    <button {...props}>{children}</button>
-  ),
+  default: ({
+    children,
+    ...props
+  }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    variant?: ButtonVariant;
+  }) => <button {...props}>{children}</button>,
 }));
 
 type CreateItemInputParams = Parameters<typeof createItem>;
@@ -56,7 +61,8 @@ vi.mock("@/src/db/actions/item", () => ({
 const getCollectionRouteMock = vi.fn();
 const getLabelOfCollectionTypeMock = vi.fn();
 vi.mock("@/src/lib/utils", () => ({
-  getCollectionRoute: (collectionType: CollectionType): string => getCollectionRouteMock(collectionType),
+  getCollectionRoute: (collectionType: CollectionType): string =>
+    getCollectionRouteMock(collectionType),
   getLabelOfCollectionType: (collectionType: CollectionType): string =>
     getLabelOfCollectionTypeMock(collectionType),
 }));
@@ -72,17 +78,11 @@ describe("AddItemFormClient", () => {
   });
 
   const renderCmp = () =>
-    render(
-      <AddItemFormClient
-        collectionType="SHOPPING"
-        collectionId="col-123"
-        ownerId="user-1"
-      />
-    );
+    render(<AddItemFormClient collectionType="SHOPPING" collectionId="col-123" ownerId="user-1" />);
 
   it("closes on overlay click", () => {
-    const {container} = renderCmp();
-    const overlay = getByTestId(container, 'overlay');
+    const { container } = renderCmp();
+    const overlay = getByTestId(container, "overlay");
 
     fireEvent.click(overlay);
     expect(backMock).toHaveBeenCalledOnce();
@@ -91,17 +91,17 @@ describe("AddItemFormClient", () => {
   it("does NOT close when clicking inside modal", () => {
     renderCmp();
 
-    fireEvent.click(screen.getByRole("button", {name: /submit/i}));
+    fireEvent.click(screen.getByRole("button", { name: /submit/i }));
     expect(backMock).not.toHaveBeenCalled();
   });
 
   it("submits form and navigates", async () => {
     renderCmp();
 
-    fireEvent.change(screen.getByPlaceholderText("Title"), {target: {value: "Milk"}});
-    fireEvent.change(screen.getByPlaceholderText("Body"), {target: {value: "2L"}});
+    fireEvent.change(screen.getByPlaceholderText("Title"), { target: { value: "Milk" } });
+    fireEvent.change(screen.getByPlaceholderText("Body"), { target: { value: "2L" } });
 
-    fireEvent.click(screen.getByRole("button", {name: /submit/i}));
+    fireEvent.click(screen.getByRole("button", { name: /submit/i }));
 
     await waitFor(() => {
       expect(pushMock).toHaveBeenCalledWith("/collections/col-123");
@@ -117,8 +117,6 @@ describe("AddItemFormClient", () => {
 
   it("renders collection label in title", () => {
     renderCmp();
-    expect(
-      screen.getByText("Add item to Shopping List")
-    ).toBeInTheDocument();
+    expect(screen.getByText("Add item to Shopping List")).toBeInTheDocument();
   });
 });

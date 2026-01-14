@@ -1,17 +1,21 @@
-"use client"
+"use client";
 
-import {useRouter} from "next/navigation"
-import Form from "next/form"
+import { useRouter } from "next/navigation";
+import Form from "next/form";
 import Input from "@/src/components/ui/Input";
-import {getCollectionRoute, getLabelOfCollectionType} from "@/src/lib/utils";
-import {createItem} from "@/src/db/actions/item";
-import {CollectionType} from "@prisma/client";
+import { getCollectionRoute, getLabelOfCollectionType } from "@/src/lib/utils";
+import { createItem } from "@/src/db/actions/item";
+import { CollectionType } from "@prisma/client";
 import Button from "@/src/components/ui/Button";
 
-export default function AddItemFormClient({collectionType, collectionId, ownerId}: {
-  collectionType: CollectionType,
-  collectionId: string,
-  ownerId: string,
+export default function AddItemFormClient({
+  collectionType,
+  collectionId,
+  ownerId,
+}: {
+  collectionType: CollectionType;
+  collectionId: string;
+  ownerId: string;
 }) {
   const router = useRouter();
 
@@ -21,12 +25,12 @@ export default function AddItemFormClient({collectionType, collectionId, ownerId
       className="fixed inset-0 bg-black/40 flex justify-center items-center"
       onClick={() => router.back()}
     >
-      <div className="rounded-xl bg-white shadow-lg p-6" onClick={e => e.stopPropagation()}>
+      <div className="rounded-xl bg-white shadow-lg p-6" onClick={(e) => e.stopPropagation()}>
         <Form
           action={async (formData) => {
             await createItem({
-              title: formData.get('title')!.toString(),
-              body: formData.get('body')!.toString(),
+              title: formData.get("title")!.toString(),
+              body: formData.get("body")!.toString(),
               collectionId,
               createdById: ownerId,
             });
@@ -35,23 +39,12 @@ export default function AddItemFormClient({collectionType, collectionId, ownerId
           className="flex flex-col gap-4"
         >
           <h3 className="text-lg mb-4">Add item to {getLabelOfCollectionType(collectionType)}</h3>
-          <Input
-            id="create_form_title"
-            name="title"
-            placeholder="Title"
-            required/>
-          <Input
-            id="create_form_body"
-            name="body"
-            placeholder="Body"/>
+          <Input id="create_form_title" name="title" placeholder="Title" required />
+          <Input id="create_form_body" name="body" placeholder="Body" />
 
-          <Button
-            type="submit"
-          >
-            Submit
-          </Button>
+          <Button type="submit">Submit</Button>
         </Form>
       </div>
     </div>
-  )
+  );
 }

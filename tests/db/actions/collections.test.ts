@@ -1,4 +1,4 @@
-import {describe, it, expect, beforeEach, vi} from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 
 /* ------------------ mocks ------------------ */
 
@@ -20,8 +20,8 @@ vi.mock("@/src/db/actions/util", () => ({
 
 /* ------------------ imports ------------------ */
 
-import {prisma} from "@/src/db";
-import {getAuthorId, getFamiliesIds} from "@/src/db/actions/util";
+import { prisma } from "@/src/db";
+import { getAuthorId, getFamiliesIds } from "@/src/db/actions/util";
 
 import {
   createCollection,
@@ -29,7 +29,7 @@ import {
   getCollections,
   deleteCollection,
 } from "@/src/db/actions/collections";
-import {Collection, CollectionType} from "@prisma/client";
+import { Collection, CollectionType } from "@prisma/client";
 
 /* ------------------ tests ------------------ */
 
@@ -44,9 +44,9 @@ describe("collections server actions", () => {
 
   describe("createCollection", () => {
     it("throws error if title is missing", async () => {
-      await expect(
-        createCollection("", CollectionType.NOTE, "fam-1")
-      ).rejects.toThrow("Missing required title field");
+      await expect(createCollection("", CollectionType.NOTE, "fam-1")).rejects.toThrow(
+        "Missing required title field",
+      );
 
       expect(prisma.collection.create).not.toHaveBeenCalled();
     });
@@ -91,14 +91,11 @@ describe("collections server actions", () => {
       expect(prisma.collection.findFirst).toHaveBeenCalledWith(
         expect.objectContaining({
           where: {
-            OR: [
-              {ownerId},
-              {familyId: {in: families}},
-            ],
+            OR: [{ ownerId }, { familyId: { in: families } }],
             id: "c1",
             type: CollectionType.NOTE,
           },
-        })
+        }),
       );
 
       expect(result).toBe(row);
@@ -137,14 +134,11 @@ describe("collections server actions", () => {
 
       expect(prisma.collection.findMany).toHaveBeenCalledWith({
         where: {
-          OR: [
-            {ownerId},
-            {familyId: {in: families}},
-          ],
+          OR: [{ ownerId }, { familyId: { in: families } }],
           type: CollectionType.NOTE,
         },
-        orderBy: {createdAt: "desc"},
-        include: {family: true},
+        orderBy: { createdAt: "desc" },
+        include: { family: true },
       });
 
       expect(result).toEqual(rows);
@@ -153,7 +147,7 @@ describe("collections server actions", () => {
 
   describe("deleteCollection", () => {
     it("deletes collection if allowed", async () => {
-      const del = {count: 1};
+      const del = { count: 1 };
       vi.mocked(prisma.collection.deleteMany).mockResolvedValue(del);
 
       const result = await deleteCollection("c1");
@@ -161,10 +155,7 @@ describe("collections server actions", () => {
       expect(prisma.collection.deleteMany).toHaveBeenCalledWith({
         where: {
           id: "c1",
-          OR: [
-            {ownerId},
-            {familyId: {in: families}},
-          ],
+          OR: [{ ownerId }, { familyId: { in: families } }],
         },
       });
 

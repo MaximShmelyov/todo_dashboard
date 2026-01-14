@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { ApiError, ApiSuccess } from "@/src/types/api";
-import {RegisterBodySchema} from "@/src/app/api/v1/auth/schema";
+import { RegisterBodySchema } from "@/src/app/api/v1/auth/schema";
 
 type RegisterData = { url: string };
 
@@ -9,10 +9,7 @@ export async function POST(req: Request) {
   try {
     json = await req.json();
   } catch {
-    return NextResponse.json<ApiError>(
-      { success: false, error: "Invalid JSON" },
-      { status: 400 },
-    );
+    return NextResponse.json<ApiError>({ success: false, error: "Invalid JSON" }, { status: 400 });
   }
 
   const parsed = RegisterBodySchema.safeParse(json);

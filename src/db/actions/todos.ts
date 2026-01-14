@@ -1,21 +1,24 @@
-"use server"
+"use server";
 
-import {Collection, CollectionType} from "@prisma/client";
+import { Collection, CollectionType } from "@prisma/client";
 import {
   CollectionExtended,
   CollectionsExtended,
   createCollection,
   getCollection,
-  getCollections
+  getCollections,
 } from "@/src/db/actions/collections";
 
 const collectionType = CollectionType.TODO;
 
-export async function createTodo(title: Collection['title'], familyId: Collection['familyId']): Promise<void> {
+export async function createTodo(
+  title: Collection["title"],
+  familyId: Collection["familyId"],
+): Promise<void> {
   return createCollection(title, collectionType, familyId);
 }
 
-export async function getTodo(id: Collection['id']): Promise<CollectionExtended> {
+export async function getTodo(id: Collection["id"]): Promise<CollectionExtended> {
   return getCollection(id, collectionType);
 }
 

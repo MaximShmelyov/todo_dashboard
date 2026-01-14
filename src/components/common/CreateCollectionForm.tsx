@@ -1,14 +1,14 @@
-"use server"
+"use server";
 
-import { CollectionType } from "@prisma/client"
-import { prisma } from "@/src/db"
-import { getSession } from "@/src/lib/auth"
-import CreateCollectionFormClient from "./CreateCollectionFormClient"
+import { CollectionType } from "@prisma/client";
+import { prisma } from "@/src/db";
+import { getSession } from "@/src/lib/auth";
+import CreateCollectionFormClient from "./CreateCollectionFormClient";
 
 export default async function CreateCollectionForm({
-                                                     collectionType,
-                                                   }: {
-  collectionType: CollectionType
+  collectionType,
+}: {
+  collectionType: CollectionType;
 }) {
   const session = await getSession();
 
@@ -22,10 +22,5 @@ export default async function CreateCollectionForm({
     },
   });
 
-  return (
-    <CreateCollectionFormClient
-      collectionType={collectionType}
-      families={families}
-    />
-  )
+  return <CreateCollectionFormClient collectionType={collectionType} families={families} />;
 }

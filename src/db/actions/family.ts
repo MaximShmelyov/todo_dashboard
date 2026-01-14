@@ -1,9 +1,9 @@
-"use server"
+"use server";
 
 import { prisma } from "@/src/db";
-import {$Enums, Family} from "@prisma/client";
+import { $Enums, Family } from "@prisma/client";
 import RoleType = $Enums.RoleType;
-import {getAuthorId} from "@/src/db/actions/util";
+import { getAuthorId } from "@/src/db/actions/util";
 
 export async function getFamilies() {
   const userId = await getAuthorId();
@@ -36,7 +36,7 @@ export async function getFamilies() {
 
 export type FamilyExtended = Awaited<ReturnType<typeof getFamily>>;
 
-export async function getFamily(id: Family['id']) {
+export async function getFamily(id: Family["id"]) {
   return await prisma.family.findUnique({
     where: {
       id,
@@ -56,7 +56,7 @@ export async function getFamily(id: Family['id']) {
           roleType: true,
         },
         orderBy: {
-          roleType: 'desc',
+          roleType: "desc",
         },
       },
       familyInvite: {
@@ -80,7 +80,9 @@ export async function getFamily(id: Family['id']) {
   });
 }
 
-export async function updateFamily(family: Partial<Omit<Family, 'id'>> & Required<Pick<Family, 'id'>>) {
+export async function updateFamily(
+  family: Partial<Omit<Family, "id">> & Required<Pick<Family, "id">>,
+) {
   await prisma.family.update({
     where: {
       id: family.id,
@@ -91,12 +93,11 @@ export async function updateFamily(family: Partial<Omit<Family, 'id'>> & Require
   });
 }
 
-export async function createFamily(name: Family['name']): Promise<string> {
+export async function createFamily(name: Family["name"]): Promise<string> {
   const authorId = await getAuthorId();
 
   return prisma.$transaction(async (transaction) => {
-    const createdFamily = await transaction.family.create(
-      {
+    const createdFamily = await transaction.family.create({
       data: {
         name,
       },

@@ -17,9 +17,5 @@ export default function Login() {
 
   if (status === "loading") return null;
 
-  return (
-    <Button onClick={() => signIn("google")}>
-      Login via Google
-    </Button>
-  );
+  return <Button onClick={() => signIn("google")}>Login via Google</Button>;
 }

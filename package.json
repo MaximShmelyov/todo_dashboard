@@ -38,7 +38,7 @@
     "eslint-config-next": "^16.0.7",
     "jsdom": "^27.4.0",
     "prettier": "^3.7.4",
-    "prisma": "^6.19.2",
+    "prisma": "^7.1.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.0.17"

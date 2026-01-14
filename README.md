@@ -45,7 +45,6 @@ A modern, full-featured dashboard for managing todos, notes, and shopping lists 
    ```
 
 3. **Configure environment variables:**
-
    - Copy .env.example to .env and fill in your database and authentication secrets.
 
 4. **Set up the database:**
@@ -59,20 +58,25 @@ A modern, full-featured dashboard for managing todos, notes, and shopping lists 
 
    ```bash
    npm run dev
+   ```
 
 ### Testing
+
 Run all tests with coverage:
-   ```bash
-   npm run test:coverage
-   ```
+
+```bash
+npm run test:coverage
+```
 
 ### Linting & Formatting
-   ```bash
-      npm run lint
-      npm run format
-   ```
+
+```bash
+npm run lint
+npm run format
+```
 
 ### Project Structure
+
 - src/app/ — Next.js app routes and pages
 - src/components/ — Reusable UI components
 - src/db/ — Prisma models and data access logic

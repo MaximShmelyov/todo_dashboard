@@ -8,6 +8,13 @@ export default defineConfig({
     clearMocks: true,
     restoreMocks: true,
     mockReset: true,
+    coverage: {
+      provider: "v8",
+      include: ["src/**/*.{ts,tsx}"],
+      reporter: ["text", "json-summary", "html", "lcov"],
+      reportsDirectory: "./coverage",
+      exclude: ["tests/**", "**/*.test.{ts,tsx}", "**/*.d.ts", ".next/**", "next-env.d.ts"],
+    },
   },
   resolve: {
     alias: {

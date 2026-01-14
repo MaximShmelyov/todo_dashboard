@@ -1,6 +1,6 @@
 'use server'
 
-import {Collection, CollectionType} from "@prisma/client";
+import {CollectionType} from "@prisma/client";
 import {getSession} from "@/src/lib/auth"
 import AddItemForm from "@/src/components/common/AddItemForm";
 import CollectionClient from "@/src/app/CollectionClient";

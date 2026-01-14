@@ -4,7 +4,6 @@ import pg from 'pg';
 
 declare global {
   // Prevent multiple instances in dev (Next.js HMR)
-  // eslint-disable-next-line no-var
   var prisma: PrismaClient | undefined;
 }
 

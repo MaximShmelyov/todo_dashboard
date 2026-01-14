@@ -1,6 +1,6 @@
 "use client"
 
-import React, {useState, useRef, useEffect, useCallback, useMemo} from "react";
+import React, {useState, useRef, useEffect, useMemo} from "react";
 import {signIn, signOut, useSession} from "next-auth/react";
 import PopupMenu, {PopupMenuItem} from "@/src/components/layout/PopupMenu";
 import Image from "next/image";

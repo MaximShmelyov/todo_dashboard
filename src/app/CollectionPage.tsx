@@ -1,15 +1,19 @@
-'use server'
+"use server";
 
-import {CollectionType} from "@prisma/client";
-import {getSession} from "@/src/lib/auth"
+import { CollectionType } from "@prisma/client";
+import { getSession } from "@/src/lib/auth";
 import AddItemForm from "@/src/components/common/AddItemForm";
 import CollectionClient from "@/src/app/CollectionClient";
-import {CollectionExtended, getCollection} from "@/src/db/actions/collections";
+import { CollectionExtended, getCollection } from "@/src/db/actions/collections";
 
-export default async function CollectionPage({collectionType, params, searchParams}: {
-  collectionType: CollectionType,
-  params: Promise<{ id: string }>,
-  searchParams: Promise<{ create?: string }>
+export default async function CollectionPage({
+  collectionType,
+  params,
+  searchParams,
+}: {
+  collectionType: CollectionType;
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ create?: string }>;
 }) {
   const session = await getSession();
   const paramsObj = await params;
@@ -24,8 +28,8 @@ export default async function CollectionPage({collectionType, params, searchPara
 
   return (
     <>
-      <CollectionClient collection={collection}/>
-      {showForm && <AddItemForm collectionType={collectionType} collectionId={collection.id}/>}
+      <CollectionClient collection={collection} />
+      {showForm && <AddItemForm collectionType={collectionType} collectionId={collection.id} />}
     </>
   );
 }

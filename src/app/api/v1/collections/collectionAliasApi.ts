@@ -2,14 +2,20 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/src/lib/auth";
 import { prisma } from "@/src/db";
 import type { ApiError, ApiSuccess, Paginated } from "@/src/types/api";
-import type {Collection, CollectionType} from "@prisma/client";
-import { PaginationQuerySchema, CreateCollectionBodySchema } from "@/src/app/api/v1/collections/schema";
+import type { Collection, CollectionType } from "@prisma/client";
+import {
+  PaginationQuerySchema,
+  CreateCollectionBodySchema,
+} from "@/src/app/api/v1/collections/schema";
 
 export function createCollectionAliasApi(collectionType: CollectionType) {
   async function GET(req: Request) {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json<ApiError>({ success: false, error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json<ApiError>(
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
+      );
     }
 
     const url = new URL(req.url);
@@ -20,7 +26,11 @@ export function createCollectionAliasApi(collectionType: CollectionType) {
     const parsed = PaginationQuerySchema.safeParse(query);
     if (!parsed.success) {
       return NextResponse.json<ApiError>(
-        { success: false, error: "Validation error", details: parsed.error.flatten((issue) => issue.message) },
+        {
+          success: false,
+          error: "Validation error",
+          details: parsed.error.flatten((issue) => issue.message),
+        },
         { status: 400 },
       );
     }
@@ -52,21 +62,31 @@ export function createCollectionAliasApi(collectionType: CollectionType) {
   async function POST(req: Request) {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json<ApiError>({ success: false, error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json<ApiError>(
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
+      );
     }
 
     let json: unknown;
     try {
       json = await req.json();
-    } catch(e) {
+    } catch (e) {
       console.error(e);
-      return NextResponse.json<ApiError>({ success: false, error: "Invalid JSON" }, { status: 400 });
+      return NextResponse.json<ApiError>(
+        { success: false, error: "Invalid JSON" },
+        { status: 400 },
+      );
     }
 
     const parsed = CreateCollectionBodySchema.safeParse(json);
     if (!parsed.success) {
       return NextResponse.json<ApiError>(
-        { success: false, error: "Validation error", details: parsed.error.flatten((issue) => issue.message) },
+        {
+          success: false,
+          error: "Validation error",
+          details: parsed.error.flatten((issue) => issue.message),
+        },
         { status: 400 },
       );
     }

@@ -1,12 +1,14 @@
-"use server"
+"use server";
 
-import {Collection, CollectionType} from "@prisma/client";
-import {prisma} from "@/src/db";
-import {getAuthorId, getFamiliesIds} from "@/src/db/actions/util";
+import { Collection, CollectionType } from "@prisma/client";
+import { prisma } from "@/src/db";
+import { getAuthorId, getFamiliesIds } from "@/src/db/actions/util";
 
-export async function createCollection(title: Collection['title'],
-                                       type: CollectionType,
-                                       familyId: Collection['familyId']): Promise<void> {
+export async function createCollection(
+  title: Collection["title"],
+  type: CollectionType,
+  familyId: Collection["familyId"],
+): Promise<void> {
   const ownerId = await getAuthorId();
 
   if (!title) {
@@ -20,12 +22,12 @@ export async function createCollection(title: Collection['title'],
       familyId,
       ownerId,
     },
-  })
+  });
 }
 
 export type CollectionExtended = Awaited<ReturnType<typeof getCollection>>;
 
-export async function getCollection(id: Collection['id'], type: CollectionType) {
+export async function getCollection(id: Collection["id"], type: CollectionType) {
   const ownerId = await getAuthorId();
 
   return prisma.collection.findFirst({
@@ -63,7 +65,7 @@ export async function getCollection(id: Collection['id'], type: CollectionType) 
           dueDate: true,
         },
         orderBy: {
-          id: 'desc',
+          id: "desc",
         },
       },
       family: {
@@ -103,14 +105,14 @@ export async function getCollections(type: CollectionType) {
       ],
       type,
     },
-    orderBy: {createdAt: "desc"},
+    orderBy: { createdAt: "desc" },
     include: {
       family: true,
     },
   });
 }
 
-export async function deleteCollection(id: Collection['id']) {
+export async function deleteCollection(id: Collection["id"]) {
   const ownerId = await getAuthorId();
 
   return prisma.collection.deleteMany({

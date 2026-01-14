@@ -1,17 +1,21 @@
-'use server'
+"use server";
 
-import {FamilyInvite, RoleType} from "@prisma/client";
-import {prisma} from "@/src/db";
-import {getAuthorId, getFamilyMemberRole} from "@/src/db/actions/util";
-import {getAllowedRoleTypesForInviteIssuer} from "@/src/lib/utils";
+import { FamilyInvite, RoleType } from "@prisma/client";
+import { prisma } from "@/src/db";
+import { getAuthorId, getFamilyMemberRole } from "@/src/db/actions/util";
+import { getAllowedRoleTypesForInviteIssuer } from "@/src/lib/utils";
 
-export async function createInvite(disabled: FamilyInvite['disabled'],
-                                   familyId: FamilyInvite['familyId'],
-                                   roleType: FamilyInvite['roleType']): Promise<string | null> {
+export async function createInvite(
+  disabled: FamilyInvite["disabled"],
+  familyId: FamilyInvite["familyId"],
+  roleType: FamilyInvite["roleType"],
+): Promise<string | null> {
   const authorId = await getAuthorId();
 
-  const allowedRoleTypes: RoleType[] = getAllowedRoleTypesForInviteIssuer(await getFamilyMemberRole(familyId));
-  if (!allowedRoleTypes.some(allowedRoleType => allowedRoleType === roleType)) {
+  const allowedRoleTypes: RoleType[] = getAllowedRoleTypesForInviteIssuer(
+    await getFamilyMemberRole(familyId),
+  );
+  if (!allowedRoleTypes.some((allowedRoleType) => allowedRoleType === roleType)) {
     return null;
   }
 
@@ -28,13 +32,13 @@ export async function createInvite(disabled: FamilyInvite['disabled'],
 
 export type FamilyInviteExtended = Awaited<ReturnType<typeof getInvite>>;
 
-export async function getInvite(id: FamilyInvite['id']) {
+export async function getInvite(id: FamilyInvite["id"]) {
   const authorId = await getAuthorId();
 
   return await prisma.$transaction(async (transaction) => {
     const invite = await transaction.familyInvite.findUnique({
       where: {
-        id
+        id,
       },
       include: {
         family: true,
@@ -79,7 +83,9 @@ export async function getInvite(id: FamilyInvite['id']) {
   });
 }
 
-export async function updateInvite(invite: Pick<FamilyInvite, 'id'> & Partial<Pick<FamilyInvite, 'disabled' | 'roleType'>>) {
+export async function updateInvite(
+  invite: Pick<FamilyInvite, "id"> & Partial<Pick<FamilyInvite, "disabled" | "roleType">>,
+) {
   await prisma.familyInvite.update({
     where: {
       id: invite.id,
@@ -90,7 +96,7 @@ export async function updateInvite(invite: Pick<FamilyInvite, 'id'> & Partial<Pi
   });
 }
 
-export async function activateInvite(id: FamilyInvite['id']): Promise<boolean> {
+export async function activateInvite(id: FamilyInvite["id"]): Promise<boolean> {
   const usedById = await getAuthorId();
 
   return await prisma.$transaction(async (transaction) => {
@@ -112,32 +118,36 @@ export async function activateInvite(id: FamilyInvite['id']): Promise<boolean> {
 
     if (!invite) return false;
 
-    if (!!await transaction.membership.findFirst({
-      where: {
-        userId: usedById,
-        familyId: invite.family.id,
-      },
-    })) {
-      console.debug('Already family member');
+    if (
+      !!(await transaction.membership.findFirst({
+        where: {
+          userId: usedById,
+          familyId: invite.family.id,
+        },
+      }))
+    ) {
+      console.debug("Already family member");
       return false;
     }
 
-    if (!!await transaction.familyInvite.update({
-      where: {
-        id,
-      },
-      data: {
-        usedById,
-        usedAt: new Date(),
-      },
-    })) {
-      return !!await transaction.membership.create({
+    if (
+      !!(await transaction.familyInvite.update({
+        where: {
+          id,
+        },
+        data: {
+          usedById,
+          usedAt: new Date(),
+        },
+      }))
+    ) {
+      return !!(await transaction.membership.create({
         data: {
           userId: usedById,
           familyId: invite.family.id,
           roleType: invite.roleType,
         },
-      });
+      }));
     }
     return false;
   });
@@ -145,7 +155,7 @@ export async function activateInvite(id: FamilyInvite['id']): Promise<boolean> {
 
 export type FamilyInvitePublic = Awaited<ReturnType<typeof getInvitePublic>>;
 
-export async function getInvitePublic(id: FamilyInvite['id']) {
+export async function getInvitePublic(id: FamilyInvite["id"]) {
   return await prisma.familyInvite.findUnique({
     where: {
       id,

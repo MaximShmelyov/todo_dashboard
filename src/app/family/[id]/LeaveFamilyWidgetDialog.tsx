@@ -1,11 +1,15 @@
-'use client'
+"use client";
 
 import Button from "@/src/components/ui/Button";
 
-export default function LeaveFamilyWidgetDialog({onConfirmAction, onCancelAction, familyName}: {
-  onConfirmAction: () => void,
-  onCancelAction: () => void,
-  familyName: string
+export default function LeaveFamilyWidgetDialog({
+  onConfirmAction,
+  onCancelAction,
+  familyName,
+}: {
+  onConfirmAction: () => void;
+  onCancelAction: () => void;
+  familyName: string;
 }) {
   return (
     <div
@@ -16,19 +20,14 @@ export default function LeaveFamilyWidgetDialog({onConfirmAction, onCancelAction
         className="bg-white rounded-xl p-4 flex flex-col gap-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="fong-lg">Do you want to leave <span className="font-semibold">{familyName}</span>?</h3>
+        <h3 className="fong-lg">
+          Do you want to leave <span className="font-semibold">{familyName}</span>?
+        </h3>
         <div className="flex flex-row justify-around">
-          <Button
-            variant={'secondary'}
-            onClick={onConfirmAction}
-          >
+          <Button variant={"secondary"} onClick={onConfirmAction}>
             Confirm
           </Button>
-          <Button
-            onClick={onCancelAction}
-          >
-            Cancel
-          </Button>
+          <Button onClick={onCancelAction}>Cancel</Button>
         </div>
       </div>
     </div>

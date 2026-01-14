@@ -18,10 +18,7 @@ export async function POST(req: Request) {
   try {
     json = await req.json();
   } catch {
-    return NextResponse.json<ApiError>(
-      { success: false, error: "Invalid JSON" },
-      { status: 400 },
-    );
+    return NextResponse.json<ApiError>({ success: false, error: "Invalid JSON" }, { status: 400 });
   }
 
   const parsed = LoginBodySchema.safeParse(json);

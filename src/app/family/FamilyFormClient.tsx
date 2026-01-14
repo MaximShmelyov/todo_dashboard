@@ -1,46 +1,47 @@
-'use client'
+"use client";
 
 import Form from "next/form";
-import {createFamily, updateFamily} from "@/src/db/actions/family";
+import { createFamily, updateFamily } from "@/src/db/actions/family";
 import Input from "@/src/components/ui/Input";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import Button from "@/src/components/ui/Button";
 
-export default function FamilyFormClient({family}: { family?: [familyId: string, familyName: string] }) {
+export default function FamilyFormClient({
+  family,
+}: {
+  family?: [familyId: string, familyName: string];
+}) {
   const router = useRouter();
   return (
     <div
       className="fixed inset-0 bg-black/40 flex justify-center items-center"
-      onClick={() => router.back() }
+      onClick={() => router.back()}
     >
-      <div
-        className="rounded-xl bg-white shadow-lg p-6"
-        onClick={e => e.stopPropagation()}
-      >
+      <div className="rounded-xl bg-white shadow-lg p-6" onClick={(e) => e.stopPropagation()}>
         <Form
           className="flex flex-col gap-4"
           action={async (formData) => {
-            const name = formData.get('familyName')!.toString();
+            const name = formData.get("familyName")!.toString();
             if (family) {
-              await updateFamily(
-                {
-                  id: family[0],
-                  name,
-                }
-              );
+              await updateFamily({
+                id: family[0],
+                name,
+              });
             } else {
               await createFamily(name);
             }
-            router.push('/family');
+            router.push("/family");
           }}
         >
-          <h3 className="text-lg text-center">{family ? 'Update' : 'Create'}</h3>
-          <Input name='familyName' maxLength={25} defaultValue={family ? family[1] : ''} placeholder="Family name" required/>
-          <Button
-            type='submit'
-          >
-            Submit
-          </Button>
+          <h3 className="text-lg text-center">{family ? "Update" : "Create"}</h3>
+          <Input
+            name="familyName"
+            maxLength={25}
+            defaultValue={family ? family[1] : ""}
+            placeholder="Family name"
+            required
+          />
+          <Button type="submit">Submit</Button>
         </Form>
       </div>
     </div>

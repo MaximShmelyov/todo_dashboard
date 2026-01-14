@@ -1,18 +1,18 @@
-"use server"
+"use server";
 
-import {Item, Prisma} from "@prisma/client";
-import {prisma} from "@/src/db"
-import {getAuthorId, getFamiliesIds} from "@/src/db/actions/util";
+import { Item, Prisma } from "@prisma/client";
+import { prisma } from "@/src/db";
+import { getAuthorId, getFamiliesIds } from "@/src/db/actions/util";
 
 export async function createItem(
-  item: Pick<Item, "title" | "body" | "collectionId" | "createdById"> & { dueDate?: Date }
+  item: Pick<Item, "title" | "body" | "collectionId" | "createdById"> & { dueDate?: Date },
 ) {
   await prisma.item.create({
-    data: item
+    data: item,
   });
 }
 
-export async function deleteItem(id: Item['id']) {
+export async function deleteItem(id: Item["id"]) {
   const createdById = await getAuthorId();
 
   await prisma.item.delete({
@@ -34,7 +34,7 @@ export async function deleteItem(id: Item['id']) {
   });
 }
 
-export async function deleteItems(ids: Item['id'][]) {
+export async function deleteItems(ids: Item["id"][]) {
   const createdById = await getAuthorId();
 
   await prisma.item.deleteMany({
@@ -51,7 +51,7 @@ export async function deleteItems(ids: Item['id'][]) {
             familyId: {
               in: await getFamiliesIds(),
             },
-          }
+          },
         },
       ],
     },
@@ -60,11 +60,11 @@ export async function deleteItems(ids: Item['id'][]) {
 
 export async function updateItem(
   item: Partial<Pick<Item, "done" | "position" | "body" | "title" | "dueDate">> & {
-    metadata?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue | undefined
-  } & Pick<Item, "id">
+    metadata?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue | undefined;
+  } & Pick<Item, "id">,
 ) {
   const createdById = await getAuthorId();
-  const {id, ...data} = item;
+  const { id, ...data } = item;
 
   await prisma.item.update({
     where: {

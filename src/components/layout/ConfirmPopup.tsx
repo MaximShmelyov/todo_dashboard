@@ -1,8 +1,16 @@
-'use client'
+"use client";
 
 import Button from "@/src/components/ui/Button";
 
-export default function ConfirmPopup({title, onCancelAction, onConfirmAction}: { title: string, onCancelAction: () => void, onConfirmAction: () => void }) {
+export default function ConfirmPopup({
+  title,
+  onCancelAction,
+  onConfirmAction,
+}: {
+  title: string;
+  onCancelAction: () => void;
+  onConfirmAction: () => void;
+}) {
   return (
     <div
       className="fixed inset-0 bg-black/40 flex justify-center items-center"
@@ -14,17 +22,10 @@ export default function ConfirmPopup({title, onCancelAction, onConfirmAction}: {
       >
         <div className="font-bold text-center">{title}</div>
         <div className="flex flex-row justify-around">
-          <Button
-            variant={'delete'}
-            onClick={() => onConfirmAction()}
-          >
+          <Button variant={"delete"} onClick={() => onConfirmAction()}>
             Yes
           </Button>
-          <Button
-            onClick={() => onCancelAction()}
-          >
-            No
-          </Button>
+          <Button onClick={() => onCancelAction()}>No</Button>
         </div>
       </div>
     </div>

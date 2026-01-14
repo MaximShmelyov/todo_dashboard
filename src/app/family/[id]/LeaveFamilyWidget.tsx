@@ -1,15 +1,18 @@
-'use client'
+"use client";
 
-import {deleteMembership} from "@/src/db/actions/membership";
-import {Family} from "@prisma/client";
-import {useRouter} from "next/navigation";
-import {useState} from "react";
+import { deleteMembership } from "@/src/db/actions/membership";
+import { Family } from "@prisma/client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import LeaveFamilyWidgetDialog from "@/src/app/family/[id]/LeaveFamilyWidgetDialog";
 import Button from "@/src/components/ui/Button";
 
-export default function LeaveFamilyWidget({familyName, familyId}: {
-  familyName: Family['name'],
-  familyId: Family['id']
+export default function LeaveFamilyWidget({
+  familyName,
+  familyId,
+}: {
+  familyName: Family["name"];
+  familyId: Family["id"];
 }) {
   const router = useRouter();
   const [showDialog, setShowDialog] = useState(false);
@@ -19,7 +22,7 @@ export default function LeaveFamilyWidget({familyName, familyId}: {
   };
   const handleConfirmLeave = async () => {
     if (await deleteMembership(familyId)) {
-      router.push('/family');
+      router.push("/family");
     } else {
       // @TODO
     }
@@ -28,15 +31,16 @@ export default function LeaveFamilyWidget({familyName, familyId}: {
 
   return (
     <>
-      {showDialog && <LeaveFamilyWidgetDialog onConfirmAction={handleConfirmLeave} onCancelAction={() => setShowDialog(false)}
-                                              familyName={familyName}/>}
-      <Button
-        variant={'secondary'}
-        onClick={handleLeaveClick}
-      >
+      {showDialog && (
+        <LeaveFamilyWidgetDialog
+          onConfirmAction={handleConfirmLeave}
+          onCancelAction={() => setShowDialog(false)}
+          familyName={familyName}
+        />
+      )}
+      <Button variant={"secondary"} onClick={handleLeaveClick}>
         Leave
       </Button>
     </>
-  )
-    ;
+  );
 }

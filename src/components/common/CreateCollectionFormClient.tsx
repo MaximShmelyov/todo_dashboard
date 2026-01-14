@@ -1,20 +1,24 @@
-"use client"
+"use client";
 
-import {useRouter} from "next/navigation"
-import Form from "next/form"
-import {CollectionType, Family} from "@prisma/client";
-import {createShopping} from "@/src/db/actions/shopping";
+import { useRouter } from "next/navigation";
+import Form from "next/form";
+import { CollectionType, Family } from "@prisma/client";
+import { createShopping } from "@/src/db/actions/shopping";
 import Input from "@/src/components/ui/Input";
-import {createNote} from "@/src/db/actions/notes";
-import {getCollectionRoute, getLabelOfCollectionType} from "@/src/lib/utils";
-import {createTodo} from "@/src/db/actions/todos";
+import { createNote } from "@/src/db/actions/notes";
+import { getCollectionRoute, getLabelOfCollectionType } from "@/src/lib/utils";
+import { createTodo } from "@/src/db/actions/todos";
 import Button from "@/src/components/ui/Button";
 
 const exhaustiveGuardCollectionType = (_: never): never => {
-  throw new Error('Got unexpected value here.');
+  throw new Error("Got unexpected value here.");
 };
 
-function createCollection(collectionType: CollectionType, title: string, familyId?: string): Promise<void> {
+function createCollection(
+  collectionType: CollectionType,
+  title: string,
+  familyId?: string,
+): Promise<void> {
   switch (collectionType) {
     case "NOTE":
       return createNote(title, familyId ?? null);
@@ -27,9 +31,12 @@ function createCollection(collectionType: CollectionType, title: string, familyI
   }
 }
 
-export default function CreateCollectionFormClient({collectionType, families}: {
-  collectionType: CollectionType,
-  families: Family[]
+export default function CreateCollectionFormClient({
+  collectionType,
+  families,
+}: {
+  collectionType: CollectionType;
+  families: Family[];
 }) {
   const router = useRouter();
 
@@ -38,49 +45,34 @@ export default function CreateCollectionFormClient({collectionType, families}: {
       className="fixed inset-0 bg-black/40 flex justify-center items-center"
       onClick={() => router.back()}
     >
-      <div
-        className="rounded-xl bg-white shadow-lg p-6"
-        onClick={e => e.stopPropagation()}
-      >
+      <div className="rounded-xl bg-white shadow-lg p-6" onClick={(e) => e.stopPropagation()}>
         <Form
           action={async (formData) => {
             await createCollection(
               collectionType,
-              formData.get('title')!.toString(),
-              formData.get('familyId')?.toString() || undefined);
+              formData.get("title")!.toString(),
+              formData.get("familyId")?.toString() || undefined,
+            );
             router.push(getCollectionRoute(collectionType));
           }}
           className="flex flex-col gap-4"
         >
           <h3 className="text-lg mb-4">Create a {getLabelOfCollectionType(collectionType)}</h3>
           {/*<label htmlFor="create_form_title">Name</label>*/}
-          <Input
-            id="create_form_title"
-            name="title"
-            placeholder="Title"
-            maxLength={30}
-            required/>
+          <Input id="create_form_title" name="title" placeholder="Title" maxLength={30} required />
 
-          <select
-            className="rounded-lg hover:bg-stone-100"
-            name="familyId"
-            defaultValue=""
-          >
+          <select className="rounded-lg hover:bg-stone-100" name="familyId" defaultValue="">
             <option value="">Private</option>
-            {families.map(family => (
+            {families.map((family) => (
               <option key={family.id} value={family.id}>
                 {family.name}
               </option>
             ))}
           </select>
 
-          <Button
-            type="submit"
-          >
-            Create
-          </Button>
+          <Button type="submit">Create</Button>
         </Form>
       </div>
     </div>
-  )
+  );
 }

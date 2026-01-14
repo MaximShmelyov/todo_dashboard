@@ -21,9 +21,7 @@ export default function Register() {
 
   return (
     <div className={styles.container}>
-      <Button onClick={() => signIn("google")}>
-        Continue with Google
-      </Button>
+      <Button onClick={() => signIn("google")}>Continue with Google</Button>
       <div className={styles.linkRow}>
         <span>Already have an account?</span>
         <Link href="/auth/login" className={styles.link}>

@@ -1,4 +1,4 @@
-import {describe, it, expect, beforeEach, vi} from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 
 /* ------------------ mocks ------------------ */
 
@@ -19,17 +19,12 @@ vi.mock("@/src/db/actions/util", () => ({
 
 /* ------------------ imports ------------------ */
 
-import {prisma} from "@/src/db";
-import {getAuthorId} from "@/src/db/actions/util";
+import { prisma } from "@/src/db";
+import { getAuthorId } from "@/src/db/actions/util";
 
-import {
-  getFamilies,
-  getFamily,
-  updateFamily,
-  createFamily,
-} from "@/src/db/actions/family";
+import { getFamilies, getFamily, updateFamily, createFamily } from "@/src/db/actions/family";
 
-import {$Enums, type Family} from "@prisma/client";
+import { $Enums, type Family } from "@prisma/client";
 
 /* ------------------ tests ------------------ */
 
@@ -52,7 +47,7 @@ describe("family server actions", () => {
           id: "f2",
           name: "Family2",
           createdAt: new Date(),
-        }
+        },
       ];
       vi.mocked(prisma.family.findMany).mockResolvedValue(rows);
 
@@ -91,13 +86,13 @@ describe("family server actions", () => {
 
   describe("getFamily", () => {
     it("queries family by id and includes memberships ordered by roleType desc + familyInvite", async () => {
-      const row = {id: "f1", name: "Family1", createdAt: new Date()};
+      const row = { id: "f1", name: "Family1", createdAt: new Date() };
       vi.mocked(prisma.family.findUnique).mockResolvedValue(row);
 
       const result = await getFamily("f1");
 
       expect(prisma.family.findUnique).toHaveBeenCalledWith({
-        where: {id: "f1"},
+        where: { id: "f1" },
         include: {
           memberships: {
             select: {
@@ -142,7 +137,11 @@ describe("family server actions", () => {
 
   describe("updateFamily", () => {
     it("updates family by id with provided fields", async () => {
-      vi.mocked(prisma.family.update).mockResolvedValue({id: "f1", name: "Family1", createdAt: new Date()});
+      vi.mocked(prisma.family.update).mockResolvedValue({
+        id: "f1",
+        name: "Family1",
+        createdAt: new Date(),
+      });
 
       const patch: Partial<Family> & Pick<Family, "id"> = {
         id: "f1",
@@ -152,7 +151,7 @@ describe("family server actions", () => {
       await updateFamily(patch);
 
       expect(prisma.family.update).toHaveBeenCalledWith({
-        where: {id: "f1"},
+        where: { id: "f1" },
         data: {
           ...patch,
         },
@@ -162,19 +161,19 @@ describe("family server actions", () => {
 
   describe("createFamily", () => {
     it("creates family and admin membership inside transaction; returns null (current behavior)", async () => {
-      const txFamilyCreate = vi.fn().mockResolvedValue({id: "fam-123"});
-      const txMembershipCreate = vi.fn().mockResolvedValue({id: "mem-1"});
+      const txFamilyCreate = vi.fn().mockResolvedValue({ id: "fam-123" });
+      const txMembershipCreate = vi.fn().mockResolvedValue({ id: "mem-1" });
 
       type Tx = Parameters<Parameters<typeof prisma.$transaction>[0]>[0];
       vi.mocked(prisma.$transaction).mockImplementation(
         async (cb: (tx: Tx) => Promise<unknown>) => {
           const tx = {
-            family: {create: txFamilyCreate},
-            membership: {create: txMembershipCreate},
+            family: { create: txFamilyCreate },
+            membership: { create: txMembershipCreate },
           } as unknown as Tx;
 
           return cb(tx);
-        }
+        },
       );
 
       const result = await createFamily("My family");

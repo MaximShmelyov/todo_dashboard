@@ -26,7 +26,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
             {/* MAIN */}
             <main className="flex-1 px-4">
-              <div className="p-8">{children}</div>
+              <div className="max-w-3xl mx-auto p-4">{children}</div>
             </main>
           </div>
         </div>

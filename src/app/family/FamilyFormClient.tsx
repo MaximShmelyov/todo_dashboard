@@ -5,6 +5,8 @@ import { createFamily, updateFamily } from "@/src/db/actions/family";
 import Input from "@/src/components/ui/Input";
 import { useRouter } from "next/navigation";
 import Button from "@/src/components/ui/Button";
+import ModalDialog from "@/src/components/common/ModalDialog";
+import ModalDialogTitle from "@/src/components/common/ModalDialogTitle";
 
 export default function FamilyFormClient({
   family,
@@ -13,37 +15,36 @@ export default function FamilyFormClient({
 }) {
   const router = useRouter();
   return (
-    <div
-      className="fixed inset-0 bg-black/40 flex justify-center items-center"
-      onClick={() => router.back()}
+    <ModalDialog
+      onCloseAction={() => {
+        router.back();
+      }}
     >
-      <div className="rounded-xl bg-white shadow-lg p-6" onClick={(e) => e.stopPropagation()}>
-        <Form
-          className="flex flex-col gap-4"
-          action={async (formData) => {
-            const name = formData.get("familyName")!.toString();
-            if (family) {
-              await updateFamily({
-                id: family[0],
-                name,
-              });
-            } else {
-              await createFamily(name);
-            }
-            router.push("/family");
-          }}
-        >
-          <h3 className="text-lg text-center">{family ? "Update" : "Create"}</h3>
-          <Input
-            name="familyName"
-            maxLength={25}
-            defaultValue={family ? family[1] : ""}
-            placeholder="Family name"
-            required
-          />
-          <Button type="submit">Submit</Button>
-        </Form>
-      </div>
-    </div>
+      <Form
+        className="flex flex-col gap-4"
+        action={async (formData) => {
+          const name = formData.get("familyName")!.toString();
+          if (family) {
+            await updateFamily({
+              id: family[0],
+              name,
+            });
+          } else {
+            await createFamily(name);
+          }
+          router.push("/family");
+        }}
+      >
+        <ModalDialogTitle>{family ? "Update" : "Create"}</ModalDialogTitle>
+        <Input
+          name="familyName"
+          maxLength={25}
+          defaultValue={family ? family[1] : ""}
+          placeholder="Family name"
+          required
+        />
+        <Button type="submit">Submit</Button>
+      </Form>
+    </ModalDialog>
   );
 }

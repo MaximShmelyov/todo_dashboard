@@ -7,6 +7,8 @@ import { createInvite, FamilyInviteExtended, updateInvite } from "@/src/db/actio
 import { RoleTypeLimited } from "@/src/db/actions/membership";
 import { useEffect } from "react";
 import Button from "@/src/components/ui/Button";
+import ModalDialog from "@/src/components/common/ModalDialog";
+import ModalDialogTitle from "@/src/components/common/ModalDialogTitle";
 
 type FamilyInviteFormProps =
   | {
@@ -35,79 +37,74 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
   }
 
   return (
-    <div
-      className="fixed inset-0 bg-black/40 flex justify-center items-center"
-      onClick={() => router.back()}
-    >
-      <div className="rounded-xl bg-white shadow-lg p-6" onClick={(e) => e.stopPropagation()}>
-        <Form
-          className="flex flex-col gap-4"
-          action={async (formData) => {
-            const familyId = formData.get("familyId")!.toString();
-            const disabled = formData.has("disabled");
-            const roleType = formData.get("roleType")!.toString() as RoleTypeLimited;
-            if (props.mode === "create") {
-              await createInvite(disabled, familyId, roleType);
-            } else if (props.mode === "edit") {
-              await updateInvite({
-                id: invite!.id,
-                disabled,
-                roleType,
-              });
-            }
-            router.replace(`/family/${familyId}`);
-          }}
-        >
-          <h3 className="text-lg text-center">{invite ? `invite` : "Create invite"}</h3>
-          <label>
-            Family:
-            <select
-              className="hover:bg-stone-100"
-              name="familyId"
-              defaultValue={invite ? invite.family.id : ""}
-              required
-            >
-              {invite ? (
-                <option value={invite.family.id}>{invite.family.name}</option>
-              ) : (
-                <>
-                  <option value="" disabled>
-                    -
-                  </option>
-                  {families!.map((family) => (
-                    <option key={family.id} value={family.id}>
-                      {family.name}
-                    </option>
-                  ))}
-                </>
-              )}
-            </select>
-          </label>
-          <label>
-            Role:
-            <select
-              className="hover:bg-stone-100"
-              name="roleType"
-              defaultValue={invite ? invite.roleType : RoleType.USER}
-            >
-              {inviteRoleTypes.map((roleType) => (
-                <option key={roleType} value={roleType}>
-                  {roleType}
+    <ModalDialog onCloseAction={() => router.back()}>
+      <Form
+        className="flex flex-col gap-4"
+        action={async (formData) => {
+          const familyId = formData.get("familyId")!.toString();
+          const disabled = formData.has("disabled");
+          const roleType = formData.get("roleType")!.toString() as RoleTypeLimited;
+          if (props.mode === "create") {
+            await createInvite(disabled, familyId, roleType);
+          } else if (props.mode === "edit") {
+            await updateInvite({
+              id: invite!.id,
+              disabled,
+              roleType,
+            });
+          }
+          router.replace(`/family/${familyId}`);
+        }}
+      >
+        <ModalDialogTitle>{invite ? `invite` : "Create invite"}</ModalDialogTitle>
+        <label>
+          Family:
+          <select
+            className="hover:bg-stone-100"
+            name="familyId"
+            defaultValue={invite ? invite.family.id : ""}
+            required
+          >
+            {invite ? (
+              <option value={invite.family.id}>{invite.family.name}</option>
+            ) : (
+              <>
+                <option value="" disabled>
+                  -
                 </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Disabled:{" "}
-            <input
-              type="checkbox"
-              name="disabled"
-              defaultChecked={invite ? invite.disabled : false}
-            />
-          </label>
-          <Button type="submit">Submit</Button>
-        </Form>
-      </div>
-    </div>
+                {families!.map((family) => (
+                  <option key={family.id} value={family.id}>
+                    {family.name}
+                  </option>
+                ))}
+              </>
+            )}
+          </select>
+        </label>
+        <label>
+          Role:
+          <select
+            className="hover:bg-stone-100"
+            name="roleType"
+            defaultValue={invite ? invite.roleType : RoleType.USER}
+          >
+            {inviteRoleTypes.map((roleType) => (
+              <option key={roleType} value={roleType}>
+                {roleType}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Disabled:{" "}
+          <input
+            type="checkbox"
+            name="disabled"
+            defaultChecked={invite ? invite.disabled : false}
+          />
+        </label>
+        <Button type="submit">Submit</Button>
+      </Form>
+    </ModalDialog>
   );
 }

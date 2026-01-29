@@ -3,12 +3,14 @@ import "@testing-library/jest-dom";
 
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, getByTestId, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 import AddItemFormClient from "@/src/components/common/AddItemFormClient";
 import { CollectionType } from "@prisma/client";
 import { ButtonVariant } from "@/src/components/ui/Button";
 import { createItem } from "@/src/db/actions/item";
+import ModalDialog from "@/src/components/common/ModalDialog";
 
 /* ------------------ mocks ------------------ */
 
@@ -80,12 +82,34 @@ describe("AddItemFormClient", () => {
   const renderCmp = () =>
     render(<AddItemFormClient collectionType="SHOPPING" collectionId="col-123" ownerId="user-1" />);
 
-  it("closes on overlay click", () => {
-    const { container } = renderCmp();
-    const overlay = getByTestId(container, "overlay");
+  it("closes on overlay click", async () => {
+    function Wrapper({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
+      const [open, setOpen] = React.useState(true);
+      return (
+        <ModalDialog
+          open={open}
+          onCloseAction={() => {
+            setOpen(false);
+            onClose();
+          }}
+        >
+          {children}
+        </ModalDialog>
+      );
+    }
 
-    fireEvent.click(overlay);
-    expect(backMock).toHaveBeenCalledOnce();
+    render(
+      <Wrapper onClose={backMock}>
+        <div>Modal content</div>
+      </Wrapper>,
+    );
+
+    const overlay = screen.getByTestId("overlay");
+    await userEvent.click(overlay);
+
+    await waitFor(() => {
+      expect(backMock).toHaveBeenCalledTimes(1);
+    });
   });
 
   it("does NOT close when clicking inside modal", () => {

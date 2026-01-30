@@ -2,10 +2,17 @@ services:
   db:
     image: postgres:16-alpine
     restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - todo_pg_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U todo_user -d todo_dashboard"]
+      test:
+        [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
       interval: 2s
       timeout: 2s
       retries: 30
@@ -13,7 +20,7 @@ services:
       - todo_net
 
   app:
-    build: .
+    image: ghcr.io/maximshmelyov/todo_dashboard/app:latest
     container_name: todo-dashboard-app
     restart: unless-stopped
     env_file:

@@ -23,7 +23,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: maximshmelyov
+          username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT }}
 
       - name: Build and push app image
@@ -32,7 +32,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/maximshmelyov/todo-dashboard/app:latest
+          tags: ghcr.io/maximshmelyov/todo_dashboard/app:latest
 
       - name: SSH to VPS and deploy updated app
         uses: appleboy/ssh-action@v1.0.0
@@ -43,11 +43,13 @@ jobs:
           port: ${{ secrets.VPS_SSH_PORT }}
           script: |
             set -e
+
             BRANCH="vpsdeploy"
             cd /home/${{ secrets.VPS_USER }}/apps/todo_dashboard
-            git fetch origin $BRANCH
-            git checkout $BRANCH
-            git pull origin $BRANCH
+            git fetch origin "$BRANCH"
+            git checkout "$BRANCH"
+            git pull origin "$BRANCH"
 
-            docker compose pull app || true
-            docker compose up -d app
+            # Pull the freshly pushed image from GHCR and recreate the service
+            docker compose pull app
+            docker compose up -d --force-recreate app

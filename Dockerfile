@@ -1,29 +1,30 @@
-FROM node:20-alpine AS base
-
+FROM node:20-alpine AS deps
 WORKDIR /app
-
-# prod-deps for production, dev-deps - for build
 COPY package.json package-lock.json* ./
 RUN npm ci
 
-# Copy the app
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Generate Prisma
 RUN npx prisma generate
-
-# Build Next.js
 RUN npm run build
 
-# Production image
-FROM node:20-alpine AS prod
-
+FROM node:20-alpine AS runner
 WORKDIR /app
-
-COPY --from=base /app ./
-
 ENV NODE_ENV=production
 
-EXPOSE 3000
+COPY package.json package-lock.json* ./
+RUN npm ci --omit=dev && npm cache clean --force
 
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+
+COPY docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
+
+EXPOSE 3000
+ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD ["npm", "start"]

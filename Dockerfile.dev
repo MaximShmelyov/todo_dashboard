@@ -1,0 +1,18 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+RUN apk add --no-cache postgresql-client
+
+COPY package.json package-lock.json* ./
+RUN npm ci
+
+COPY . .
+
+EXPOSE 3000
+
+# EntryPoint script
+COPY docker-entrypoint-dev.sh /usr/local/bin/docker-entrypoint-dev.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint-dev.sh
+
+ENTRYPOINT ["docker-entrypoint-dev.sh"]

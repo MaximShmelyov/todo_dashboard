@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: todo_dashboard
+      POSTGRES_USER: todo_user
+      POSTGRES_PASSWORD: todo_pass
+    volumes:
+      - todo_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U todo_user -d todo_dashboard"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    networks:
+      - todo_net
+
+  app:
+    build: .
+    container_name: todo-dashboard-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://todo_user:todo_pass@db:5432/todo_dashboard
+    networks:
+      - todo_net
+      - edge
+
+volumes:
+  todo_pg_data:
+
+networks:
+  todo_net:
+    driver: bridge
+  edge:
+    external: true
+    name: edge

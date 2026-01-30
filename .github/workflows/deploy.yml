@@ -1,0 +1,53 @@
+name: Deploy Todo Dashboard via Docker Compose
+
+on:
+  push:
+    branches:
+      - vpsdeploy
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: maximshmelyov
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Build and push app image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ghcr.io/maximshmelyov/todo-dashboard/app:latest
+
+      - name: SSH to VPS and deploy updated app
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT }}
+          script: |
+            set -e
+            BRANCH="vpsdeploy"
+            cd /home/${{ secrets.VPS_USER }}/apps/todo-dashboard
+            git fetch origin $BRANCH
+            git checkout $BRANCH
+            git pull origin $BRANCH
+
+            docker compose pull app || true
+            docker compose up -d app

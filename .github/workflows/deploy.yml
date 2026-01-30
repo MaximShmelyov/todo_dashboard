@@ -48,7 +48,8 @@ jobs:
             cd /home/${{ secrets.VPS_USER }}/apps/todo_dashboard
             git fetch origin "$BRANCH"
             git checkout "$BRANCH"
-            git pull origin "$BRANCH"
+            git reset --hard "origin/$BRANCH"
+            git clean -fd -e .env.production
 
             # Pull the freshly pushed image from GHCR and recreate the service
             docker compose pull app

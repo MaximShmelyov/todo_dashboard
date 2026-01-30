@@ -29,6 +29,7 @@ services:
       DATABASE_PORT: "5432"
       DATABASE_USER: todo_user
       DATABASE_NAME: todo_dashboard
+      NEXT_TELEMETRY_DISABLED: "1"
     ports:
       - "3000:3000"
     volumes:

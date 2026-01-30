@@ -1,6 +1,7 @@
 # Todo Dashboard
 
-A modern, full-featured dashboard for managing todos, notes, and shopping lists with family/group support. Built with Next.js, React, Prisma, PostgreSQL, and Tailwind CSS.
+A modern, full-featured dashboard for managing todos, notes, and shopping lists with family/group support. Built with
+Next.js, React, Prisma, PostgreSQL, and Tailwind CSS.
 
 ## Features
 
@@ -45,7 +46,7 @@ A modern, full-featured dashboard for managing todos, notes, and shopping lists 
    ```
 
 3. **Configure environment variables:**
-   - Copy .env.example to .env and fill in your database and authentication secrets.
+    - Copy .env.example to .env and fill in your database and authentication secrets.
 
 4. **Set up the database:**
 
@@ -59,6 +60,16 @@ A modern, full-featured dashboard for managing todos, notes, and shopping lists 
    ```bash
    npm run dev
    ```
+
+6. (Optional) **Dockerized development server:**
+    - Run
+      ```bash
+      docker compose -f docker-compose.dev.yml up --build
+      ```
+    - Stop
+      ```bash
+        docker compose -f docker-compose.dev.yml down
+        ```
 
 ### Testing
 

@@ -28,7 +28,9 @@ export default function ModalDialog({
       className="fixed inset-0 z-50 flex items-center justify-center"
     >
       <DialogBackdrop className="fixed inset-0 bg-black/40" data-testid="overlay" />
-      <DialogPanel className="rounded-xl bg-white shadow-lg p-6 z-10">{children}</DialogPanel>
+      <DialogPanel className="rounded-xl bg-white dark:bg-gray-800 shadow-lg p-6 z-10">
+        {children}
+      </DialogPanel>
     </Dialog>
   );
 }

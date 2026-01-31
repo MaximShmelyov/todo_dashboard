@@ -19,7 +19,7 @@ type LinkProps = Common & {
 
 export default function VerticalListItem(props: DivProps | LinkProps) {
   const baseStyle: string =
-    "flex justify-between items-center bg-white p-4 rounded-xl shadow border border-stone-100 w-full";
+    "flex justify-between items-center bg-white dark:bg-stone-800 p-4 rounded-xl shadow border border-stone-100 dark:border-stone-700 w-full";
 
   const isEmptyHref: boolean = !("href" in props) || props.href == null || props.href === "";
 
@@ -36,7 +36,7 @@ export default function VerticalListItem(props: DivProps | LinkProps) {
   return (
     <Link
       href={href}
-      className={`${baseStyle} hover:bg-gray-100 ${className ?? ""}`}
+      className={`${baseStyle} hover:bg-gray-100 dark:hover:bg-gray-700 ${className ?? ""}`}
       {...linkProps}
     >
       {children}

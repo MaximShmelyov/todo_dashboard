@@ -7,7 +7,7 @@ import { MobileSidebar } from "@/src/components/layout/sidebar/MobileSidebar";
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className="bg-stone-50 text-stone-800">
+      <body>
         <div className="flex min-h-screen">
           <div>
             {/* DESKTOP SIDEBAR */}

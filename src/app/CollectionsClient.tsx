@@ -40,7 +40,7 @@ export default function CollectionsClient({
               {/*/>*/}
               <span>{item.title}</span>
             </div>
-            <span className="text-sm text-stone-500">{item.family?.name ?? "(private)"}</span>
+            <span className="text-sm">{item.family?.name ?? "(private)"}</span>
           </VerticalListItem>
         ))}
       </VerticalList>

@@ -134,7 +134,10 @@ export default function CollectionClient({
           <ul className="flex flex-col gap-2 p-2">
             {collection.items.length > 0
               ? collection.items.map((item) => (
-                  <li className="hover:bg-gray-100 p-2 rounded-sm shadow-xs" key={item.id}>
+                  <li
+                    className="dark:border dark:border-stone-700 hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-sm shadow-xs"
+                    key={item.id}
+                  >
                     <div className="flex flex-row justify-between gap-2 h-20 items-start overflow-clip">
                       <input
                         className="w-5 h-5"

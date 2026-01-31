@@ -17,7 +17,9 @@ export default function ConfirmPopup({
       onClick={() => onCancelAction()}
     >
       <div
-        className="flex flex-col gap-8 bg-white p-6 rounded-sm shadow-xl w-60"
+        className="flex flex-col gap-8
+                   bg-white dark:bg-stone-800
+                   p-6 rounded-sm shadow-xl w-60"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="font-bold text-center">{title}</div>

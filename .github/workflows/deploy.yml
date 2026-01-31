@@ -32,7 +32,18 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/maximshmelyov/todo_dashboard/app:latest
+          tags: |
+            ghcr.io/${{ github.repository }}/app:latest
+            ghcr.io/${{ github.repository }}/app:sha-${{ github.sha }}
+          labels: |
+            tododashboard.image.source=${{ github.repository }}
+            tododashboard.image.revision=${{ github.sha }}
+            tododashboard.image.created=${{ github.run_id }}
+            tododashboard.image.version=sha-${{ github.sha }}
+          build-args: |
+            APP_VERSION=sha-${{ github.sha }}
+            VCS_REF=${{ github.sha }}
+            BUILD_DATE=${{ github.run_id }}
 
       - name: SSH to VPS and deploy updated app
         uses: appleboy/ssh-action@v1.0.0

@@ -17,7 +17,7 @@ export default function LeaveFamilyWidgetDialog({
       onClick={onCancelAction}
     >
       <div
-        className="bg-white rounded-xl p-4 flex flex-col gap-4"
+        className="bg-white dark:bg-stone-800 rounded-xl p-4 flex flex-col gap-4"
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="fong-lg">

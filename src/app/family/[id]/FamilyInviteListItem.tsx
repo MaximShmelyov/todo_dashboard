@@ -27,7 +27,7 @@ export default function FamilyInviteListItem({
           : null
       }
     >
-      <div className={familyInvite.disabled ? "bg-red-50" : ""}>
+      <div className={familyInvite.disabled ? "bg-red-50 dark:bg-red-800" : ""}>
         {familyInvite.roleType} -{" "}
         <span className="font-semibold">{familyInvite.usedBy?.email ?? "Available"}</span> created
         at {familyInvite.createdAt.toLocaleString()}

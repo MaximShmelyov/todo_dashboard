@@ -3,7 +3,7 @@ import { getCollectionRoute } from "@/src/lib/utils";
 import { CollectionType } from "@prisma/client";
 
 export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
-  const linkClass = "px-3 py-2 rounded-lg hover:bg-amber-100 transition";
+  const linkClass = "px-3 py-2 rounded-lg hover:bg-amber-100 dark:hover:bg-gray-600 transition";
 
   return (
     <>
@@ -39,6 +39,9 @@ export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         <Link onClick={onNavigate} className={linkClass} href="/settings">
           ⚙️ Settings
         </Link>
+        <div className="mt-8 text-stone-400 dark:text-stone-500 italic select-none opacity-60 text-xs">
+          Ver: {process.env.NEXT_PUBLIC_APP_VERSION ?? "local"}
+        </div>
       </nav>
     </>
   );

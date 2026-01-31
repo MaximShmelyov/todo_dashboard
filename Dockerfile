@@ -7,12 +7,28 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+ARG APP_VERSION
+ARG VCS_REF
+ARG BUILD_DATE
+ENV NEXT_PUBLIC_APP_VERSION=$APP_VERSION
+
 RUN npx prisma generate
 RUN npm run build
 
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+
+ARG APP_VERSION
+ARG VCS_REF
+ARG BUILD_DATE
+
+LABEL tododashboard.image.revision=$VCS_REF \
+      tododashboard.image.created=$BUILD_DATE \
+      tododashboard.image.version=$APP_VERSION
+
+RUN echo "$APP_VERSION" > /app/VERSION
 
 COPY package.json package-lock.json* ./
 RUN npm ci --omit=dev && npm cache clean --force

@@ -31,6 +31,13 @@ jobs:
         run: |
           echo "repo_lowercase=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
+      - name: Set build version
+        id: version
+        run: |
+          DATE=$(date +'%Y%m%d_%H%M%S')
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-8)
+          echo "version=${DATE}_${SHORT_SHA}" >> $GITHUB_OUTPUT
+
       - name: Build and push app image
         uses: docker/build-push-action@v5
         with:
@@ -39,14 +46,14 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ steps.repo.outputs.repo_lowercase }}/app:latest
-            ghcr.io/${{ steps.repo.outputs.repo_lowercase }}/app:sha-${{ github.sha }}
+            ghcr.io/${{ steps.repo.outputs.repo_lowercase }}/app:${{ steps.version.outputs.version }}
           labels: |
             tododashboard.image.source=${{ github.repository }}
             tododashboard.image.revision=${{ github.sha }}
             tododashboard.image.created=${{ github.run_id }}
-            tododashboard.image.version=sha-${{ github.sha }}
+            tododashboard.image.version=${{ steps.version.outputs.version }}
           build-args: |
-            APP_VERSION=sha-${{ github.sha }}
+            APP_VERSION=${{ steps.version.outputs.version }}
             VCS_REF=${{ github.sha }}
             BUILD_DATE=${{ github.run_id }}
 

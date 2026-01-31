@@ -39,8 +39,19 @@ export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         <Link onClick={onNavigate} className={linkClass} href="/settings">
           ⚙️ Settings
         </Link>
-        <div className="mt-8 text-stone-400 dark:text-stone-500 italic select-none opacity-60 text-xs">
-          Ver: {process.env.NEXT_PUBLIC_APP_VERSION ?? "local"}
+        <div
+          className="mt-8 text-stone-400 dark:text-stone-500 italic select-none opacity-60 text-xs flex items-center gap-1"
+          style={{ minWidth: 0 }}
+        >
+          <span className="shrink-0">Ver:</span>
+          <span
+            className="overflow-hidden whitespace-nowrap text-ellipsis"
+            style={{ direction: "rtl", textOverflow: "ellipsis" }}
+          >
+            <span style={{ direction: "ltr", unicodeBidi: "plaintext" }}>
+              {process.env.NEXT_PUBLIC_APP_VERSION ?? "local"}
+            </span>
+          </span>
         </div>
       </nav>
     </>

@@ -58,10 +58,16 @@ export default function CreateCollectionFormClient({
         <ModalDialogTitle>Create a {getLabelOfCollectionType(collectionType)}</ModalDialogTitle>
         <Input id="create_form_title" name="title" placeholder="Title" maxLength={30} required />
 
-        <select className="rounded-lg hover:bg-stone-100" name="familyId" defaultValue="">
-          <option value="">Private</option>
+        <select
+          className="rounded-lg hover:bg-stone-100 dark:hover:bg-gray-600 h-10"
+          name="familyId"
+          defaultValue=""
+        >
+          <option value="" className="dark:bg-gray-600">
+            Private
+          </option>
           {families.map((family) => (
-            <option key={family.id} value={family.id}>
+            <option key={family.id} value={family.id} className="dark:bg-gray-600">
               {family.name}
             </option>
           ))}

@@ -18,7 +18,12 @@ export default function PopupMenu({ open, popupMenuItems, onItemSelected }: Popu
   return (
     <>
       {open && (
-        <div className="absolute rounded-xl right-0 py-4 mt-8 w-56 shadow-lg bg-white divide-x divide-gray-300 ring-1 ring-black/5">
+        <div
+          className="absolute rounded-xl right-0 py-4 mt-8 w-56
+                     shadow-lg dark:shadow-stone-900/60
+                     bg-white dark:bg-stone-800
+                     divide-x divide-gray-300 ring-1 ring-black/5 dark:ring-white/5"
+        >
           <ul className="flex flex-col ">
             {popupMenuItems.map((item) => (
               <Button key={item.id} className="mx-4" onClick={() => onItemSelected(item)}>

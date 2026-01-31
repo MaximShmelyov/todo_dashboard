@@ -16,7 +16,13 @@ export default function Card({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="bg-white rounded-2xl shadow p-6 border border-stone-100">
+    <div
+      className="bg-white dark:bg-stone-800
+                 rounded-2xl shadow
+                 dark:shadow-stone-900/60
+                 p-6 border
+                 border-stone-100 dark:border-stone-700"
+    >
       <div className="flex flex-row justify-between">
         <h3 className="text-lg font-semibold mb-3">{title}</h3>
         <div className="flex flex-row justify-around">

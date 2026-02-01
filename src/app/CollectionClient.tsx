@@ -69,7 +69,6 @@ export default function CollectionClient({
     setShowSingleDeleteDialog(true);
   };
   const onSingleDeleteConfirm = async (id: string) => {
-    console.warn(`Deleting ${id} item`);
     await deleteItem(id);
     router.refresh();
     setDeletingId("");
@@ -85,7 +84,6 @@ export default function CollectionClient({
     setShowMultiDeleteDialog(true);
   };
   const onMultiDeleteConfirm = async () => {
-    console.warn(`Deleting: ${idsToDeleteState}`);
     await deleteItems(idsToDeleteState);
     router.refresh();
     setShowMultiDeleteDialog(false);
@@ -118,30 +116,42 @@ export default function CollectionClient({
           onCancelAction={onMultiDeleteCancel}
         />
       )}
-      <div className="">
+      <div className="w-full max-w-full overflow-x-hidden px-2">
         <BackNavigation href={getCollectionRoute(collection.type)} />
-        <div className="flex flex-row justify-between">
-          <div className="text-lg font-semibold">{collection.title}</div>
+        <div className="flex flex-wrap items-start justify-between gap-2 w-full min-w-0 mb-2">
+          <div className="text-lg font-semibold min-w-0 break-words">{collection.title}</div>
+
           {idsToDeleteState.length !== 0 && (
-            <Button onClick={onMultiDelete} variant={"delete"}>
-              Delete selected
+            <Button onClick={onMultiDelete} variant={"delete"} className="shrink-0 max-w-full">
+              {`Delete selected (${idsToDeleteState.length})`}
             </Button>
           )}
         </div>
-        <div>{collection.description}</div>
-        <div>{collection.family?.name ?? "(private)"}</div>
-        <div className="mt-2 py-2 shadow-sm rounded-sm">
-          <ul className="flex flex-col gap-2 p-2">
+        <div className="truncate break-words">{collection.description}</div>
+        <div className="truncate break-words">{collection.family?.name ?? "(private)"}</div>
+        <div className="mt-2 py-2 shadow-sm rounded-sm w-full max-w-full">
+          <ul className="flex flex-col gap-2 p-2 w-full max-w-full">
             {collection.items.length > 0
               ? collection.items.map((item) => (
                   <li
-                    className="dark:border dark:border-stone-700 hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-sm shadow-xs"
+                    className={`
+              bg-white dark:bg-stone-900
+              border border-gray-200 dark:border-stone-700
+              border-l-4 ${item.done ? "dark:border-l-stone-800" : "border-l-blue-500"}
+              p-4 rounded-lg shadow
+              mb-2
+              transition
+              overflow-hidden
+              w-full
+              max-w-full
+            `}
                     key={item.id}
                   >
-                    <div className="flex flex-row justify-between gap-2 h-20 items-start overflow-clip">
+                    <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-2 sm:gap-4 w-full max-w-full">
                       <input
-                        className="w-5 h-5"
+                        className="w-5 h-5 mt-1 shrink-0"
                         type="checkbox"
+                        checked={idsToDeleteState.includes(item.id)}
                         onChange={(e) => {
                           idsToDeleteDispatch({
                             id: item.id,
@@ -149,33 +159,46 @@ export default function CollectionClient({
                           });
                         }}
                       />
-                      <div className={`flex-3 ${item.done ? "" : "font-semibold"}`}>
+                      <span
+                        className={`
+    flex-1 min-w-0 break-words break-all
+    ${item.done ? "line-through text-gray-400" : "font-semibold"}
+  `}
+                        title={item.title}
+                      >
                         {item.title}
+                      </span>
+                      <div className="flex flex-row flex-wrap gap-2 w-full sm:w-auto sm:ml-auto justify-end">
+                        <Button
+                          variant={item.done ? "itemDone" : "itemTodo"}
+                          className="h-8 leading-4 min-w-0 max-w-[110px] px-2 truncate"
+                          onClick={async () => {
+                            await toggleItemDone(item);
+                            router.refresh();
+                          }}
+                          aria-label="Change status"
+                          title={item.done ? "Done ✔" : "Todo"}
+                        >
+                          {item.done ? "Done ✔" : "Todo"}
+                        </Button>
+                        <Button
+                          className="!p-1 !rounded-xl !text-xs min-w-0 max-w-[80px] px-2 truncate"
+                          onClick={() => onSingleDelete(item.id)}
+                          title="Delete"
+                        >
+                          Delete
+                        </Button>
                       </div>
-                      <Button
-                        variant={item.done ? "itemDone" : "itemTodo"}
-                        className="flex-1 h-8 leading-4"
-                        onClick={async () => {
-                          await toggleItemDone(item);
-                          router.refresh();
-                        }}
-                      >
-                        {item.done ? "Done" : "Todo"}
-                      </Button>
                     </div>
-                    <div className="ml-4">{item.body}</div>
-                    {/*<div className="ml-4">{item.dueDate && <div>Due date:{item.dueDate.toLocaleString()}</div>}</div>*/}
-                    {/*<div className="ml-4">{item.updatedAt && ("Modified at: " + item.updatedAt.toLocaleString())}</div>*/}
-                    <div className="flex flex-row mt-4 justify-between items-end">
-                      <Button
-                        variant={"delete"}
-                        className={"!p-1 !rounded-xl"}
-                        onClick={() => onSingleDelete(item.id)}
-                        aria-label="Delete"
+                    {item.body && (
+                      <div
+                        className={`ml-0 sm:ml-4 mt-1 italic text-sm break-words break-all ${item.done ? "line-through text-gray-400" : ""}`}
                       >
-                        Delete
-                      </Button>
-                      <div className="ml-auto">{"by " + item.createdBy.name}</div>
+                        {item.body}
+                      </div>
+                    )}
+                    <div className="flex items-center mt-2 ml-0 sm:ml-4 text-xs text-gray-500 break-words break-all">
+                      by {item.createdBy.name}
                     </div>
                   </li>
                 ))
@@ -183,11 +206,11 @@ export default function CollectionClient({
           </ul>
           <div className="flex flex-row mx-auto justify-center">
             <AddButton href="?create=1" aria-label="Add item">
-              +
+              Add item
             </AddButton>
           </div>
           <div className="flex mt-8 px-2">
-            <Button onClick={onCollectionDelete} variant={"delete"} className={"ml-auto"}>
+            <Button onClick={onCollectionDelete} variant={"delete"} className="ml-auto">
               {`Delete ${getLabelOfCollectionType(collection.type)}`}
             </Button>
           </div>

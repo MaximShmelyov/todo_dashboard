@@ -18,7 +18,7 @@ export default async function Home() {
   const feeds = await getFeedCollections();
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 w-full max-w-full">
       <h2 className="text-2xl font-semibold tracking-tight">Recent</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

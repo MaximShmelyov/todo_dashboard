@@ -19,7 +19,7 @@ services:
       - todo_net
 
   app:
-    image: ghcr.io/maximshmelyov/todo_dashboard/app:latest
+    image: ghcr.io/${REPO_LOWERCASE}/app:latest
     container_name: todo-dashboard-app
     restart: unless-stopped
     env_file:

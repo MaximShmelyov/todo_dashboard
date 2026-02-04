@@ -4,8 +4,13 @@ import CollectionsClient from "@/src/app/CollectionsClient";
 import { getSession } from "@/src/lib/auth";
 import { getTodoList } from "@/src/db/actions/todos";
 import PleaseLogIn from "@/src/components/common/PleaseLogIn";
+import { getPageMetadata } from "@/src/lib/metadata";
 
 const collectionType: CollectionType = CollectionType.TODO;
+
+export const metadata = getPageMetadata({
+  title: "TODOs",
+});
 
 export default async function Todos({
   searchParams,

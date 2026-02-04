@@ -4,6 +4,11 @@ import CollectionsClient from "@/src/app/CollectionsClient";
 import { CollectionType } from "@prisma/client";
 import { getSession } from "@/src/lib/auth";
 import PleaseLogIn from "@/src/components/common/PleaseLogIn";
+import { getPageMetadata } from "@/src/lib/metadata";
+
+export const metadata = getPageMetadata({
+  title: "Notes",
+});
 
 export default async function Notes({
   searchParams,

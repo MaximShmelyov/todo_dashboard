@@ -1,5 +1,6 @@
 "use client";
 
+import Head from "next/head";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -17,5 +18,13 @@ export default function Login() {
 
   if (status === "loading") return null;
 
-  return <Button onClick={() => signIn("google")}>Login via Google</Button>;
+  return (
+    <>
+      <Head>
+        <title>Login - {process.env.SITE_TITLE}</title>
+        <meta name="description" content={`Login page for ${process.env.SITE_TITLE}`} />
+      </Head>
+      <Button onClick={() => signIn("google")}>Login via Google</Button>
+    </>
+  );
 }

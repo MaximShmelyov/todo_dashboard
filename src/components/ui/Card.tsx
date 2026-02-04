@@ -2,7 +2,7 @@ import React from "react";
 import LinkButton from "@/src/components/ui/LinkButton";
 
 export type CardAction = {
-  title: string;
+  title: React.ReactNode;
   href: string;
 };
 
@@ -11,7 +11,7 @@ export default function Card({
   cardActions,
   children,
 }: Readonly<{
-  title: string;
+  title: React.ReactNode;
   cardActions?: CardAction[];
   children: React.ReactNode;
 }>) {
@@ -28,8 +28,8 @@ export default function Card({
         <div className="flex flex-row justify-around">
           {cardActions &&
             cardActions.length > 0 &&
-            cardActions.map((cardAction) => (
-              <LinkButton key={cardAction.title} href={cardAction.href}>
+            cardActions.map((cardAction, idx) => (
+              <LinkButton key={idx} href={cardAction.href}>
                 {cardAction.title}
               </LinkButton>
             ))}

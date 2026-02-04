@@ -4,6 +4,11 @@ import { getShoppingList } from "@/src/db/actions/shopping";
 import CollectionsClient from "@/src/app/CollectionsClient";
 import { getSession } from "@/src/lib/auth";
 import PleaseLogIn from "@/src/components/common/PleaseLogIn";
+import { getPageMetadata } from "@/src/lib/metadata";
+
+export const metadata = getPageMetadata({
+  title: "Shopping list",
+});
 
 export default async function ShoppingPage({
   searchParams,

@@ -3,8 +3,12 @@ import { DesktopSidebar } from "@/src/components/layout/sidebar/DesktopSidebar";
 import Header from "@/src/components/layout/Header";
 import SessionProviderWrapper from "@/src/app/auth/SessionProviderWrapper";
 import { MobileSidebar } from "@/src/components/layout/sidebar/MobileSidebar";
+import { cookies } from "next/headers";
+import CookieNotice from "@/src/components/common/CookieNotice";
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const dismissed = (await cookies()).get("cookie_notice_dismissed")?.value === "1";
+
   return (
     <html lang="en">
       <body>
@@ -26,6 +30,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             </main>
           </div>
         </div>
+        {!dismissed && <CookieNotice />}
       </body>
     </html>
   );

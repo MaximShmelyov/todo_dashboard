@@ -1,5 +1,3 @@
-"use server";
-
 import { getFamilies } from "@/src/db/actions/family";
 import AddButton from "@/src/components/ui/buttons/AddButton";
 import Card from "@/src/components/ui/Card";
@@ -13,6 +11,11 @@ import FamilyMemberFormClient from "@/src/app/family/FamilyMemberFormClient";
 import { getMembership } from "@/src/db/actions/membership";
 import { getFamilyMemberRole } from "@/src/db/actions/util";
 import { getAllowedRoleTypesForInviteIssuer } from "@/src/lib/utils";
+import { getPageMetadata } from "@/src/lib/metadata";
+
+export const metadata = getPageMetadata({
+  title: "Family",
+});
 
 export default async function Families({
   searchParams,

@@ -1,6 +1,9 @@
-"use server";
-
 import Card from "@/src/components/ui/Card";
+import { getPageMetadata } from "@/src/lib/metadata";
+
+export const metadata = getPageMetadata({
+  title: "Cookie Policy",
+});
 
 export default async function CookiePolicy() {
   return (

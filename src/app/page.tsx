@@ -1,5 +1,3 @@
-"use server";
-
 import Card from "@/src/components/ui/Card";
 import { getFeedCollections } from "@/src/db/actions/feed/feedCollections";
 import { getCategoryLabelOfCollectionType, getCollectionRoute } from "@/src/lib/utils";
@@ -8,6 +6,12 @@ import VerticalListItem from "@/src/components/ui/list/VerticalListItem";
 import { getSession } from "@/src/lib/auth";
 import PleaseLogIn from "@/src/components/common/PleaseLogIn";
 import { CollectionType } from "@prisma/client";
+import { getPageMetadata } from "@/src/lib/metadata";
+
+export const metadata = getPageMetadata({
+  title: "Home",
+  description: "Home page",
+});
 
 export default async function Home() {
   const session = await getSession();

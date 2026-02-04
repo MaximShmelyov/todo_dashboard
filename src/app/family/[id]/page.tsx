@@ -1,5 +1,3 @@
-"use server";
-
 import { FamilyExtended, getFamily } from "@/src/db/actions/family";
 import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
 import VerticalList from "@/src/components/ui/list/VerticalList";
@@ -14,7 +12,26 @@ import { getFamilyMemberRole } from "@/src/db/actions/util";
 import { getAllowedRoleTypesForInviteIssuer } from "@/src/lib/utils";
 import FamilyInviteListItem from "@/src/app/family/[id]/FamilyInviteListItem";
 import LeaveFamilyWidget from "@/src/app/family/[id]/LeaveFamilyWidget";
+import type { Metadata } from "next";
+import { cache } from "react";
+import { getPageMetadata } from "@/src/lib/metadata";
 
+const getFamilyCached = cache(async (id: string) => {
+  return getFamily(id);
+});
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const paramsObj = await params;
+  const family = await getFamilyCached(paramsObj.id);
+  return getPageMetadata({
+    title: family ? family.name : "Family - Not Found",
+    description: family ? `Family page for ${family.name}` : "Family not found",
+  });
+}
 export default async function FamilyPage({
   searchParams,
   params,
@@ -23,7 +40,7 @@ export default async function FamilyPage({
   params: Promise<{ id: string }>;
 }) {
   const paramsObj = await params;
-  const family: FamilyExtended = await getFamily(paramsObj.id);
+  const family: FamilyExtended = await getFamilyCached(paramsObj.id);
   const { updateMembership, inviteEdit, issueInvite } = await searchParams;
   const membership = updateMembership ? await getMembership(updateMembership) : null;
 

@@ -12,10 +12,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="en">
       <body>
-        <div className="flex min-h-screen overflow-x-hidden">
-          <aside className="hidden md:block w-64 shrink-0">
-            <DesktopSidebar />
-          </aside>
+        <div className="flex w-full min-h-screen overflow-x-hidden">
+          <DesktopSidebar />
 
           <div className="flex-1 min-w-0">
             <div className="flex flex-row w-full min-w-0">

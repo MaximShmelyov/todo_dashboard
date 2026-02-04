@@ -3,15 +3,17 @@ import { DesktopSidebar } from "@/src/components/layout/sidebar/DesktopSidebar";
 import Header from "@/src/components/layout/Header";
 import SessionProviderWrapper from "@/src/app/auth/SessionProviderWrapper";
 import { MobileSidebar } from "@/src/components/layout/sidebar/MobileSidebar";
+import { cookies } from "next/headers";
+import CookieNotice from "@/src/components/common/CookieNotice";
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const dismissed = (await cookies()).get("cookie_notice_dismissed")?.value === "1";
+
   return (
     <html lang="en">
       <body>
-        <div className="flex min-h-screen overflow-x-hidden">
-          <aside className="hidden md:block w-64 shrink-0">
-            <DesktopSidebar />
-          </aside>
+        <div className="flex w-full min-h-screen overflow-x-hidden">
+          <DesktopSidebar />
 
           <div className="flex-1 min-w-0">
             <div className="flex flex-row w-full min-w-0">
@@ -26,6 +28,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             </main>
           </div>
         </div>
+        {!dismissed && <CookieNotice />}
       </body>
     </html>
   );

@@ -1,8 +1,6 @@
 import { CollectionType } from "@prisma/client";
 import CollectionPage from "@/src/app/CollectionPage";
 import { getPageMetadata } from "@/src/lib/metadata";
-import { cache } from "react";
-import { getFamily } from "@/src/db/actions/family";
 
 const collectionType = CollectionType.NOTE;
 

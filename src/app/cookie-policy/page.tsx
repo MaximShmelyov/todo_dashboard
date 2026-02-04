@@ -1,6 +1,8 @@
+"use server";
+
 import Card from "@/src/components/ui/Card";
 
-export default function CookiePolicy() {
+export default async function CookiePolicy() {
   return (
     <div className="space-y-8 w-full max-w-full">
       <h2 className="text-2xl font-semibold tracking-tight">Cookie Policy</h2>
@@ -13,7 +15,7 @@ export default function CookiePolicy() {
         <Card title="0. Overview">
           <p>
             This Cookie Policy explains how we use cookies and similar technologies on{" "}
-            <strong>dev.todo.makestack.eu</strong> (the &quot;Service&quot;).
+            <strong>{process.env.SITE_DOMAIN}</strong> (the &quot;Service&quot;).
           </p>
           <div className="box my-4 p-4 bg-blue-50 dark:bg-stone-900 rounded">
             <p>
@@ -187,7 +189,7 @@ export default function CookiePolicy() {
           <p>If you have questions about this Cookie Policy, contact us:</p>
           <ul>
             <li>
-              Email: <strong>moksov@gmail.com</strong>
+              Email: <strong>{process.env.SUPPORT_EMAIL}</strong>
             </li>
           </ul>
         </Card>

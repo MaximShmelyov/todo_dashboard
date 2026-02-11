@@ -6,6 +6,14 @@ import ConfirmPopup from "@/src/components/layout/ConfirmPopup";
 import { CollectionExtended } from "@/src/db/actions/collections";
 import { Item } from "@prisma/client";
 
+type SortOption =
+  | "created_desc"
+  | "created_asc"
+  | "title_asc"
+  | "title_desc"
+  | "done_asc"
+  | "done_desc";
+
 type Props = {
   collection: NonNullable<CollectionExtended>;
   idsToDelete: string[];
@@ -21,6 +29,8 @@ type Props = {
     toggleSelect: (id: string, checked: boolean) => void;
     delete: (id: string) => void;
   };
+  sortOption: SortOption;
+  setSortOption: (option: SortOption) => void;
 };
 
 export default function CollectionView({
@@ -30,6 +40,8 @@ export default function CollectionView({
   deletingId,
   dialogHandlers,
   itemHandlers,
+  sortOption,
+  setSortOption,
 }: Props) {
   return (
     <>
@@ -70,6 +82,27 @@ export default function CollectionView({
         </div>
         <div className="truncate break-words">{collection.description}</div>
         <div className="truncate break-words">{collection.family?.name ?? "(private)"}</div>
+
+        {/* Сортировка */}
+        <div className="flex gap-2 items-center my-2">
+          <label htmlFor="sort-option" className="text-sm">
+            Sort by:
+          </label>
+          <select
+            id="sort-option"
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value as SortOption)}
+            className="border rounded p-1 text-sm"
+          >
+            <option value="created_desc">Created (newest)</option>
+            <option value="created_asc">Created (oldest)</option>
+            <option value="title_asc">Title (A-Z)</option>
+            <option value="title_desc">Title (Z-A)</option>
+            <option value="done_asc">Status (Todo first)</option>
+            <option value="done_desc">Status (Done first)</option>
+          </select>
+        </div>
+
         <div className="mt-2 py-2 shadow-sm rounded-sm w-full max-w-full">
           <ul className="flex flex-col gap-2 p-2 w-full max-w-full">
             {collection.items.length > 0

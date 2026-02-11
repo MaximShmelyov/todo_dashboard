@@ -61,6 +61,7 @@ export async function getCollection(id: Collection["id"], type: CollectionType) 
               image: true,
             },
           },
+          createdAt: true,
           updatedAt: true,
           dueDate: true,
         },

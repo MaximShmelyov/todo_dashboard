@@ -29,21 +29,22 @@ export default function CollectionsClient({
         </AddButton>
       </div>
 
-      <VerticalList>
-        {items.map((item) => (
-          <VerticalListItem key={item.id} href={`${getCollectionRoute(collectionType)}/${item.id}`}>
-            <div>
-              {/*<input*/}
-              {/*  onClick={(e) => e.stopPropagation()}*/}
-              {/*  className="mr-4 w-6 h-6"*/}
-              {/*  type="checkbox"*/}
-              {/*/>*/}
-              <span>{item.title}</span>
-            </div>
-            <span className="text-sm">{item.family?.name ?? "(private)"}</span>
-          </VerticalListItem>
-        ))}
-      </VerticalList>
+      {!items.length && <p>This list is empty. Add your first item!</p>}
+      {items.length > 0 && (
+        <VerticalList>
+          {items.map((item) => (
+            <VerticalListItem
+              key={item.id}
+              href={`${getCollectionRoute(collectionType)}/${item.id}`}
+            >
+              <div>
+                <span>{item.title}</span>
+              </div>
+              <span className="text-sm">{item.family?.name ?? "(private)"}</span>
+            </VerticalListItem>
+          ))}
+        </VerticalList>
+      )}
     </div>
   );
 }

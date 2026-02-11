@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export default function CookieNotice() {
   const [open, setOpen] = useState(true);
@@ -22,9 +23,12 @@ export default function CookieNotice() {
         <div className="text-sm">
           We use cookies for authentication via Google OAuth and to protect your session. These
           cookies are required for sign-in to work.{" "}
-          <a href="/cookie-policy" className="underline text-white hover:text-blue-200 transition">
+          <Link
+            href="/cookie-policy"
+            className="underline text-white hover:text-blue-200 transition"
+          >
             Learn more
-          </a>
+          </Link>
           .
         </div>
       </div>

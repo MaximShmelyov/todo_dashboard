@@ -40,7 +40,7 @@ export default function FamilyMemberFormClient(props: FamilyMemberFormProps) {
         <label>
           Role:
           <select
-            className="ml-1 hover:bg-stone-100"
+            className="ml-1 not-dark:hover:bg-stone-100 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md"
             name="roleType"
             defaultValue={membership.roleType}
           >

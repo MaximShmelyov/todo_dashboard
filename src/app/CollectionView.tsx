@@ -83,7 +83,7 @@ export default function CollectionView({
         <div className="truncate break-words">{collection.description}</div>
         <div className="truncate break-words">{collection.family?.name ?? "(private)"}</div>
 
-        {/* Сортировка */}
+        {/* Sort */}
         <div className="flex gap-2 items-center my-2">
           <label htmlFor="sort-option" className="text-sm">
             Sort by:
@@ -92,7 +92,7 @@ export default function CollectionView({
             id="sort-option"
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value as SortOption)}
-            className="border rounded p-1 text-sm"
+            className="border rounded p-1 text-sm dark:bg-gray-600"
           >
             <option value="created_desc">Created (newest)</option>
             <option value="created_asc">Created (oldest)</option>

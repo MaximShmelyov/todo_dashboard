@@ -56,11 +56,11 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
           router.replace(`/family/${familyId}`);
         }}
       >
-        <ModalDialogTitle>{invite ? `invite` : "Create invite"}</ModalDialogTitle>
+        <ModalDialogTitle>{invite ? `Edit invite` : "Create invite"}</ModalDialogTitle>
         <label>
           Family:
           <select
-            className="hover:bg-stone-100"
+            className="not-dark:hover:bg-stone-100 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md"
             name="familyId"
             defaultValue={invite ? invite.family.id : ""}
             required
@@ -69,9 +69,11 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
               <option value={invite.family.id}>{invite.family.name}</option>
             ) : (
               <>
-                <option value="" disabled>
-                  -
-                </option>
+                {(!families?.length || families?.length > 1) && (
+                  <option value="" disabled>
+                    -
+                  </option>
+                )}
                 {families!.map((family) => (
                   <option key={family.id} value={family.id}>
                     {family.name}
@@ -84,7 +86,7 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
         <label>
           Role:
           <select
-            className="hover:bg-stone-100"
+            className="not-dark:hover:bg-stone-100 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md"
             name="roleType"
             defaultValue={invite ? invite.roleType : RoleType.USER}
           >

@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import PopupMenu, { PopupMenuItem } from "@/src/components/layout/PopupMenu";
 import Image from "next/image";
+import { Session } from "next-auth";
 
 interface PopupMenuItemWithAction extends PopupMenuItem {
   action: () => void;
@@ -26,6 +27,21 @@ function getActionItems(signedIn: boolean): PopupMenuItemWithAction[] {
       action: () => signIn("google").then(() => console.log("logged in")),
     },
   ];
+}
+
+type SessionStatus = ReturnType<typeof useSession>["status"];
+
+function getAuthenticationStatusMessage(session: Session | null, status: SessionStatus): string {
+  switch (status) {
+    case "authenticated":
+      return session?.user?.name ?? "Unknown";
+    case "unauthenticated":
+      return "Logged out";
+    case "loading":
+      return "Loading...";
+    default:
+      throw new Error("Got unexpected status");
+  }
 }
 
 export default function ProfileMenu() {
@@ -58,7 +74,7 @@ export default function ProfileMenu() {
   return (
     <div className="flex items-center gap-3 ml-auto" ref={menuRef}>
       <span className="text-sm not-dark:text-stone-600">
-        {session ? session.user?.name : "Logged out"}
+        {getAuthenticationStatusMessage(session, status)}
       </span>
       <button
         className="w-8 h-8 rounded-full bg-stone-300 dark:bg-stone-500 cursor-pointer"

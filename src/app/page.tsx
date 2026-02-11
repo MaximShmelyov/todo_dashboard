@@ -7,6 +7,7 @@ import { getSession } from "@/src/lib/auth";
 import PleaseLogIn from "@/src/components/common/PleaseLogIn";
 import { CollectionType } from "@prisma/client";
 import { getPageMetadata } from "@/src/lib/metadata";
+import Link from "next/link";
 
 export const metadata = getPageMetadata({
   title: "Home",
@@ -42,9 +43,12 @@ export default async function Home() {
             ) : (
               "No recent items"
             )}
-            <a className="block mt-2 underline" href={getCollectionRoute(type as CollectionType)}>
+            <Link
+              className="block mt-2 underline"
+              href={getCollectionRoute(type as CollectionType)}
+            >
               See all items -&gt;
-            </a>
+            </Link>
           </Card>
         ))}
       </div>

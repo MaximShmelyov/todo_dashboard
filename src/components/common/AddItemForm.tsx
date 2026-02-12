@@ -14,7 +14,7 @@ export default async function AddItemForm({
 }) {
   const session = await getSession();
 
-  if (!session) return "Loading";
+  if (!session) throw new Error("empty session");
 
   return (
     <AddItemFormClient

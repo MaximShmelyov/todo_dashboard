@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/src/components/ui/Button";
 
 export interface PopupMenuItem {
@@ -16,13 +17,17 @@ interface PopupMenuProps extends PopupMenuParams {
 
 export default function PopupMenu({ open, popupMenuItems, onItemSelected }: PopupMenuProps) {
   return (
-    <>
+    <AnimatePresence>
       {open && (
-        <div
+        <motion.div
           className="absolute rounded-xl right-0 py-4 mt-8 w-56
                      shadow-lg dark:shadow-stone-900/60
                      bg-white dark:bg-stone-800
                      divide-x divide-gray-300 ring-1 ring-black/5 dark:ring-white/5"
+          initial={{ opacity: 0, y: -16, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -16, scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
         >
           <ul className="flex flex-col ">
             {popupMenuItems.map((item) => (
@@ -31,8 +36,8 @@ export default function PopupMenu({ open, popupMenuItems, onItemSelected }: Popu
               </Button>
             ))}
           </ul>
-        </div>
+        </motion.div>
       )}
-    </>
+    </AnimatePresence>
   );
 }

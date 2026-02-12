@@ -70,7 +70,7 @@ describe("CollectionsClient", () => {
     );
 
     expect(screen.getByText("My Collections")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /create/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /new/i })).toBeInTheDocument();
     expect(screen.getByText("Groceries")).toBeInTheDocument();
     expect(screen.getByText("Work")).toBeInTheDocument();
     expect(screen.getByText("Family1")).toBeInTheDocument();

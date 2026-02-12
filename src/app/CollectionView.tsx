@@ -106,7 +106,7 @@ export default function CollectionView({
 
         <div className="mt-2 py-2 shadow-sm rounded-sm w-full max-w-full">
           <ul className="flex flex-col gap-2 p-2 w-full max-w-full">
-            <AnimatePresence initial={false}>
+            <AnimatePresence initial={true}>
               {collection.items.length > 0
                 ? collection.items.map((item) => (
                     <motion.li

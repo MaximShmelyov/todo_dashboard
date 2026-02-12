@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, AnimatePresence } from "framer-motion";
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import PopupMenu, { PopupMenuItem } from "@/src/components/layout/PopupMenu";
@@ -72,25 +73,34 @@ export default function ProfileMenu() {
   }, []);
 
   return (
-    <div className="flex items-center gap-3 ml-auto" ref={menuRef}>
-      <span className="text-sm not-dark:text-stone-600">
-        {getAuthenticationStatusMessage(session, status)}
-      </span>
-      <button
-        className="w-8 h-8 rounded-full bg-stone-300 dark:bg-stone-500 cursor-pointer"
-        onClick={() => setOpen((prev) => !prev)}
+    <AnimatePresence>
+      <motion.div
+        className="flex items-center gap-3 ml-auto"
+        ref={menuRef}
+        initial={{ opacity: 0, y: -16, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -16, scale: 0.98 }}
+        transition={{ type: "spring", stiffness: 400, damping: 30 }}
       >
-        {session && session.user && (
-          <Image
-            className="rounded-full"
-            src={session.user.image ?? ""}
-            alt="Profile image"
-            width={100}
-            height={100}
-          />
-        )}
-      </button>
-      <PopupMenu open={open} popupMenuItems={items} onItemSelected={onItemSelected} />
-    </div>
+        <span className="text-sm not-dark:text-stone-600">
+          {getAuthenticationStatusMessage(session, status)}
+        </span>
+        <button
+          className="w-8 h-8 rounded-full bg-stone-300 dark:bg-stone-500 cursor-pointer"
+          onClick={() => setOpen((prev) => !prev)}
+        >
+          {session && session.user && (
+            <Image
+              className="rounded-full"
+              src={session.user.image ?? ""}
+              alt="Profile image"
+              width={100}
+              height={100}
+            />
+          )}
+        </button>
+        <PopupMenu open={open} popupMenuItems={items} onItemSelected={onItemSelected} />
+      </motion.div>
+    </AnimatePresence>
   );
 }

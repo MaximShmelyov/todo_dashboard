@@ -12,7 +12,7 @@ export default async function CreateCollectionForm({
 }) {
   const session = await getSession();
 
-  if (!session) return "Loading";
+  if (!session) throw new Error("empty session");
 
   const families = await prisma.family.findMany({
     where: {

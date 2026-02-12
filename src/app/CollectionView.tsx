@@ -110,6 +110,7 @@ export default function CollectionView({
               {collection.items.length > 0
                 ? collection.items.map((item) => (
                     <motion.li
+                      layout
                       key={item.id}
                       initial={{ opacity: 0, y: 24 }}
                       animate={{ opacity: 1, y: 0 }}

@@ -1,3 +1,4 @@
+import importPlugin from "eslint-plugin-import";
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
@@ -7,6 +8,9 @@ const eslintConfig = defineConfig([
   ...nextTs,
 
   {
+    plugins: {
+      import: importPlugin,
+    },
     rules: {
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
@@ -18,6 +22,7 @@ const eslintConfig = defineConfig([
           destructuredArrayIgnorePattern: "^_",
         },
       ],
+      "import/no-unresolved": "error",
     },
   },
 

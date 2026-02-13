@@ -105,8 +105,14 @@ export default function CollectionView({
         </div>
 
         <div className="mt-2 py-2 shadow-sm rounded-sm w-full max-w-full">
-          <ul className="flex flex-col gap-2 p-2 w-full max-w-full">
-            <AnimatePresence initial={true}>
+          <motion.ul
+            layout
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="flex flex-col gap-2 p-2 w-full max-w-full"
+          >
+            <AnimatePresence initial={false}>
               {collection.items.length > 0
                 ? collection.items.map((item) => (
                     <motion.li
@@ -179,7 +185,7 @@ export default function CollectionView({
                   ))
                 : "No items yet"}
             </AnimatePresence>
-          </ul>
+          </motion.ul>
           <div className="flex flex-row mx-auto justify-center">
             <AddButton href="?create=1" aria-label="Add item">
               Add item

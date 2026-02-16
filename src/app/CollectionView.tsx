@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import InlineEditInput from "@/src/components/common/InlineEditInput";
+import InlineEditTextarea from "@/src/components/common/InlineEditTextarea";
 import AddButton from "@/src/components/ui/buttons/AddButton";
 import Button from "@/src/components/ui/Button";
 import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
@@ -31,6 +32,7 @@ type Props = {
     toggleDone: (item: Pick<Item, "id" | "done">) => void;
     toggleSelect: (id: string, checked: boolean) => void;
     editTitle: (id: string, title: string) => void;
+    editBody: (id: string, body: string) => void;
     delete: (id: string) => void;
   };
   sortOption: SortOption;
@@ -49,6 +51,8 @@ export default function CollectionView({
 }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingValue, setEditingValue] = useState<string>("");
+  const [editingBodyId, setEditingBodyId] = useState<string | null>(null);
+  const [editingBodyValue, setEditingBodyValue] = useState<string>("");
 
   return (
     <>
@@ -194,15 +198,45 @@ export default function CollectionView({
                           </Button>
                         </div>
                       </div>
-                      {item.body && (
-                        <div
-                          className={`ml-0 sm:ml-4 mt-1 italic text-sm break-words break-all ${
-                            item.done ? "line-through text-gray-400" : ""
-                          }`}
-                        >
-                          {item.body}
-                        </div>
-                      )}
+                      <div
+                        className={`
+    ml-0 sm:ml-4 mt-1 italic text-sm break-words break-all
+    ${editingBodyId !== item.id && item.done ? "text-gray-400" : ""}
+  `}
+                      >
+                        {editingBodyId === item.id ? (
+                          <InlineEditTextarea
+                            initialValue={editingBodyValue}
+                            onSave={(val) => {
+                              itemHandlers.editBody(item.id, val);
+                              setEditingBodyId(null);
+                            }}
+                            onCancel={() => setEditingBodyId(null)}
+                            textareaAriaLabel={"Edit description"}
+                            className="w-full"
+                          />
+                        ) : (
+                          <span
+                            className={`
+        flex-1 whitespace-pre-line
+        ${item.body && item.body.trim() !== "" ? "" : "text-gray-400 italic"}
+        ${item.done ? "line-through" : ""}
+        cursor-pointer
+      `}
+                            title={
+                              item.body && item.body.trim() !== ""
+                                ? "Edit description"
+                                : "Add description"
+                            }
+                            onClick={() => {
+                              setEditingBodyId(item.id);
+                              setEditingBodyValue(item.body ?? "");
+                            }}
+                          >
+                            {item.body && item.body.trim() !== "" ? item.body : "Add description"}
+                          </span>
+                        )}
+                      </div>
                       <div className="flex items-center mt-2 ml-0 sm:ml-4 text-xs text-gray-500 break-words break-all">
                         by {item.createdBy.name}
                       </div>

@@ -105,6 +105,10 @@ export default function CollectionClient({
       await updateItem({ id, title });
       router.refresh();
     },
+    editBody: async (id: string, body: string) => {
+      await updateItem({ id, body });
+      router.refresh();
+    },
     delete: (id: string) => {
       dialogHandlers.single.open(id);
     },

@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
+import InlineEditInput from "@/src/components/common/InlineEditInput";
 import AddButton from "@/src/components/ui/buttons/AddButton";
 import Button from "@/src/components/ui/Button";
 import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
@@ -6,6 +7,7 @@ import { getCollectionRoute, getLabelOfCollectionType } from "@/src/lib/utils";
 import ConfirmPopup from "@/src/components/layout/ConfirmPopup";
 import { CollectionExtended } from "@/src/db/actions/collections";
 import { Item } from "@prisma/client";
+import { useState } from "react";
 
 type SortOption =
   | "created_desc"
@@ -28,6 +30,7 @@ type Props = {
   itemHandlers: {
     toggleDone: (item: Pick<Item, "id" | "done">) => void;
     toggleSelect: (id: string, checked: boolean) => void;
+    editTitle: (id: string, title: string) => void;
     delete: (id: string) => void;
   };
   sortOption: SortOption;
@@ -44,6 +47,9 @@ export default function CollectionView({
   sortOption,
   setSortOption,
 }: Props) {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingValue, setEditingValue] = useState<string>("");
+
   return (
     <>
       {showDialogs.collection && (
@@ -141,15 +147,32 @@ export default function CollectionView({
                           checked={idsToDelete.includes(item.id)}
                           onChange={(e) => itemHandlers.toggleSelect(item.id, e.target.checked)}
                         />
-                        <span
-                          className={`
-                          flex-1 min-w-0 break-words break-all
-                          ${item.done ? "line-through text-gray-400" : "font-semibold"}
-                        `}
-                          title={item.title}
-                        >
-                          {item.title}
-                        </span>
+                        {editingId === item.id ? (
+                          <InlineEditInput
+                            initialValue={editingValue}
+                            onSave={(val) => {
+                              itemHandlers.editTitle(item.id, val);
+                              setEditingId(null);
+                            }}
+                            onCancel={() => setEditingId(null)}
+                            className="flex-1 min-w-0"
+                          />
+                        ) : (
+                          <span
+                            className={`
+                    flex-1 min-w-0 break-words break-all
+                    ${item.done ? "line-through text-gray-400" : "font-semibold"}
+                    cursor-pointer
+                  `}
+                            title={item.title}
+                            onClick={() => {
+                              setEditingId(item.id);
+                              setEditingValue(item.title);
+                            }}
+                          >
+                            {item.title}
+                          </span>
+                        )}
                         <div className="flex flex-row flex-wrap gap-2 w-full sm:w-auto sm:ml-auto justify-end">
                           <Button
                             variant={item.done ? "itemDone" : "itemTodo"}

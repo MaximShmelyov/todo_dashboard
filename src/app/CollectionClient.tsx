@@ -101,6 +101,10 @@ export default function CollectionClient({
         type: checked ? "ADD" : "REMOVE",
       });
     },
+    editTitle: async (id: string, title: string) => {
+      await updateItem({ id, title });
+      router.refresh();
+    },
     delete: (id: string) => {
       dialogHandlers.single.open(id);
     },

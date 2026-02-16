@@ -140,40 +140,42 @@ export default function CollectionView({
               max-w-full
             `}
                     >
-                      <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-2 sm:gap-4 w-full max-w-full">
+                      <div className="flex flex-row items-center gap-2 w-full min-w-0">
                         <input
                           className="w-5 h-5 mt-1 shrink-0"
                           type="checkbox"
                           checked={idsToDelete.includes(item.id)}
                           onChange={(e) => itemHandlers.toggleSelect(item.id, e.target.checked)}
                         />
-                        {editingId === item.id ? (
-                          <InlineEditInput
-                            initialValue={editingValue}
-                            onSave={(val) => {
-                              itemHandlers.editTitle(item.id, val);
-                              setEditingId(null);
-                            }}
-                            onCancel={() => setEditingId(null)}
-                            className="flex-1 min-w-0"
-                          />
-                        ) : (
-                          <span
-                            className={`
-                    flex-1 min-w-0 break-words break-all
-                    ${item.done ? "line-through text-gray-400" : "font-semibold"}
-                    cursor-pointer
-                  `}
-                            title={item.title}
-                            onClick={() => {
-                              setEditingId(item.id);
-                              setEditingValue(item.title);
-                            }}
-                          >
-                            {item.title}
-                          </span>
-                        )}
-                        <div className="flex flex-row flex-wrap gap-2 w-full sm:w-auto sm:ml-auto justify-end">
+                        <div className="flex-1 min-w-0">
+                          {editingId === item.id ? (
+                            <InlineEditInput
+                              initialValue={editingValue}
+                              onSave={(val) => {
+                                itemHandlers.editTitle(item.id, val);
+                                setEditingId(null);
+                              }}
+                              onCancel={() => setEditingId(null)}
+                              className="w-full max-w-full"
+                            />
+                          ) : (
+                            <span
+                              className={`
+          block truncate break-words break-all
+          ${item.done ? "line-through text-gray-400" : "font-semibold"}
+          cursor-pointer
+        `}
+                              title={item.title}
+                              onClick={() => {
+                                setEditingId(item.id);
+                                setEditingValue(item.title);
+                              }}
+                            >
+                              {item.title}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex flex-row gap-2 shrink-0 ml-2">
                           <Button
                             variant={item.done ? "itemDone" : "itemTodo"}
                             className="h-8 leading-4 min-w-0 max-w-[110px] px-2 truncate"

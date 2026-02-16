@@ -56,12 +56,12 @@ export default function CollectionClient({
   const [sortOption, setSortOption] = useState<SortOption>("created_desc");
   const router = useRouter();
 
-  const collectionHandlers = {
-    editTitle: async (title: string) => {
-      await updateCollection({ id: collection.id, title });
-      router.refresh();
-    },
-  };
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingValue, setEditingValue] = useState<string>("");
+  const [editingBodyId, setEditingBodyId] = useState<string | null>(null);
+  const [editingBodyValue, setEditingBodyValue] = useState<string>("");
+  const [editingCollectionTitle, setEditingCollectionTitle] = useState(false);
+  const [collectionTitleValue, setCollectionTitleValue] = useState(collection.title);
 
   const dialogHandlers = {
     collection: {
@@ -125,6 +125,13 @@ export default function CollectionClient({
     },
   };
 
+  const collectionHandlers = {
+    editTitle: async (title: string) => {
+      await updateCollection({ id: collection.id, title });
+      router.refresh();
+    },
+  };
+
   const sortedItems = useMemo(() => {
     const items = [...collection.items];
     items.sort((a, b) => {
@@ -166,9 +173,21 @@ export default function CollectionClient({
       deletingId={deletingId}
       dialogHandlers={dialogHandlers}
       itemHandlers={itemHandlers}
+      collectionHandlers={collectionHandlers}
       sortOption={sortOption}
       setSortOption={setSortOption}
-      collectionHandlers={collectionHandlers}
+      editingId={editingId}
+      setEditingId={setEditingId}
+      editingValue={editingValue}
+      setEditingValue={setEditingValue}
+      editingBodyId={editingBodyId}
+      setEditingBodyId={setEditingBodyId}
+      editingBodyValue={editingBodyValue}
+      setEditingBodyValue={setEditingBodyValue}
+      editingCollectionTitle={editingCollectionTitle}
+      setEditingCollectionTitle={setEditingCollectionTitle}
+      collectionTitleValue={collectionTitleValue}
+      setCollectionTitleValue={setCollectionTitleValue}
     />
   );
 }

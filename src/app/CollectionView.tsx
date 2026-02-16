@@ -8,7 +8,6 @@ import { getCollectionRoute, getLabelOfCollectionType } from "@/src/lib/utils";
 import ConfirmPopup from "@/src/components/layout/ConfirmPopup";
 import { CollectionExtended } from "@/src/db/actions/collections";
 import { Item } from "@prisma/client";
-import { useState } from "react";
 
 type SortOption =
   | "created_desc"
@@ -40,6 +39,18 @@ type Props = {
   };
   sortOption: SortOption;
   setSortOption: (option: SortOption) => void;
+  editingId: string | null;
+  setEditingId: (id: string | null) => void;
+  editingValue: string;
+  setEditingValue: (v: string) => void;
+  editingBodyId: string | null;
+  setEditingBodyId: (id: string | null) => void;
+  editingBodyValue: string;
+  setEditingBodyValue: (v: string) => void;
+  editingCollectionTitle: boolean;
+  setEditingCollectionTitle: (v: boolean) => void;
+  collectionTitleValue: string;
+  setCollectionTitleValue: (v: string) => void;
 };
 
 export default function CollectionView({
@@ -52,14 +63,19 @@ export default function CollectionView({
   collectionHandlers,
   sortOption,
   setSortOption,
+  editingId,
+  setEditingId,
+  editingValue,
+  setEditingValue,
+  editingBodyId,
+  setEditingBodyId,
+  editingBodyValue,
+  setEditingBodyValue,
+  editingCollectionTitle,
+  setEditingCollectionTitle,
+  collectionTitleValue,
+  setCollectionTitleValue,
 }: Props) {
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editingValue, setEditingValue] = useState<string>("");
-  const [editingBodyId, setEditingBodyId] = useState<string | null>(null);
-  const [editingBodyValue, setEditingBodyValue] = useState<string>("");
-  const [editingCollectionTitle, setEditingCollectionTitle] = useState(false);
-  const [collectionTitleValue, setCollectionTitleValue] = useState(collection.title);
-
   return (
     <>
       {showDialogs.collection && (

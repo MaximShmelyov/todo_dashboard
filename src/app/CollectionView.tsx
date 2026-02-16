@@ -35,6 +35,9 @@ type Props = {
     editBody: (id: string, body: string) => void;
     delete: (id: string) => void;
   };
+  collectionHandlers: {
+    editTitle: (title: string) => void;
+  };
   sortOption: SortOption;
   setSortOption: (option: SortOption) => void;
 };
@@ -46,6 +49,7 @@ export default function CollectionView({
   deletingId,
   dialogHandlers,
   itemHandlers,
+  collectionHandlers,
   sortOption,
   setSortOption,
 }: Props) {
@@ -53,6 +57,8 @@ export default function CollectionView({
   const [editingValue, setEditingValue] = useState<string>("");
   const [editingBodyId, setEditingBodyId] = useState<string | null>(null);
   const [editingBodyValue, setEditingBodyValue] = useState<string>("");
+  const [editingCollectionTitle, setEditingCollectionTitle] = useState(false);
+  const [collectionTitleValue, setCollectionTitleValue] = useState(collection.title);
 
   return (
     <>
@@ -80,7 +86,28 @@ export default function CollectionView({
       <div className="w-full max-w-full overflow-x-hidden px-2">
         <BackNavigation href={getCollectionRoute(collection.type)} />
         <div className="flex flex-wrap items-start justify-between gap-2 w-full min-w-0 mb-2">
-          <div className="text-lg font-semibold min-w-0 break-words">{collection.title}</div>
+          <div className="text-lg font-semibold min-w-0 break-words">
+            {editingCollectionTitle ? (
+              <InlineEditInput
+                initialValue={collectionTitleValue}
+                onSave={(val) => {
+                  setEditingCollectionTitle(false);
+                  setCollectionTitleValue(val);
+                  collectionHandlers.editTitle(val);
+                }}
+                onCancel={() => setEditingCollectionTitle(false)}
+                className="w-full max-w-full"
+              />
+            ) : (
+              <span
+                className="cursor-pointer"
+                title="Edit collection title"
+                onClick={() => setEditingCollectionTitle(true)}
+              >
+                {collection.title}
+              </span>
+            )}
+          </div>
           {idsToDelete.length !== 0 && (
             <Button
               onClick={dialogHandlers.multi.open}

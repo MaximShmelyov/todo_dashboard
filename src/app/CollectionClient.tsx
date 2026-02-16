@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation";
 import { Item } from "@prisma/client";
 import { getCollectionRoute } from "@/src/lib/utils";
 import { deleteItem, deleteItems, updateItem } from "@/src/db/actions/item";
-import { CollectionExtended, deleteCollection } from "@/src/db/actions/collections";
+import {
+  CollectionExtended,
+  deleteCollection,
+  updateCollection,
+} from "@/src/db/actions/collections";
 import CollectionView from "./CollectionView";
 
 type AddAction = { id: string; type: "ADD" };
@@ -51,6 +55,13 @@ export default function CollectionClient({
   );
   const [sortOption, setSortOption] = useState<SortOption>("created_desc");
   const router = useRouter();
+
+  const collectionHandlers = {
+    editTitle: async (title: string) => {
+      await updateCollection({ id: collection.id, title });
+      router.refresh();
+    },
+  };
 
   const dialogHandlers = {
     collection: {
@@ -157,6 +168,7 @@ export default function CollectionClient({
       itemHandlers={itemHandlers}
       sortOption={sortOption}
       setSortOption={setSortOption}
+      collectionHandlers={collectionHandlers}
     />
   );
 }

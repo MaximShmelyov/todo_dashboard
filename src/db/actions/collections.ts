@@ -132,3 +132,26 @@ export async function deleteCollection(id: Collection["id"]) {
     },
   });
 }
+
+export async function updateCollection(
+  data: Partial<Pick<Collection, "title" | "description" | "familyId" | "type">> &
+    Pick<Collection, "id">,
+) {
+  const ownerId = await getAuthorId();
+  const { id, ...updateData } = data;
+
+  await prisma.collection.updateMany({
+    where: {
+      id,
+      OR: [
+        { ownerId },
+        {
+          familyId: {
+            in: await getFamiliesIds(),
+          },
+        },
+      ],
+    },
+    data: updateData,
+  });
+}

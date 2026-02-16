@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation";
 import { Item } from "@prisma/client";
 import { getCollectionRoute } from "@/src/lib/utils";
 import { deleteItem, deleteItems, updateItem } from "@/src/db/actions/item";
-import { CollectionExtended, deleteCollection } from "@/src/db/actions/collections";
+import {
+  CollectionExtended,
+  deleteCollection,
+  updateCollection,
+} from "@/src/db/actions/collections";
 import CollectionView from "./CollectionView";
 
 type AddAction = { id: string; type: "ADD" };
@@ -51,6 +55,13 @@ export default function CollectionClient({
   );
   const [sortOption, setSortOption] = useState<SortOption>("created_desc");
   const router = useRouter();
+
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingValue, setEditingValue] = useState<string>("");
+  const [editingBodyId, setEditingBodyId] = useState<string | null>(null);
+  const [editingBodyValue, setEditingBodyValue] = useState<string>("");
+  const [editingCollectionTitle, setEditingCollectionTitle] = useState(false);
+  const [collectionTitleValue, setCollectionTitleValue] = useState(collection.title);
 
   const dialogHandlers = {
     collection: {
@@ -101,8 +112,23 @@ export default function CollectionClient({
         type: checked ? "ADD" : "REMOVE",
       });
     },
+    editTitle: async (id: string, title: string) => {
+      await updateItem({ id, title });
+      router.refresh();
+    },
+    editBody: async (id: string, body: string) => {
+      await updateItem({ id, body });
+      router.refresh();
+    },
     delete: (id: string) => {
       dialogHandlers.single.open(id);
+    },
+  };
+
+  const collectionHandlers = {
+    editTitle: async (title: string) => {
+      await updateCollection({ id: collection.id, title });
+      router.refresh();
     },
   };
 
@@ -147,8 +173,21 @@ export default function CollectionClient({
       deletingId={deletingId}
       dialogHandlers={dialogHandlers}
       itemHandlers={itemHandlers}
+      collectionHandlers={collectionHandlers}
       sortOption={sortOption}
       setSortOption={setSortOption}
+      editingId={editingId}
+      setEditingId={setEditingId}
+      editingValue={editingValue}
+      setEditingValue={setEditingValue}
+      editingBodyId={editingBodyId}
+      setEditingBodyId={setEditingBodyId}
+      editingBodyValue={editingBodyValue}
+      setEditingBodyValue={setEditingBodyValue}
+      editingCollectionTitle={editingCollectionTitle}
+      setEditingCollectionTitle={setEditingCollectionTitle}
+      collectionTitleValue={collectionTitleValue}
+      setCollectionTitleValue={setCollectionTitleValue}
     />
   );
 }

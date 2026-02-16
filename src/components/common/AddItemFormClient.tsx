@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import Form from "next/form";
 import Input from "@/src/components/ui/Input";
+import Textarea from "@/src/components/ui/Textarea";
 import { getCollectionRoute, getLabelOfCollectionType } from "@/src/lib/utils";
 import { createItem } from "@/src/db/actions/item";
 import { CollectionType } from "@prisma/client";
@@ -37,7 +38,7 @@ export default function AddItemFormClient({
       >
         <ModalDialogTitle>Add item to {getLabelOfCollectionType(collectionType)}</ModalDialogTitle>
         <Input id="create_form_title" name="title" placeholder="Title" required />
-        <Input id="create_form_body" name="body" placeholder="Body" />
+        <Textarea id="create_form_body" name="body" placeholder="Body" />
 
         <Button type="submit">Submit</Button>
       </Form>

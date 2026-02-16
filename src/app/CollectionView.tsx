@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import InlineEditInput from "@/src/components/common/InlineEditInput";
-import InlineEditTextarea from "@/src/components/common/InlineEditTextarea";
+import InlineEditInput from "@/src/components/ui/InlineEditInput";
+import InlineEditTextarea from "@/src/components/ui/InlineEditTextarea";
 import AddButton from "@/src/components/ui/buttons/AddButton";
 import Button from "@/src/components/ui/Button";
 import BackNavigation from "@/src/components/ui/buttons/BackNavigation";

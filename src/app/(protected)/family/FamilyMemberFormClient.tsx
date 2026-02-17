@@ -3,6 +3,7 @@
 import { RoleType } from "@prisma/client";
 import Form from "next/form";
 import { useRouter } from "next/navigation";
+import React, { useRef } from "react";
 
 import ModalDialog from "@/src/components/common/ModalDialog";
 import ModalDialogTitle from "@/src/components/common/ModalDialogTitle";
@@ -23,9 +24,13 @@ type FamilyMemberFormProps = {
 export default function FamilyMemberFormClient(props: FamilyMemberFormProps) {
   const router = useRouter();
   const { membership, onSuccessPath, inviteRoleTypes } = props;
+  const selectRef = useRef<HTMLSelectElement>(null);
 
   return (
-    <ModalDialog onCloseAction={() => router.back()}>
+    <ModalDialog
+      initialFocus={selectRef as React.RefObject<HTMLElement>}
+      onCloseAction={() => router.back()}
+    >
       <Form
         className="flex flex-col gap-4"
         action={async (formData) => {
@@ -41,7 +46,7 @@ export default function FamilyMemberFormClient(props: FamilyMemberFormProps) {
         </ModalDialogTitle>
         <label className="flex flex-col gap-1">
           Role:
-          <Select name="roleType" defaultValue={membership.roleType}>
+          <Select name="roleType" defaultValue={membership.roleType} ref={selectRef}>
             {inviteRoleTypes.map((roleType) => (
               <option key={roleType} value={roleType}>
                 {roleType}

@@ -3,6 +3,7 @@
 import { CollectionType } from "@prisma/client";
 import Form from "next/form";
 import { useRouter } from "next/navigation";
+import React, { useRef } from "react";
 
 import ModalDialog from "@/src/components/common/ModalDialog";
 import ModalDialogTitle from "@/src/components/common/ModalDialogTitle";
@@ -22,9 +23,13 @@ export default function AddItemFormClient({
   ownerId: string;
 }) {
   const router = useRouter();
+  const titleInputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <ModalDialog onCloseAction={() => router.back()}>
+    <ModalDialog
+      initialFocus={titleInputRef as React.RefObject<HTMLElement>}
+      onCloseAction={() => router.back()}
+    >
       <Form
         action={async (formData) => {
           await createItem({
@@ -49,6 +54,7 @@ export default function AddItemFormClient({
             placeholder="Enter a title"
             required
             aria-required="true"
+            ref={titleInputRef}
           />
         </div>
 

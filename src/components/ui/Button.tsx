@@ -8,6 +8,13 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
 };
 
-export default function Button({ variant = "primary", className, ...props }: ButtonProps) {
-  return <button className={`${styles.button} ${styles[variant]} ${className}`} {...props} />;
-}
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  { variant = "primary", className, ...props },
+  ref,
+) {
+  return (
+    <button className={`${styles.button} ${styles[variant]} ${className}`} {...props} ref={ref} />
+  );
+});
+
+export default Button;

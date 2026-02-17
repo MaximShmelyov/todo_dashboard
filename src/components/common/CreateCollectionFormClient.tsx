@@ -3,6 +3,7 @@
 import { CollectionType, Family } from "@prisma/client";
 import Form from "next/form";
 import { useRouter } from "next/navigation";
+import React, { useRef } from "react";
 
 import ModalDialog from "@/src/components/common/ModalDialog";
 import ModalDialogTitle from "@/src/components/common/ModalDialogTitle";
@@ -43,9 +44,13 @@ export default function CreateCollectionFormClient({
   families: Family[];
 }) {
   const router = useRouter();
+  const initialFocusRef = useRef<HTMLInputElement>(null);
 
   return (
-    <ModalDialog onCloseAction={() => router.back()}>
+    <ModalDialog
+      initialFocus={initialFocusRef as React.RefObject<HTMLElement>}
+      onCloseAction={() => router.back()}
+    >
       <Form
         action={async (formData) => {
           await createCollection(
@@ -69,6 +74,7 @@ export default function CreateCollectionFormClient({
             maxLength={30}
             required
             aria-required="true"
+            ref={initialFocusRef}
           />
         </label>
         <label className="flex flex-col gap-1">

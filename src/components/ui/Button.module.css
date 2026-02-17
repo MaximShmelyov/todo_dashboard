@@ -13,6 +13,11 @@
   @apply rounded-lg;
 }
 
+.button:focus-visible {
+  outline: 2px solid #6c6c6c; /* синий, можно заменить на свой */
+  outline-offset: 2px;
+}
+
 .primary {
   @apply bg-stone-100 dark:bg-stone-700 border border-stone-300 dark:border-stone-500 hover:bg-stone-200 dark:hover:bg-stone-500;
 }

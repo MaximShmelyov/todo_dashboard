@@ -2,6 +2,7 @@
 
 import Form from "next/form";
 import { useRouter } from "next/navigation";
+import React, { useRef } from "react";
 
 import ModalDialog from "@/src/components/common/ModalDialog";
 import ModalDialogTitle from "@/src/components/common/ModalDialogTitle";
@@ -15,8 +16,13 @@ export default function FamilyFormClient({
   family?: [familyId: string, familyName: string];
 }) {
   const router = useRouter();
+  const familyNameInputRef = useRef<HTMLInputElement>(null);
+
   return (
-    <ModalDialog onCloseAction={() => router.back()}>
+    <ModalDialog
+      initialFocus={familyNameInputRef as React.RefObject<HTMLElement>}
+      onCloseAction={() => router.back()}
+    >
       <Form
         className="flex flex-col gap-4"
         action={async (formData) => {
@@ -44,6 +50,7 @@ export default function FamilyFormClient({
             placeholder="Enter family name"
             required
             aria-required="true"
+            ref={familyNameInputRef}
           />
         </label>
         <Button type="submit">Submit</Button>

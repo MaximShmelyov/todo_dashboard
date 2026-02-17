@@ -2,7 +2,7 @@ import React from "react";
 
 type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement>;
 
-export default function Select(props: SelectProps) {
+const Input = React.forwardRef<HTMLSelectElement, SelectProps>(function Select(props, ref) {
   return (
     <select
       className="
@@ -11,7 +11,10 @@ export default function Select(props: SelectProps) {
         hover:bg-stone-100 dark:hover:bg-gray-600
         transition-colors
       "
+      ref={ref}
       {...props}
     />
   );
-}
+});
+
+export default Input;

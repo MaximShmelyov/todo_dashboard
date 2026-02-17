@@ -3,7 +3,7 @@
 import { Family, RoleType } from "@prisma/client";
 import Form from "next/form";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 import ModalDialog from "@/src/components/common/ModalDialog";
 import ModalDialogTitle from "@/src/components/common/ModalDialogTitle";
@@ -25,6 +25,7 @@ type FamilyInviteFormProps =
     };
 export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
   const router = useRouter();
+  const initialFocusRef = useRef<HTMLSelectElement>(null);
   const inviteRoleTypes = props.inviteRoleTypes;
   const invite: FamilyInviteExtended = props.mode === "edit" ? props.invite : null;
   const families: Family[] | null = props.mode === "create" ? props.families : null;
@@ -39,7 +40,10 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
   }
 
   return (
-    <ModalDialog onCloseAction={() => router.back()}>
+    <ModalDialog
+      initialFocus={initialFocusRef as React.RefObject<HTMLElement>}
+      onCloseAction={() => router.back()}
+    >
       <Form
         className="flex flex-col gap-4"
         action={async (formData) => {
@@ -61,7 +65,12 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
         <ModalDialogTitle>{invite ? `Edit invite` : "Create invite"}</ModalDialogTitle>
         <label className="flex flex-col gap-1">
           Family:
-          <Select name="familyId" defaultValue={invite ? invite.family.id : ""} required>
+          <Select
+            name="familyId"
+            defaultValue={invite ? invite.family.id : ""}
+            required
+            ref={initialFocusRef}
+          >
             {invite ? (
               <option value={invite.family.id}>{invite.family.name}</option>
             ) : (

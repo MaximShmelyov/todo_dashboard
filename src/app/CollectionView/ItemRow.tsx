@@ -68,7 +68,19 @@ export default function ItemRow({
           checked={idsToDelete.includes(item.id)}
           onChange={(e) => itemHandlers.toggleSelect(item.id, e.target.checked)}
         />
-        <div className="flex-1 min-w-0">
+        <div
+          className="flex-1 min-w-0"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              setEditingId(item.id);
+              setEditingValue(item.title);
+              if (e.key === " ") e.preventDefault();
+            }
+          }}
+          role="button"
+          aria-label="Edit title"
+        >
           {editingId === item.id ? (
             <InlineEditInput
               initialValue={editingValue}
@@ -120,6 +132,16 @@ export default function ItemRow({
           ml-0 sm:ml-4 mt-1 italic text-sm break-words break-all
           ${editingBodyId !== item.id && item.done ? "text-gray-400" : ""}
         `}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            setEditingBodyId(item.id);
+            setEditingBodyValue(item.body ?? "");
+            if (e.key === " ") e.preventDefault();
+          }
+        }}
+        role="button"
+        aria-label="Edit description"
       >
         {editingBodyId === item.id ? (
           <InlineEditTextarea

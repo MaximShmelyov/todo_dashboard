@@ -1,13 +1,14 @@
+import { CollectionType } from "@prisma/client";
+import Link from "next/link";
+
+import PleaseLogIn from "@/src/components/common/PleaseLogIn";
 import Card from "@/src/components/ui/Card";
-import { getFeedCollections } from "@/src/db/actions/feed/feedCollections";
-import { getCategoryLabelOfCollectionType, getCollectionRoute } from "@/src/lib/utils";
 import VerticalList from "@/src/components/ui/list/VerticalList";
 import VerticalListItem from "@/src/components/ui/list/VerticalListItem";
+import { getFeedCollections } from "@/src/db/actions/feed/feedCollections";
 import { getSession } from "@/src/lib/auth";
-import PleaseLogIn from "@/src/components/common/PleaseLogIn";
-import { CollectionType } from "@prisma/client";
 import { getPageMetadata } from "@/src/lib/metadata";
-import Link from "next/link";
+import { getCategoryLabelOfCollectionType, getCollectionRoute } from "@/src/lib/utils";
 
 export const metadata = getPageMetadata({
   title: "Home",

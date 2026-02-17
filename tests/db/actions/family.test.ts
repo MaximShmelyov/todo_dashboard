@@ -1,3 +1,4 @@
+import { $Enums, type Family } from "@prisma/client";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 /* ------------------ mocks ------------------ */
@@ -20,11 +21,8 @@ vi.mock("@/src/db/actions/util", () => ({
 /* ------------------ imports ------------------ */
 
 import { prisma } from "@/src/db";
-import { getAuthorId } from "@/src/db/actions/util";
-
 import { getFamilies, getFamily, updateFamily, createFamily } from "@/src/db/actions/family";
-
-import { $Enums, type Family } from "@prisma/client";
+import { getAuthorId } from "@/src/db/actions/util";
 
 /* ------------------ tests ------------------ */
 

@@ -1,9 +1,10 @@
 "use client";
 
 import Head from "next/head";
-import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useSession, signIn } from "next-auth/react";
 import { useEffect } from "react";
+
 import Button from "@/src/components/ui/Button";
 
 export default function Login() {

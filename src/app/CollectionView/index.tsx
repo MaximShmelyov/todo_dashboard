@@ -1,15 +1,17 @@
-import CollectionTitle from "./CollectionTitle";
-import CollectionDescription from "./CollectionDescription";
-import SortSelector from "./SortSelector";
-import DeleteSelectedButton from "./DeleteSelectedButton";
-import ItemList from "./ItemList";
-import FooterActions from "./FooterActions";
-import Dialogs from "./Dialogs";
-import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
-import { getCollectionRoute } from "@/src/lib/utils";
-import { CollectionExtended } from "@/src/db/actions/collections";
 import { Item } from "@prisma/client";
+
 import AddButton from "@/src/components/ui/buttons/AddButton";
+import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
+import { CollectionExtended } from "@/src/db/actions/collections";
+import { getCollectionRoute } from "@/src/lib/utils";
+
+import CollectionDescription from "./CollectionDescription";
+import CollectionTitle from "./CollectionTitle";
+import DeleteSelectedButton from "./DeleteSelectedButton";
+import Dialogs from "./Dialogs";
+import FooterActions from "./FooterActions";
+import ItemList from "./ItemList";
+import SortSelector from "./SortSelector";
 
 type SortOption =
   | "created_desc"

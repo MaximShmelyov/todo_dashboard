@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+
 import style from "./LinkButton.module.css";
 
 type LinkButtonVariant = "primary" | "secondary" | "add";

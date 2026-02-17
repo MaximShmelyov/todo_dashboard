@@ -1,12 +1,14 @@
 "use client";
 
-import { motion, MotionProps } from "framer-motion";
+import { motion } from "framer-motion";
 import React from "react";
+
+import type { HTMLMotionProps } from "framer-motion";
 
 type FadeSlideInProps = {
   children: React.ReactNode;
   className?: string;
-} & MotionProps;
+} & HTMLMotionProps<"div">;
 
 export default function FadeSlideIn({
   children,

@@ -1,6 +1,7 @@
 "use server";
 
 import { Collection, CollectionType } from "@prisma/client";
+
 import {
   CollectionExtended,
   CollectionsExtended,

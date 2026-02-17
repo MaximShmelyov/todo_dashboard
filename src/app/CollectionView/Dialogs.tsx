@@ -1,6 +1,6 @@
 import ConfirmPopup from "@/src/components/layout/ConfirmPopup";
-import { getLabelOfCollectionType } from "@/src/lib/utils";
 import { CollectionExtended } from "@/src/db/actions/collections";
+import { getLabelOfCollectionType } from "@/src/lib/utils";
 
 type Props = {
   collection: NonNullable<CollectionExtended>;

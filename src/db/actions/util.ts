@@ -1,8 +1,9 @@
 "use server";
 
-import { getSession } from "@/src/lib/auth";
-import { prisma } from "@/src/db";
 import { Family, Membership, Prisma, RoleType } from "@prisma/client";
+
+import { prisma } from "@/src/db";
+import { getSession } from "@/src/lib/auth";
 
 export async function getAuthorId(): Promise<string> {
   const session = await getSession();

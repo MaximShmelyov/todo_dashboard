@@ -1,8 +1,9 @@
 /* @vitest-environment jsdom */
 import "@testing-library/jest-dom";
+import { render, screen, fireEvent } from "@testing-library/react";
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+
 import CollectionClient from "@/src/app/CollectionClient";
 import { CollectionExtended } from "@/src/db/actions/collections";
 

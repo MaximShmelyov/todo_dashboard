@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import { SidebarContent } from "./SidebarContent";
 
 export function MobileSidebar() {

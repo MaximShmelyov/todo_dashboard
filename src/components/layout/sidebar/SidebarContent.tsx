@@ -1,6 +1,7 @@
-import Link from "next/link";
-import { getCollectionRoute } from "@/src/lib/utils";
 import { CollectionType } from "@prisma/client";
+import Link from "next/link";
+
+import { getCollectionRoute } from "@/src/lib/utils";
 
 export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const linkClass = "px-3 py-2 rounded-lg hover:bg-amber-100 dark:hover:bg-gray-600 transition";

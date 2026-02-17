@@ -1,3 +1,4 @@
+import { Collection, CollectionType } from "@prisma/client";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 /* ------------------ mocks ------------------ */
@@ -21,15 +22,13 @@ vi.mock("@/src/db/actions/util", () => ({
 /* ------------------ imports ------------------ */
 
 import { prisma } from "@/src/db";
-import { getAuthorId, getFamiliesIds } from "@/src/db/actions/util";
-
 import {
   createCollection,
   getCollection,
   getCollections,
   deleteCollection,
 } from "@/src/db/actions/collections";
-import { Collection, CollectionType } from "@prisma/client";
+import { getAuthorId, getFamiliesIds } from "@/src/db/actions/util";
 
 /* ------------------ tests ------------------ */
 

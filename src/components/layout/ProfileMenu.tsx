@@ -1,11 +1,12 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import React, { useState, useRef, useEffect, useMemo } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
-import PopupMenu, { PopupMenuItem } from "@/src/components/layout/PopupMenu";
 import Image from "next/image";
 import { Session } from "next-auth";
+import { signIn, signOut, useSession } from "next-auth/react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
+
+import PopupMenu, { PopupMenuItem } from "@/src/components/layout/PopupMenu";
 
 interface PopupMenuItemWithAction extends PopupMenuItem {
   action: () => void;

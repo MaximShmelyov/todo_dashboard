@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
 import SessionProviderWrapper from "@/src/app/auth/SessionProviderWrapper";
+
+import type { Metadata } from "next";
 
 export const runtime = "nodejs";
 

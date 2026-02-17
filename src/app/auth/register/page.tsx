@@ -1,10 +1,12 @@
 "use client";
 
-import { useSession, signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import Button from "@/src/components/ui/Button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSession, signIn } from "next-auth/react";
+import { useEffect } from "react";
+
+import Button from "@/src/components/ui/Button";
+
 import styles from "./Register.module.css";
 
 export default function Register() {

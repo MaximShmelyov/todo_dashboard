@@ -1,8 +1,9 @@
 "use server";
 
 import { CollectionType } from "@prisma/client";
-import AddItemForm from "@/src/components/common/AddItemForm";
+
 import CollectionClient from "@/src/app/CollectionClient";
+import AddItemForm from "@/src/components/common/AddItemForm";
 import { CollectionExtended, getCollection } from "@/src/db/actions/collections";
 
 export default async function CollectionPage({

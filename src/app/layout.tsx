@@ -1,10 +1,11 @@
 import "./globals.css";
-import { DesktopSidebar } from "@/src/components/layout/sidebar/DesktopSidebar";
-import Header from "@/src/components/layout/Header";
-import SessionProviderWrapper from "@/src/app/auth/SessionProviderWrapper";
-import { MobileSidebar } from "@/src/components/layout/sidebar/MobileSidebar";
 import { cookies } from "next/headers";
+
+import SessionProviderWrapper from "@/src/app/auth/SessionProviderWrapper";
 import CookieNotice from "@/src/components/common/CookieNotice";
+import Header from "@/src/components/layout/Header";
+import { DesktopSidebar } from "@/src/components/layout/sidebar/DesktopSidebar";
+import { MobileSidebar } from "@/src/components/layout/sidebar/MobileSidebar";
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const dismissed = (await cookies()).get("cookie_notice_dismissed")?.value === "1";

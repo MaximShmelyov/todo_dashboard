@@ -1,4 +1,5 @@
 import React from "react";
+
 import LinkButton from "@/src/components/ui/LinkButton";
 
 type AnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };

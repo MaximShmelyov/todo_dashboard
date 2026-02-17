@@ -1,6 +1,7 @@
+import { CollectionType } from "@prisma/client";
+
 import Button from "@/src/components/ui/Button";
 import { getLabelOfCollectionType } from "@/src/lib/utils";
-import { CollectionType } from "@prisma/client";
 
 export default function FooterActions({
   onDeleteCollection,

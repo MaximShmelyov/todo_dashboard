@@ -1,8 +1,9 @@
 "use client";
 
-import { activateInvite, FamilyInvitePublic } from "@/src/db/actions/invite";
 import { useRouter } from "next/navigation";
+
 import Button from "@/src/components/ui/Button";
+import { activateInvite, FamilyInvitePublic } from "@/src/db/actions/invite";
 
 export default function FamilyInviteActivate({
   invite,

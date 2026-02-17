@@ -1,4 +1,5 @@
 import React from "react";
+
 import LinkButton from "@/src/components/ui/LinkButton";
 
 export type CardAction = {

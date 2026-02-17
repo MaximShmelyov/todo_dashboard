@@ -1,9 +1,10 @@
-import CreateCollectionForm from "@/src/components/common/CreateCollectionForm";
 import { CollectionType } from "@prisma/client";
+
 import CollectionsClient from "@/src/app/CollectionsClient";
-import { getSession } from "@/src/lib/auth";
-import { getTodoList } from "@/src/db/actions/todos";
+import CreateCollectionForm from "@/src/components/common/CreateCollectionForm";
 import PleaseLogIn from "@/src/components/common/PleaseLogIn";
+import { getTodoList } from "@/src/db/actions/todos";
+import { getSession } from "@/src/lib/auth";
 import { getPageMetadata } from "@/src/lib/metadata";
 
 const collectionType: CollectionType = CollectionType.TODO;

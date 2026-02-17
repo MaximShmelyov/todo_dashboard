@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
+
 import Button from "@/src/components/ui/Button";
 import InlineEditInput from "@/src/components/ui/InlineEditInput";
 import InlineEditTextarea from "@/src/components/ui/InlineEditTextarea";
-import type { Item } from "@prisma/client";
 import { type CollectionExtended } from "@/src/db/actions/collections";
+
+import type { Item } from "@prisma/client";
 
 type CollectionItem = NonNullable<CollectionExtended>["items"][number];
 

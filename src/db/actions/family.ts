@@ -1,9 +1,11 @@
 "use server";
 
-import { prisma } from "@/src/db";
 import { $Enums, Family } from "@prisma/client";
-import RoleType = $Enums.RoleType;
+
+import { prisma } from "@/src/db";
 import { getAuthorId } from "@/src/db/actions/util";
+
+import RoleType = $Enums.RoleType;
 
 export async function getFamilies() {
   const userId = await getAuthorId();

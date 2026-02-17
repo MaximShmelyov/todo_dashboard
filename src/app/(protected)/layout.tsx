@@ -1,7 +1,8 @@
 import "../globals.css";
-import { getSession } from "@/src/lib/auth";
-import PleaseLogIn from "@/src/components/common/PleaseLogIn";
 import React from "react";
+
+import PleaseLogIn from "@/src/components/common/PleaseLogIn";
+import { getSession } from "@/src/lib/auth";
 
 export default async function ProtectedLayout({
   children,

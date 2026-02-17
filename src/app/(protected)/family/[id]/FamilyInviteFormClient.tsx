@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import Button from "@/src/components/ui/Button";
 import ModalDialog from "@/src/components/common/ModalDialog";
 import ModalDialogTitle from "@/src/components/common/ModalDialogTitle";
+import Select from "@/src/components/ui/Select";
 
 type FamilyInviteFormProps =
   | {
@@ -57,14 +58,9 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
         }}
       >
         <ModalDialogTitle>{invite ? `Edit invite` : "Create invite"}</ModalDialogTitle>
-        <label>
+        <label className="flex flex-col gap-1">
           Family:
-          <select
-            className="not-dark:hover:bg-stone-100 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md"
-            name="familyId"
-            defaultValue={invite ? invite.family.id : ""}
-            required
-          >
+          <Select name="familyId" defaultValue={invite ? invite.family.id : ""} required>
             {invite ? (
               <option value={invite.family.id}>{invite.family.name}</option>
             ) : (
@@ -81,29 +77,26 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
                 ))}
               </>
             )}
-          </select>
+          </Select>
         </label>
-        <label>
+        <label className="flex flex-col gap-1">
           Role:
-          <select
-            className="not-dark:hover:bg-stone-100 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md"
-            name="roleType"
-            defaultValue={invite ? invite.roleType : RoleType.USER}
-          >
+          <Select name="roleType" defaultValue={invite ? invite.roleType : RoleType.USER}>
             {inviteRoleTypes.map((roleType) => (
               <option key={roleType} value={roleType}>
                 {roleType}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
-        <label>
-          Disabled:{" "}
+        <label className="flex items-center gap-2 select-none">
           <input
             type="checkbox"
             name="disabled"
             defaultChecked={invite ? invite.disabled : false}
+            className="accent-red-500 w-4 h-4"
           />
+          Disabled
         </label>
         <Button type="submit">Submit</Button>
       </Form>

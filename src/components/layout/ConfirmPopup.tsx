@@ -16,13 +16,20 @@ export default function ConfirmPopup({
 }) {
   return (
     <ModalDialog open={open} onCloseAction={onCancelAction}>
-      <div className="flex flex-col gap-8 w-60">
-        <div className="font-bold text-center">{title}</div>
-        <div className="flex flex-row justify-around">
-          <Button variant={"delete"} onClick={onConfirmAction}>
+      <div className="flex flex-col gap-6 min-w-[240px]">
+        <div className="font-semibold text-lg text-center">{title}</div>
+        <div className="flex flex-row gap-4 justify-center">
+          <Button
+            variant="delete"
+            onClick={onConfirmAction}
+            className="min-w-[80px]"
+            aria-label="Confirm"
+          >
             Yes
           </Button>
-          <Button onClick={onCancelAction}>No</Button>
+          <Button onClick={onCancelAction} className="min-w-[80px]" aria-label="Cancel">
+            No
+          </Button>
         </div>
       </div>
     </ModalDialog>

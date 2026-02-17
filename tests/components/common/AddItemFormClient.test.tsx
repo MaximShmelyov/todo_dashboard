@@ -122,8 +122,10 @@ describe("AddItemFormClient", () => {
   it("submits form and navigates", async () => {
     renderCmp();
 
-    fireEvent.change(screen.getByPlaceholderText("Title"), { target: { value: "Milk" } });
-    fireEvent.change(screen.getByPlaceholderText("Body"), { target: { value: "2L" } });
+    fireEvent.change(screen.getByPlaceholderText("Enter a title"), { target: { value: "Milk" } });
+    fireEvent.change(screen.getByPlaceholderText("You can add details (optional)"), {
+      target: { value: "2L" },
+    });
 
     fireEvent.click(screen.getByRole("button", { name: /submit/i }));
 

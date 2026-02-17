@@ -68,19 +68,7 @@ export default function ItemRow({
           checked={idsToDelete.includes(item.id)}
           onChange={(e) => itemHandlers.toggleSelect(item.id, e.target.checked)}
         />
-        <div
-          className="flex-1 min-w-0"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              setEditingId(item.id);
-              setEditingValue(item.title);
-              if (e.key === " ") e.preventDefault();
-            }
-          }}
-          role="button"
-          aria-label="Edit title"
-        >
+        <div className="flex-1 min-w-0">
           {editingId === item.id ? (
             <InlineEditInput
               initialValue={editingValue}
@@ -98,11 +86,21 @@ export default function ItemRow({
                 ${item.done ? "line-through text-gray-400" : "font-semibold"}
                 cursor-pointer
               `}
+              tabIndex={0}
               title={item.title}
               onClick={() => {
                 setEditingId(item.id);
                 setEditingValue(item.title);
               }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  setEditingId(item.id);
+                  setEditingValue(item.title);
+                  if (e.key === " ") e.preventDefault();
+                }
+              }}
+              role="button"
+              aria-label="Edit title"
             >
               {item.title}
             </span>
@@ -132,16 +130,6 @@ export default function ItemRow({
           ml-0 sm:ml-4 mt-1 italic text-sm break-words break-all
           ${editingBodyId !== item.id && item.done ? "text-gray-400" : ""}
         `}
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            setEditingBodyId(item.id);
-            setEditingBodyValue(item.body ?? "");
-            if (e.key === " ") e.preventDefault();
-          }
-        }}
-        role="button"
-        aria-label="Edit description"
       >
         {editingBodyId === item.id ? (
           <InlineEditTextarea
@@ -163,10 +151,20 @@ export default function ItemRow({
               cursor-pointer
             `}
             title={item.body && item.body.trim() !== "" ? "Edit description" : "Add description"}
+            tabIndex={0}
             onClick={() => {
               setEditingBodyId(item.id);
               setEditingBodyValue(item.body ?? "");
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                setEditingBodyId(item.id);
+                setEditingBodyValue(item.body ?? "");
+                if (e.key === " ") e.preventDefault();
+              }
+            }}
+            role="button"
+            aria-label="Edit description"
           >
             {item.body && item.body.trim() !== "" ? item.body : "Add description"}
           </span>

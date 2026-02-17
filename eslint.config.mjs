@@ -44,6 +44,8 @@ const eslintConfig = defineConfig([
       "import/named": "error",
       "import/no-cycle": "warn",
       "import/no-absolute-path": "error",
+      "@next/next/no-html-link-for-pages": "error",
+      "@next/next/no-img-element": "warn",
     },
   },
 

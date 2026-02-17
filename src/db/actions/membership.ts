@@ -83,3 +83,37 @@ export async function deleteMembership(familyId: Family["id"]): Promise<boolean>
     ).count > 0
   );
 }
+
+export async function removeFamilyMember(membershipId: string) {
+  const authorId = await getAuthorId();
+
+  const membership = await prisma.membership.findUnique({
+    where: { id: membershipId },
+    select: { familyId: true, userId: true, roleType: true },
+  });
+  if (!membership) throw new Error("Membership not found");
+
+  if (membership.userId === authorId) throw new Error("Cannot remove yourself");
+
+  const authorMembership = await prisma.membership.findFirst({
+    where: {
+      familyId: membership.familyId,
+      userId: authorId,
+    },
+    select: { roleType: true },
+  });
+  if (!authorMembership) throw new Error("Forbidden");
+
+  if (!([RoleType.ADMIN, RoleType.MODERATOR] as RoleType[]).includes(authorMembership.roleType)) {
+    throw new Error("Forbidden");
+  }
+
+  if (
+    authorMembership.roleType === RoleType.MODERATOR &&
+    (membership.roleType === RoleType.ADMIN || membership.roleType === RoleType.MODERATOR)
+  ) {
+    throw new Error("Forbidden");
+  }
+
+  await prisma.membership.delete({ where: { id: membershipId } });
+}

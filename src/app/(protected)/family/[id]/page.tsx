@@ -1,7 +1,6 @@
 import { FamilyExtended, getFamily } from "@/src/db/actions/family";
 import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
 import VerticalList from "@/src/components/ui/list/VerticalList";
-import VerticalListItem from "@/src/components/ui/list/VerticalListItem";
 import { RoleType } from "@prisma/client";
 import { getMembership } from "@/src/db/actions/membership";
 import FamilyMemberFormClient from "@/src/app/(protected)/family/FamilyMemberFormClient";
@@ -15,6 +14,8 @@ import LeaveFamilyWidget from "@/src/app/(protected)/family/[id]/LeaveFamilyWidg
 import type { Metadata } from "next";
 import { cache } from "react";
 import { getPageMetadata } from "@/src/lib/metadata";
+import FamilyMemberListItem from "@/src/app/(protected)/family/[id]/FamilyMemberListItem";
+import { getAuthorId } from "@/src/db/actions/util";
 
 const getFamilyCached = cache(async (id: string) => {
   return getFamily(id);
@@ -32,6 +33,7 @@ export async function generateMetadata({
     description: family ? `Family page for ${family.name}` : "Family not found",
   });
 }
+
 export default async function FamilyPage({
   searchParams,
   params,
@@ -45,6 +47,8 @@ export default async function FamilyPage({
   const membership = updateMembership ? await getMembership(updateMembership) : null;
 
   if (!family) return <div>404 Not Found</div>;
+
+  const currentUserId = await getAuthorId();
 
   const issuerFamilyRole: RoleType | undefined = await getFamilyMemberRole(family.id);
   if (!issuerFamilyRole) throw new Error("Not a family member");
@@ -89,19 +93,19 @@ export default async function FamilyPage({
         <p className="mt-2">Members:</p>
         <VerticalList>
           {family.memberships.map((membership) => (
-            <VerticalListItem
+            <FamilyMemberListItem
               key={membership.id}
-              href={
+              membership={membership}
+              canRemove={
+                hasAccessToEdit &&
+                isEditableRole(membership.roleType, issuerFamilyRole, inviteRoleTypes) &&
+                membership.user.id !== currentUserId
+              }
+              canEdit={
                 hasAccessToEdit &&
                 isEditableRole(membership.roleType, issuerFamilyRole, inviteRoleTypes)
-                  ? `?updateMembership=${membership.id}`
-                  : null
               }
-            >
-              <div>
-                {membership.user.name} : {membership.roleType}
-              </div>
-            </VerticalListItem>
+            />
           ))}
         </VerticalList>
         <p className="mt-2">Invites:</p>

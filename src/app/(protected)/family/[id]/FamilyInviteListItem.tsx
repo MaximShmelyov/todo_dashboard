@@ -31,6 +31,7 @@ export default function FamilyInviteListItem({
   };
 
   const inviteUsed = isInviteUsed(familyInvite);
+  const isDisabled = familyInvite.disabled;
 
   return (
     <>
@@ -38,37 +39,37 @@ export default function FamilyInviteListItem({
         key={familyInvite.id}
         href={!inviteUsed && hasAccessToEdit ? `?inviteEdit=${familyInvite.id}` : null}
       >
-        <div className={familyInvite.disabled ? "bg-red-50 dark:bg-red-800" : ""}>
+        <div className={isDisabled ? "text-gray-400 dark:text-gray-500" : ""}>
           {familyInvite.roleType} -{" "}
           <span className="font-semibold">{familyInvite.usedBy?.email ?? "Available"}</span> created
           at {familyInvite.createdAt.toLocaleString()}
-          {familyInvite.disabled ? <span> - disabled</span> : null}
+          {isDisabled && (
+            <span className="ml-2 text-xs font-semibold uppercase tracking-wide">Disabled</span>
+          )}
         </div>
         <div className="flex gap-2">
-          {!inviteUsed && (
-            <>
-              <Button
-                onClick={async (e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  await handleCopy(familyInvite.id);
-                }}
-              >
-                Copy
-              </Button>
-              {hasAccessToEdit && (
-                <Button
-                  variant="delete"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setShowConfirm(true);
-                  }}
-                >
-                  Delete
-                </Button>
-              )}
-            </>
+          {!inviteUsed && !isDisabled && (
+            <Button
+              onClick={async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                await handleCopy(familyInvite.id);
+              }}
+            >
+              Copy
+            </Button>
+          )}
+          {!inviteUsed && hasAccessToEdit && (
+            <Button
+              variant="delete"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowConfirm(true);
+              }}
+            >
+              Delete
+            </Button>
           )}
         </div>
       </VerticalListItem>

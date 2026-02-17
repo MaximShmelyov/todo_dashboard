@@ -86,10 +86,31 @@ export async function getInvite(id: FamilyInvite["id"]) {
 export async function updateInvite(
   invite: Pick<FamilyInvite, "id"> & Partial<Pick<FamilyInvite, "disabled" | "roleType">>,
 ) {
-  await prisma.familyInvite.update({
-    where: {
-      id: invite.id,
+  const authorId = await getAuthorId();
+
+  const existing = await prisma.familyInvite.findUnique({
+    where: { id: invite.id },
+    select: {
+      issuedById: true,
+      familyId: true,
     },
+  });
+
+  if (!existing) throw new Error("Invite not found");
+
+  if (existing.issuedById !== authorId) {
+    const member = await prisma.membership.findFirst({
+      where: {
+        familyId: existing.familyId,
+        userId: authorId,
+        roleType: { in: [RoleType.ADMIN, RoleType.MODERATOR] },
+      },
+    });
+    if (!member) throw new Error("Forbidden");
+  }
+
+  await prisma.familyInvite.update({
+    where: { id: invite.id },
     data: {
       ...invite,
     },
@@ -172,4 +193,31 @@ export async function getInvitePublic(id: FamilyInvite["id"]) {
       },
     },
   });
+}
+
+export async function deleteInvite(id: string) {
+  const authorId = await getAuthorId();
+
+  const invite = await prisma.familyInvite.findUnique({
+    where: { id },
+    select: {
+      issuedById: true,
+      familyId: true,
+    },
+  });
+
+  if (!invite) throw new Error("Invite not found");
+
+  if (invite.issuedById !== authorId) {
+    const member = await prisma.membership.findFirst({
+      where: {
+        familyId: invite.familyId,
+        userId: authorId,
+        roleType: { in: [RoleType.ADMIN, RoleType.MODERATOR] },
+      },
+    });
+    if (!member) throw new Error("Forbidden");
+  }
+
+  await prisma.familyInvite.delete({ where: { id } });
 }

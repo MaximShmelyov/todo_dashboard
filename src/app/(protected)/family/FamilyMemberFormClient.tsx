@@ -11,6 +11,7 @@ import {
 import Button from "@/src/components/ui/Button";
 import ModalDialog from "@/src/components/common/ModalDialog";
 import ModalDialogTitle from "@/src/components/common/ModalDialogTitle";
+import Select from "@/src/components/ui/Select";
 
 type FamilyMemberFormProps = {
   membership: MembershipExtended;
@@ -37,19 +38,15 @@ export default function FamilyMemberFormClient(props: FamilyMemberFormProps) {
         <ModalDialogTitle>
           {membership.user.name} in {membership.family.name}
         </ModalDialogTitle>
-        <label>
+        <label className="flex flex-col gap-1">
           Role:
-          <select
-            className="ml-1 not-dark:hover:bg-stone-100 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md"
-            name="roleType"
-            defaultValue={membership.roleType}
-          >
+          <Select name="roleType" defaultValue={membership.roleType}>
             {inviteRoleTypes.map((roleType) => (
               <option key={roleType} value={roleType}>
                 {roleType}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <Button type="submit">Submit</Button>
       </Form>

@@ -15,11 +15,7 @@ export default function FamilyFormClient({
 }) {
   const router = useRouter();
   return (
-    <ModalDialog
-      onCloseAction={() => {
-        router.back();
-      }}
-    >
+    <ModalDialog onCloseAction={() => router.back()}>
       <Form
         className="flex flex-col gap-4"
         action={async (formData) => {
@@ -36,13 +32,19 @@ export default function FamilyFormClient({
         }}
       >
         <ModalDialogTitle>{family ? "Update" : "Create"}</ModalDialogTitle>
-        <Input
-          name="familyName"
-          maxLength={25}
-          defaultValue={family ? family[1] : ""}
-          placeholder="Family name"
-          required
-        />
+        <label className="flex flex-col gap-1">
+          <span className="flex items-center gap-1">
+            Family name <span className="text-red-500">*</span>
+          </span>
+          <Input
+            name="familyName"
+            maxLength={25}
+            defaultValue={family ? family[1] : ""}
+            placeholder="Enter family name"
+            required
+            aria-required="true"
+          />
+        </label>
         <Button type="submit">Submit</Button>
       </Form>
     </ModalDialog>

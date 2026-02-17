@@ -37,8 +37,31 @@ export default function AddItemFormClient({
         className="flex flex-col gap-4"
       >
         <ModalDialogTitle>Add item to {getLabelOfCollectionType(collectionType)}</ModalDialogTitle>
-        <Input id="create_form_title" name="title" placeholder="Title" required />
-        <Textarea id="create_form_body" name="body" placeholder="Body" />
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="create_form_title" className="font-medium">
+            Title <span className="text-red-500">*</span>
+          </label>
+          <Input
+            id="create_form_title"
+            name="title"
+            placeholder="Enter a title"
+            required
+            aria-required="true"
+          />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="create_form_body" className="font-medium">
+            Description <span className="text-gray-400 text-sm">(optional)</span>
+          </label>
+          <Textarea
+            id="create_form_body"
+            name="body"
+            placeholder="You can add details (optional)"
+            aria-required="false"
+          />
+        </div>
 
         <Button type="submit">Submit</Button>
       </Form>

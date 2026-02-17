@@ -1,10 +1,11 @@
 /* @vitest-environment jsdom */
 import "@testing-library/jest-dom";
+import { CollectionType } from "@prisma/client";
+import { render, screen } from "@testing-library/react";
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+
 import CollectionsClient from "@/src/app/CollectionsClient";
-import { CollectionType } from "@prisma/client";
 import { CollectionsExtended } from "@/src/db/actions/collections";
 
 // Mock getCollectionRoute

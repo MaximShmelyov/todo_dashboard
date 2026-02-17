@@ -1,9 +1,10 @@
-import CreateCollectionForm from "@/src/components/common/CreateCollectionForm";
 import { CollectionType } from "@prisma/client";
-import { getShoppingList } from "@/src/db/actions/shopping";
+
 import CollectionsClient from "@/src/app/CollectionsClient";
-import { getSession } from "@/src/lib/auth";
+import CreateCollectionForm from "@/src/components/common/CreateCollectionForm";
 import PleaseLogIn from "@/src/components/common/PleaseLogIn";
+import { getShoppingList } from "@/src/db/actions/shopping";
+import { getSession } from "@/src/lib/auth";
 import { getPageMetadata } from "@/src/lib/metadata";
 
 export const metadata = getPageMetadata({

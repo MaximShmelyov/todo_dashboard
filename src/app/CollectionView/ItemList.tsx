@@ -1,6 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
-import ItemRow from "./ItemRow";
+
 import { CollectionExtended } from "@/src/db/actions/collections";
+
+import ItemRow from "./ItemRow";
+
 import type { Item } from "@prisma/client";
 
 type Props = {

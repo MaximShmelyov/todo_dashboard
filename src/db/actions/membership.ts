@@ -1,7 +1,8 @@
 "use server";
 
-import { prisma } from "@/src/db";
 import { Family, Membership, RoleType } from "@prisma/client";
+
+import { prisma } from "@/src/db";
 import { getAuthorId } from "@/src/db/actions/util";
 
 export type MembershipExtended = NonNullable<Awaited<ReturnType<typeof getMembership>>>;

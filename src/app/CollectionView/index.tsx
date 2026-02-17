@@ -1,14 +1,17 @@
-import CollectionTitle from "./CollectionTitle";
-import CollectionDescription from "./CollectionDescription";
-import SortSelector from "./SortSelector";
-import DeleteSelectedButton from "./DeleteSelectedButton";
-import ItemList from "./ItemList";
-import FooterActions from "./FooterActions";
-import Dialogs from "./Dialogs";
-import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
-import { getCollectionRoute } from "@/src/lib/utils";
-import { CollectionExtended } from "@/src/db/actions/collections";
 import { Item } from "@prisma/client";
+
+import AddButton from "@/src/components/ui/buttons/AddButton";
+import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
+import { CollectionExtended } from "@/src/db/actions/collections";
+import { getCollectionRoute } from "@/src/lib/utils";
+
+import CollectionDescription from "./CollectionDescription";
+import CollectionTitle from "./CollectionTitle";
+import DeleteSelectedButton from "./DeleteSelectedButton";
+import Dialogs from "./Dialogs";
+import FooterActions from "./FooterActions";
+import ItemList from "./ItemList";
+import SortSelector from "./SortSelector";
 
 type SortOption =
   | "created_desc"
@@ -60,19 +63,25 @@ export default function CollectionView(props: Props) {
       <Dialogs {...props} />
       <div className="w-full max-w-full overflow-x-hidden px-2">
         <BackNavigation href={getCollectionRoute(props.collection.type)} />
-        <div className="flex flex-wrap items-start justify-between gap-2 w-full min-w-0 mb-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 w-full min-w-0 mb-2">
           <CollectionTitle {...props} />
-          <DeleteSelectedButton
-            count={props.idsToDelete.length}
-            onClick={props.dialogHandlers.multi.open}
-          />
+          <div className="flex gap-2 items-center">
+            <AddButton href="?create=1" aria-label="Add item">
+              Add item
+            </AddButton>
+            <DeleteSelectedButton
+              count={props.idsToDelete.length}
+              onClick={props.dialogHandlers.multi.open}
+            />
+          </div>
         </div>
         <CollectionDescription collection={props.collection} />
         <SortSelector sortOption={props.sortOption} setSortOption={props.setSortOption} />
         <div className="mt-2 py-2 shadow-sm rounded-sm w-full max-w-full">
           <ItemList {...props} />
+        </div>
+        <div className="flex mt-8 px-2">
           <FooterActions
-            onAddHref="?create=1"
             onDeleteCollection={props.dialogHandlers.collection.open}
             collectionType={props.collection.type}
           />

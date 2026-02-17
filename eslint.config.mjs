@@ -1,7 +1,7 @@
-import importPlugin from "eslint-plugin-import";
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
+import importPlugin from "eslint-plugin-import";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -23,6 +23,29 @@ const eslintConfig = defineConfig([
         },
       ],
       "import/no-unresolved": "error",
+      "import/order": [
+        "warn",
+        {
+          alphabetize: { order: "asc", caseInsensitive: true },
+          groups: [
+            "builtin",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index",
+            "object",
+            "type",
+          ],
+          "newlines-between": "always",
+        },
+      ],
+      "import/no-duplicates": "error",
+      "import/named": "error",
+      "import/no-cycle": "warn",
+      "import/no-absolute-path": "error",
+      "@next/next/no-html-link-for-pages": "error",
+      "@next/next/no-img-element": "warn",
     },
   },
 

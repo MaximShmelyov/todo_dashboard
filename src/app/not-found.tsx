@@ -1,8 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Button from "@/src/components/ui/Button";
+
 import FadeSlideIn from "@/src/components/common/FadeSlideIn";
+import Button from "@/src/components/ui/Button";
 
 export default function NotFound() {
   const router = useRouter();

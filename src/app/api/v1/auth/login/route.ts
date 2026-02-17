@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+
 import type { ApiError, ApiSuccess } from "@/src/types/api";
 
 const LoginBodySchema = z.object({

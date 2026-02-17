@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Button from "@/src/components/ui/Button";
+import { useEffect } from "react";
+
 import FadeSlideIn from "@/src/components/common/FadeSlideIn";
+import Button from "@/src/components/ui/Button";
 
 export default function Error({ error }: { error: Error }) {
   const router = useRouter();

@@ -1,11 +1,12 @@
 "use client";
 
-import { deleteMembership } from "@/src/db/actions/membership";
 import { Family } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
 import LeaveFamilyWidgetDialog from "@/src/app/(protected)/family/[id]/LeaveFamilyWidgetDialog";
 import Button from "@/src/components/ui/Button";
+import { deleteMembership } from "@/src/db/actions/membership";
 
 export default function LeaveFamilyWidget({
   familyName,

@@ -1,12 +1,13 @@
 "use client";
 
+import { RoleType } from "@prisma/client";
 import Image from "next/image";
-import Button from "@/src/components/ui/Button";
-import ConfirmPopup from "@/src/components/layout/ConfirmPopup";
-import { removeFamilyMember } from "@/src/db/actions/membership";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { RoleType } from "@prisma/client";
+
+import ConfirmPopup from "@/src/components/layout/ConfirmPopup";
+import Button from "@/src/components/ui/Button";
+import { removeFamilyMember } from "@/src/db/actions/membership";
 
 type FamilyMemberShort = {
   id: string;

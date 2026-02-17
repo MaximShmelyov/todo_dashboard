@@ -1,5 +1,6 @@
-import { defineConfig } from "@prisma/config";
 import path from "node:path";
+
+import { defineConfig } from "@prisma/config";
 import dotenv from "dotenv";
 
 /* Load env for Prisma CLI and root env files explicitly */

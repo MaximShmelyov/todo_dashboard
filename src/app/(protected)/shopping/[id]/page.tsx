@@ -1,4 +1,5 @@
 import { CollectionType } from "@prisma/client";
+
 import CollectionPage from "@/src/app/CollectionPage";
 import { getPageMetadata } from "@/src/lib/metadata";
 

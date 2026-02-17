@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/src/lib/auth";
-import { prisma } from "@/src/db";
-import type { ApiError, ApiSuccess, Paginated } from "@/src/types/api";
-import type { Collection, CollectionType } from "@prisma/client";
+
 import {
   PaginationQuerySchema,
   CreateCollectionBodySchema,
 } from "@/src/app/api/v1/collections/schema";
+import { prisma } from "@/src/db";
+import { getSession } from "@/src/lib/auth";
+
+import type { ApiError, ApiSuccess, Paginated } from "@/src/types/api";
+import type { Collection, CollectionType } from "@prisma/client";
 
 export function createCollectionAliasApi(collectionType: CollectionType) {
   async function GET(req: Request) {

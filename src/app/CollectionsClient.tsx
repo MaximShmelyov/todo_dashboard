@@ -1,13 +1,14 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import AddButton from "@/src/components/ui/buttons/AddButton";
 import { CollectionType } from "@prisma/client";
+import { AnimatePresence, motion } from "framer-motion";
+
+import AddButton from "@/src/components/ui/buttons/AddButton";
+import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
 import VerticalList from "@/src/components/ui/list/VerticalList";
 import VerticalListItem from "@/src/components/ui/list/VerticalListItem";
-import { getCollectionRoute } from "@/src/lib/utils";
-import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
 import { CollectionsExtended } from "@/src/db/actions/collections";
+import { getCollectionRoute } from "@/src/lib/utils";
 
 export default function CollectionsClient({
   label,

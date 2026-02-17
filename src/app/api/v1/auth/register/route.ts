@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import type { ApiError, ApiSuccess } from "@/src/types/api";
+
 import { RegisterBodySchema } from "@/src/app/api/v1/auth/schema";
+
+import type { ApiError, ApiSuccess } from "@/src/types/api";
 
 type RegisterData = { url: string };
 

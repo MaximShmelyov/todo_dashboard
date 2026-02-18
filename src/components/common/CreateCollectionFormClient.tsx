@@ -1,9 +1,8 @@
 "use client";
 
 import { CollectionType, Family } from "@prisma/client";
-import Form from "next/form";
 import { useRouter } from "next/navigation";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 import ModalDialog from "@/src/components/common/ModalDialog";
 import ModalDialogTitle from "@/src/components/common/ModalDialogTitle";
@@ -45,14 +44,19 @@ export default function CreateCollectionFormClient({
 }) {
   const router = useRouter();
   const initialFocusRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
 
   return (
     <ModalDialog
       initialFocus={initialFocusRef as React.RefObject<HTMLElement>}
       onCloseAction={() => router.back()}
     >
-      <Form
-        action={async (formData) => {
+      <form
+        className="flex flex-col gap-4"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          setLoading(true);
+          const formData = new FormData(e.currentTarget);
           await createCollection(
             collectionType,
             formData.get("title")!.toString(),
@@ -60,7 +64,6 @@ export default function CreateCollectionFormClient({
           );
           router.push(getCollectionRoute(collectionType));
         }}
-        className="flex flex-col gap-4"
       >
         <ModalDialogTitle>Create a {getLabelOfCollectionType(collectionType)}</ModalDialogTitle>
         <label className="flex flex-col gap-1">
@@ -75,11 +78,12 @@ export default function CreateCollectionFormClient({
             required
             aria-required="true"
             ref={initialFocusRef}
+            disabled={loading}
           />
         </label>
         <label className="flex flex-col gap-1">
           Family:
-          <Select name="familyId" defaultValue="">
+          <Select name="familyId" defaultValue="" disabled={loading}>
             <option value="">Private (no family)</option>
             {families.map((family) => (
               <option key={family.id} value={family.id}>
@@ -88,8 +92,10 @@ export default function CreateCollectionFormClient({
             ))}
           </Select>
         </label>
-        <Button type="submit">Create</Button>
-      </Form>
+        <Button type="submit" loading={loading}>
+          Create
+        </Button>
+      </form>
     </ModalDialog>
   );
 }

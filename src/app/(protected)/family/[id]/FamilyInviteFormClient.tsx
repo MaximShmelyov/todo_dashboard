@@ -1,9 +1,8 @@
 "use client";
 
 import { Family, RoleType } from "@prisma/client";
-import Form from "next/form";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import ModalDialog from "@/src/components/common/ModalDialog";
 import ModalDialogTitle from "@/src/components/common/ModalDialogTitle";
@@ -23,9 +22,11 @@ type FamilyInviteFormProps =
       invite: FamilyInviteExtended;
       inviteRoleTypes: RoleType[];
     };
+
 export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
   const router = useRouter();
   const initialFocusRef = useRef<HTMLSelectElement>(null);
+  const [loading, setLoading] = useState(false);
   const inviteRoleTypes = props.inviteRoleTypes;
   const invite: FamilyInviteExtended = props.mode === "edit" ? props.invite : null;
   const families: Family[] | null = props.mode === "create" ? props.families : null;
@@ -44,9 +45,12 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
       initialFocus={initialFocusRef as React.RefObject<HTMLElement>}
       onCloseAction={() => router.back()}
     >
-      <Form
+      <form
         className="flex flex-col gap-4"
-        action={async (formData) => {
+        onSubmit={async (e) => {
+          e.preventDefault();
+          setLoading(true);
+          const formData = new FormData(e.currentTarget);
           const familyId = formData.get("familyId")!.toString();
           const disabled = formData.has("disabled");
           const roleType = formData.get("roleType")!.toString() as RoleTypeLimited;
@@ -70,6 +74,7 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
             defaultValue={invite ? invite.family.id : ""}
             required
             ref={initialFocusRef}
+            disabled={loading}
           >
             {invite ? (
               <option value={invite.family.id}>{invite.family.name}</option>
@@ -91,7 +96,11 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
         </label>
         <label className="flex flex-col gap-1">
           Role:
-          <Select name="roleType" defaultValue={invite ? invite.roleType : RoleType.USER}>
+          <Select
+            name="roleType"
+            defaultValue={invite ? invite.roleType : RoleType.USER}
+            disabled={loading}
+          >
             {inviteRoleTypes.map((roleType) => (
               <option key={roleType} value={roleType}>
                 {roleType}
@@ -105,11 +114,14 @@ export default function FamilyInviteFormClient(props: FamilyInviteFormProps) {
             name="disabled"
             defaultChecked={invite ? invite.disabled : false}
             className="accent-red-500 w-4 h-4"
+            disabled={loading}
           />
           Disabled
         </label>
-        <Button type="submit">Submit</Button>
-      </Form>
+        <Button type="submit" loading={loading}>
+          Submit
+        </Button>
+      </form>
     </ModalDialog>
   );
 }

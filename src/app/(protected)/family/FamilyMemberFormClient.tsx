@@ -1,9 +1,8 @@
 "use client";
 
 import { RoleType } from "@prisma/client";
-import Form from "next/form";
 import { useRouter } from "next/navigation";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 import ModalDialog from "@/src/components/common/ModalDialog";
 import ModalDialogTitle from "@/src/components/common/ModalDialogTitle";
@@ -25,15 +24,19 @@ export default function FamilyMemberFormClient(props: FamilyMemberFormProps) {
   const router = useRouter();
   const { membership, onSuccessPath, inviteRoleTypes } = props;
   const selectRef = useRef<HTMLSelectElement>(null);
+  const [loading, setLoading] = useState(false);
 
   return (
     <ModalDialog
       initialFocus={selectRef as React.RefObject<HTMLElement>}
       onCloseAction={() => router.back()}
     >
-      <Form
+      <form
         className="flex flex-col gap-4"
-        action={async (formData) => {
+        onSubmit={async (e) => {
+          e.preventDefault();
+          setLoading(true);
+          const formData = new FormData(e.currentTarget);
           await updateMembership({
             id: membership.id,
             roleType: formData.get("roleType")!.toString() as RoleTypeLimited,
@@ -46,7 +49,12 @@ export default function FamilyMemberFormClient(props: FamilyMemberFormProps) {
         </ModalDialogTitle>
         <label className="flex flex-col gap-1">
           Role:
-          <Select name="roleType" defaultValue={membership.roleType} ref={selectRef}>
+          <Select
+            name="roleType"
+            defaultValue={membership.roleType}
+            ref={selectRef}
+            disabled={loading}
+          >
             {inviteRoleTypes.map((roleType) => (
               <option key={roleType} value={roleType}>
                 {roleType}
@@ -54,8 +62,10 @@ export default function FamilyMemberFormClient(props: FamilyMemberFormProps) {
             ))}
           </Select>
         </label>
-        <Button type="submit">Submit</Button>
-      </Form>
+        <Button type="submit" loading={loading}>
+          Submit
+        </Button>
+      </form>
     </ModalDialog>
   );
 }

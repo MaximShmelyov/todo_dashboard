@@ -1,8 +1,7 @@
 "use client";
 
-import Form from "next/form";
 import { useRouter } from "next/navigation";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 import ModalDialog from "@/src/components/common/ModalDialog";
 import ModalDialogTitle from "@/src/components/common/ModalDialogTitle";
@@ -17,15 +16,19 @@ export default function FamilyFormClient({
 }) {
   const router = useRouter();
   const familyNameInputRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
 
   return (
     <ModalDialog
       initialFocus={familyNameInputRef as React.RefObject<HTMLElement>}
       onCloseAction={() => router.back()}
     >
-      <Form
+      <form
         className="flex flex-col gap-4"
-        action={async (formData) => {
+        onSubmit={async (e) => {
+          e.preventDefault();
+          setLoading(true);
+          const formData = new FormData(e.currentTarget);
           const name = formData.get("familyName")!.toString();
           if (family) {
             await updateFamily({
@@ -51,10 +54,13 @@ export default function FamilyFormClient({
             required
             aria-required="true"
             ref={familyNameInputRef}
+            disabled={loading}
           />
         </label>
-        <Button type="submit">Submit</Button>
-      </Form>
+        <Button type="submit" loading={loading}>
+          Submit
+        </Button>
+      </form>
     </ModalDialog>
   );
 }

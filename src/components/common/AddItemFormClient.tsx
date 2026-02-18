@@ -1,9 +1,8 @@
 "use client";
 
 import { CollectionType } from "@prisma/client";
-import Form from "next/form";
 import { useRouter } from "next/navigation";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 import ModalDialog from "@/src/components/common/ModalDialog";
 import ModalDialogTitle from "@/src/components/common/ModalDialogTitle";
@@ -24,14 +23,19 @@ export default function AddItemFormClient({
 }) {
   const router = useRouter();
   const titleInputRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
 
   return (
     <ModalDialog
       initialFocus={titleInputRef as React.RefObject<HTMLElement>}
       onCloseAction={() => router.back()}
     >
-      <Form
-        action={async (formData) => {
+      <form
+        className="flex flex-col gap-4"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          setLoading(true);
+          const formData = new FormData(e.currentTarget);
           await createItem({
             title: formData.get("title")!.toString(),
             body: formData.get("body")!.toString(),
@@ -40,7 +44,6 @@ export default function AddItemFormClient({
           });
           router.push(`${getCollectionRoute(collectionType)}/${collectionId}`);
         }}
-        className="flex flex-col gap-4"
       >
         <ModalDialogTitle>Add item to {getLabelOfCollectionType(collectionType)}</ModalDialogTitle>
 
@@ -55,6 +58,7 @@ export default function AddItemFormClient({
             required
             aria-required="true"
             ref={titleInputRef}
+            disabled={loading}
           />
         </div>
 
@@ -67,11 +71,14 @@ export default function AddItemFormClient({
             name="body"
             placeholder="You can add details (optional)"
             aria-required="false"
+            disabled={loading}
           />
         </div>
 
-        <Button type="submit">Submit</Button>
-      </Form>
+        <Button type="submit" loading={loading}>
+          Submit
+        </Button>
+      </form>
     </ModalDialog>
   );
 }

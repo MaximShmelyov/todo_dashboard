@@ -26,6 +26,7 @@ type Props = {
   idsToDelete: string[];
   showDialogs: { collection: boolean; single: boolean; multi: boolean };
   deletingId: string;
+  addItemHref: string;
   dialogHandlers: {
     collection: { open: () => void; confirm: () => void; cancel: () => void };
     single: { open: (id: string) => void; confirm: (id: string) => void; cancel: () => void };
@@ -66,7 +67,7 @@ export default function CollectionView(props: Props) {
         <div className="flex flex-wrap items-center justify-between gap-2 w-full min-w-0 mb-2">
           <CollectionTitle {...props} />
           <div className="flex gap-2 items-center">
-            <AddButton href="?create=1" aria-label="Add item">
+            <AddButton href={props.addItemHref} aria-label="Add item">
               Add item
             </AddButton>
             <DeleteSelectedButton

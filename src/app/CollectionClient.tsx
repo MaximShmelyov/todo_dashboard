@@ -1,7 +1,7 @@
 "use client";
 
 import { Item } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useReducer, useState, useMemo } from "react";
 
 import {
@@ -55,7 +55,7 @@ export default function CollectionClient({
     idsToDeleteReducer,
     initialIdsToDelete,
   );
-  const [sortOption, setSortOption] = useState<SortOption>("created_desc");
+  const searchParams = useSearchParams();
   const router = useRouter();
 
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -64,6 +64,27 @@ export default function CollectionClient({
   const [editingBodyValue, setEditingBodyValue] = useState<string>("");
   const [editingCollectionTitle, setEditingCollectionTitle] = useState(false);
   const [collectionTitleValue, setCollectionTitleValue] = useState(collection.title);
+
+  function getUpdatedQuery(updated: Record<string, string | null>) {
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(updated).forEach(([key, value]) => {
+      if (value === null) {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    });
+    return `?${params.toString()}`;
+  }
+
+  const addItemHref = getUpdatedQuery({ create: "1" });
+
+  const sortFromQuery = searchParams.get("sort") as SortOption | null;
+  const sortOption: SortOption = sortFromQuery ?? "created_desc";
+
+  const setSortOption = (option: SortOption) => {
+    router.replace(getUpdatedQuery({ sort: option }), { scroll: false });
+  };
 
   const dialogHandlers = {
     collection: {
@@ -173,6 +194,7 @@ export default function CollectionClient({
         multi: showMultiDeleteDialog,
       }}
       deletingId={deletingId}
+      addItemHref={addItemHref}
       dialogHandlers={dialogHandlers}
       itemHandlers={itemHandlers}
       collectionHandlers={collectionHandlers}

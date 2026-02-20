@@ -72,6 +72,7 @@ export default function CreateCollectionFormClient({
           </span>
           <Input
             id="create_form_title"
+            data-testId="title-input"
             name="title"
             placeholder="Enter title"
             maxLength={30}

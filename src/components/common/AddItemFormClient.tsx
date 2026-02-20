@@ -1,7 +1,7 @@
 "use client";
 
 import { CollectionType } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useRef, useState } from "react";
 
 import ModalDialog from "@/src/components/common/ModalDialog";
@@ -22,6 +22,7 @@ export default function AddItemFormClient({
   ownerId: string;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const titleInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
 
@@ -42,7 +43,12 @@ export default function AddItemFormClient({
             collectionId,
             createdById: ownerId,
           });
-          router.push(`${getCollectionRoute(collectionType)}/${collectionId}`);
+
+          const params = new URLSearchParams(searchParams.toString());
+          params.delete("create");
+          const query = params.toString();
+          const basePath = `${getCollectionRoute(collectionType)}/${collectionId}`;
+          router.push(query ? `${basePath}?${query}` : basePath);
         }}
       >
         <ModalDialogTitle>Add item to {getLabelOfCollectionType(collectionType)}</ModalDialogTitle>

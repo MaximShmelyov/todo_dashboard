@@ -19,6 +19,9 @@ const pushMock = vi.fn();
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ back: backMock, push: pushMock }),
+  useSearchParams: () => ({
+    toString: () => "",
+  }),
 }));
 
 vi.mock("next/form", () => ({
@@ -130,7 +133,9 @@ describe("AddItemFormClient", () => {
     fireEvent.click(screen.getByRole("button", { name: /submit/i }));
 
     await waitFor(() => {
-      expect(pushMock).toHaveBeenCalledWith("/collections/col-123");
+      expect(pushMock).toHaveBeenCalled();
+      const calledWith = pushMock.mock.calls[0][0];
+      expect(calledWith).toMatch(/^\/collections\/col-123(\?.*)?$/);
     });
 
     expect(createItemMock).toHaveBeenCalledWith({

@@ -9,7 +9,7 @@ import {
   deleteCollection,
   updateCollection,
 } from "@/src/db/actions/collections";
-import { deleteItem, deleteItems, updateItem } from "@/src/db/actions/item";
+import { deleteItem, deleteItems, multiUpdate, updateItem } from "@/src/db/actions/item";
 import { getCollectionRoute } from "@/src/lib/utils";
 
 import CollectionView from "./CollectionView";
@@ -18,9 +18,9 @@ type AddAction = { id: string; type: "ADD" };
 type RemoveAction = { id: string; type: "REMOVE" };
 type ClearAction = { type: "CLEAR" };
 
-const initialIdsToDelete: string[] = [];
+const initialIdsToModify: string[] = [];
 
-function idsToDeleteReducer(
+function idsToModifyReducer(
   state: string[],
   action: AddAction | RemoveAction | ClearAction,
 ): string[] {
@@ -51,9 +51,9 @@ export default function CollectionClient({
   const [showSingleDeleteDialog, setShowSingleDeleteDialog] = useState(false);
   const [showMultiDeleteDialog, setShowMultiDeleteDialog] = useState(false);
   const [deletingId, setDeletingId] = useState<string>("");
-  const [idsToDeleteState, idsToDeleteDispatch] = useReducer(
-    idsToDeleteReducer,
-    initialIdsToDelete,
+  const [idsToModifyState, idsToModifyDispatch] = useReducer(
+    idsToModifyReducer,
+    initialIdsToModify,
   );
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -112,13 +112,13 @@ export default function CollectionClient({
         setShowSingleDeleteDialog(false);
       },
     },
-    multi: {
+    multiDelete: {
       open: () => setShowMultiDeleteDialog(true),
       confirm: async () => {
-        await deleteItems(idsToDeleteState);
+        await deleteItems(idsToModifyState);
         router.refresh();
         setShowMultiDeleteDialog(false);
-        idsToDeleteDispatch({ type: "CLEAR" });
+        idsToModifyDispatch({ type: "CLEAR" });
       },
       cancel: () => setShowMultiDeleteDialog(false),
     },
@@ -130,7 +130,7 @@ export default function CollectionClient({
       router.refresh();
     },
     toggleSelect: (id: string, checked: boolean) => {
-      idsToDeleteDispatch({
+      idsToModifyDispatch({
         id,
         type: checked ? "ADD" : "REMOVE",
       });
@@ -145,6 +145,14 @@ export default function CollectionClient({
     },
     delete: (id: string) => {
       dialogHandlers.single.open(id);
+    },
+  };
+
+  const multiItemsHandlers = {
+    markDone: async () => {
+      await multiUpdate(idsToModifyState, { done: true });
+      router.refresh();
+      idsToModifyDispatch({ type: "CLEAR" });
     },
   };
 
@@ -187,16 +195,17 @@ export default function CollectionClient({
   return (
     <CollectionView
       collection={{ ...collection, items: sortedItems }}
-      idsToDelete={idsToDeleteState}
+      idsToModify={idsToModifyState}
       showDialogs={{
         collection: showCollectionDeleteDialog,
         single: showSingleDeleteDialog,
-        multi: showMultiDeleteDialog,
+        multiDelete: showMultiDeleteDialog,
       }}
       deletingId={deletingId}
       addItemHref={addItemHref}
       dialogHandlers={dialogHandlers}
       itemHandlers={itemHandlers}
+      multiItemsHandlers={multiItemsHandlers}
       collectionHandlers={collectionHandlers}
       sortOption={sortOption}
       setSortOption={setSortOption}

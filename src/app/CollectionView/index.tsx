@@ -1,5 +1,6 @@
 import { Item } from "@prisma/client";
 
+import ModifySelectedButton from "@/src/app/CollectionView/ModifySelectedButton";
 import AddButton from "@/src/components/ui/buttons/AddButton";
 import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
 import { CollectionExtended } from "@/src/db/actions/collections";
@@ -7,7 +8,6 @@ import { getCollectionRoute } from "@/src/lib/utils";
 
 import CollectionDescription from "./CollectionDescription";
 import CollectionTitle from "./CollectionTitle";
-import DeleteSelectedButton from "./DeleteSelectedButton";
 import Dialogs from "./Dialogs";
 import FooterActions from "./FooterActions";
 import ItemList from "./ItemList";
@@ -23,14 +23,14 @@ type SortOption =
 
 type Props = {
   collection: NonNullable<CollectionExtended>;
-  idsToDelete: string[];
-  showDialogs: { collection: boolean; single: boolean; multi: boolean };
+  idsToModify: string[];
+  showDialogs: { collection: boolean; single: boolean; multiDelete: boolean };
   deletingId: string;
   addItemHref: string;
   dialogHandlers: {
     collection: { open: () => void; confirm: () => void; cancel: () => void };
     single: { open: (id: string) => void; confirm: (id: string) => void; cancel: () => void };
-    multi: { open: () => void; confirm: () => void; cancel: () => void };
+    multiDelete: { open: () => void; confirm: () => void; cancel: () => void };
   };
   itemHandlers: {
     toggleDone: (item: Pick<Item, "id" | "done">) => void;
@@ -38,6 +38,9 @@ type Props = {
     editTitle: (id: string, title: string) => void;
     editBody: (id: string, body: string) => void;
     delete: (id: string) => void;
+  };
+  multiItemsHandlers: {
+    markDone: () => void;
   };
   collectionHandlers: {
     editTitle: (title: string) => void;
@@ -68,12 +71,26 @@ export default function CollectionView(props: Props) {
           <CollectionTitle {...props} />
           <div className="flex gap-2 items-center">
             <AddButton href={props.addItemHref} aria-label="Add item">
-              Add item
+              <span className="hidden sm:inline">Add item</span>
+              <span className="inline sm:hidden">Add</span>
             </AddButton>
-            <DeleteSelectedButton
-              count={props.idsToDelete.length}
-              onClick={props.dialogHandlers.multi.open}
-            />
+            <ModifySelectedButton
+              variant={"primary"}
+              count={props.idsToModify.length}
+              onClick={props.multiItemsHandlers.markDone}
+            >
+              <span className="hidden sm:inline">Mark Done ({props.idsToModify.length})</span>
+              <span className="inline sm:hidden">Done</span>
+            </ModifySelectedButton>
+            <ModifySelectedButton
+              variant={"delete"}
+              title={"Delete selected"}
+              count={props.idsToModify.length}
+              onClick={props.dialogHandlers.multiDelete.open}
+            >
+              <span className="hidden sm:inline">Delete selected ({props.idsToModify.length})</span>
+              <span className="inline sm:hidden">Delete</span>
+            </ModifySelectedButton>
           </div>
         </div>
         <CollectionDescription collection={props.collection} />

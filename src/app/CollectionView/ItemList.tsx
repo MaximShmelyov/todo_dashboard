@@ -8,7 +8,7 @@ import type { Item } from "@prisma/client";
 
 type Props = {
   collection: NonNullable<CollectionExtended>;
-  idsToDelete: string[];
+  idsToModify: string[];
   itemHandlers: {
     toggleDone: (item: Pick<Item, "id" | "done">) => void;
     toggleSelect: (id: string, checked: boolean) => void;

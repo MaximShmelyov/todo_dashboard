@@ -11,7 +11,7 @@ type CollectionItem = NonNullable<CollectionExtended>["items"][number];
 
 type Props = {
   item: CollectionItem;
-  idsToDelete: string[];
+  idsToModify: string[];
   itemHandlers: {
     toggleDone: (item: Pick<Item, "id" | "done">) => void;
     toggleSelect: (id: string, checked: boolean) => void;
@@ -31,7 +31,7 @@ type Props = {
 
 export default function ItemRow({
   item,
-  idsToDelete,
+  idsToModify,
   itemHandlers,
   editingId,
   setEditingId,
@@ -65,7 +65,7 @@ export default function ItemRow({
         <input
           className="w-5 h-5 mt-1 shrink-0"
           type="checkbox"
-          checked={idsToDelete.includes(item.id)}
+          checked={idsToModify.includes(item.id)}
           onChange={(e) => itemHandlers.toggleSelect(item.id, e.target.checked)}
         />
         <div className="flex-1 min-w-0">

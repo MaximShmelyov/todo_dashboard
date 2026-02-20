@@ -86,3 +86,20 @@ export async function updateItem(
     data,
   });
 }
+
+type UpdateItemData = Partial<Pick<Item, "done" | "position" | "body" | "title" | "dueDate">> & {
+  metadata?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue | undefined;
+};
+
+export async function multiUpdate(ids: string[], data: UpdateItemData) {
+  const createdById = await getAuthorId();
+  const familiesIds = await getFamiliesIds();
+
+  await prisma.item.updateMany({
+    where: {
+      id: { in: ids },
+      OR: [{ createdById }, { collection: { familyId: { in: familiesIds } } }],
+    },
+    data,
+  });
+}

@@ -4,12 +4,12 @@ import { getLabelOfCollectionType } from "@/src/lib/utils";
 
 type Props = {
   collection: NonNullable<CollectionExtended>;
-  showDialogs: { collection: boolean; single: boolean; multi: boolean };
+  showDialogs: { collection: boolean; single: boolean; multiDelete: boolean };
   deletingId: string;
   dialogHandlers: {
     collection: { cancel: () => void; confirm: () => void };
     single: { confirm: (id: string) => void; cancel: () => void };
-    multi: { confirm: () => void; cancel: () => void };
+    multiDelete: { confirm: () => void; cancel: () => void };
   };
 };
 
@@ -30,11 +30,11 @@ export default function Dialogs({ collection, showDialogs, deletingId, dialogHan
           onCancelAction={dialogHandlers.single.cancel}
         />
       )}
-      {showDialogs.multi && (
+      {showDialogs.multiDelete && (
         <ConfirmPopup
           title="Are you sure?"
-          onConfirmAction={dialogHandlers.multi.confirm}
-          onCancelAction={dialogHandlers.multi.cancel}
+          onConfirmAction={dialogHandlers.multiDelete.confirm}
+          onCancelAction={dialogHandlers.multiDelete.cancel}
         />
       )}
     </>

@@ -3,6 +3,7 @@ import { Item } from "@prisma/client";
 import ModifySelectedButton from "@/src/app/CollectionView/ModifySelectedButton";
 import AddButton from "@/src/components/ui/buttons/AddButton";
 import BackNavigation from "@/src/components/ui/buttons/BackNavigation";
+import ExportButton from "@/src/components/ui/buttons/ExportButton";
 import { CollectionExtended } from "@/src/db/actions/collections";
 import { getCollectionRoute } from "@/src/lib/utils";
 
@@ -61,6 +62,24 @@ type Props = {
   setCollectionTitleValue: (v: string) => void;
 };
 
+function exportCollectionToClipboard(collection: NonNullable<CollectionExtended>) {
+  const lines = [
+    `*${collection.title}*`,
+    collection.description ? collection.description : "",
+    collection.family?.name ? `Family: ${collection.family.name}` : "",
+    "",
+    ...collection.items.map(
+      (item, idx) =>
+        `${idx + 1}. [${item.done ? "✔" : " "}] ${item.title}${item.body ? ` — ${item.body}` : ""}`,
+    ),
+  ].filter(Boolean);
+
+  const text = lines.join("\n");
+  navigator.clipboard.writeText(text).then(() => {
+    alert("List copied to clipboard!");
+  });
+}
+
 export default function CollectionView(props: Props) {
   return (
     <>
@@ -74,6 +93,11 @@ export default function CollectionView(props: Props) {
               <span className="hidden sm:inline">Add item</span>
               <span className="inline sm:hidden">Add</span>
             </AddButton>
+            <ExportButton
+              onClick={() => exportCollectionToClipboard(props.collection)}
+              aria-label="Export list"
+              title="Export list"
+            />
             <ModifySelectedButton
               variant={"primary"}
               count={props.idsToModify.length}

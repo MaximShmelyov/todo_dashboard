@@ -62,7 +62,7 @@ type Props = {
   setCollectionTitleValue: (v: string) => void;
 };
 
-function exportCollectionToClipboard(collection: NonNullable<CollectionExtended>) {
+function exportCollection(collection: NonNullable<CollectionExtended>) {
   const lines = [
     `*${collection.title}*`,
     collection.description ? collection.description : "",
@@ -75,9 +75,21 @@ function exportCollectionToClipboard(collection: NonNullable<CollectionExtended>
   ].filter(Boolean);
 
   const text = lines.join("\n");
-  navigator.clipboard.writeText(text).then(() => {
-    alert("List copied to clipboard!");
-  });
+
+  if (navigator.share) {
+    navigator
+      .share({
+        title: collection.title,
+        text,
+      })
+      .catch(() => {
+        // fallback if user cancels share
+      });
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("List copied to clipboard!");
+    });
+  }
 }
 
 export default function CollectionView(props: Props) {
@@ -94,7 +106,7 @@ export default function CollectionView(props: Props) {
               <span className="inline sm:hidden">Add</span>
             </AddButton>
             <ExportButton
-              onClick={() => exportCollectionToClipboard(props.collection)}
+              onClick={() => exportCollection(props.collection)}
               aria-label="Export list"
               title="Export list"
             />

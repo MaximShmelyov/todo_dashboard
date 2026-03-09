@@ -25,6 +25,8 @@ export default function AddItemFormClient({
   const searchParams = useSearchParams();
   const titleInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
+  const [multiMode, setMultiMode] = useState(false);
+  const [multiValue, setMultiValue] = useState("");
 
   return (
     <ModalDialog
@@ -36,13 +38,30 @@ export default function AddItemFormClient({
         onSubmit={async (e) => {
           e.preventDefault();
           setLoading(true);
-          const formData = new FormData(e.currentTarget);
-          await createItem({
-            title: formData.get("title")!.toString(),
-            body: formData.get("body")!.toString(),
-            collectionId,
-            createdById: ownerId,
-          });
+
+          if (multiMode) {
+            const lines = multiValue
+              .split("\n")
+              .map((line) => line.trim())
+              .filter(Boolean);
+
+            for (const line of lines) {
+              await createItem({
+                title: line,
+                body: "",
+                collectionId,
+                createdById: ownerId,
+              });
+            }
+          } else {
+            const formData = new FormData(e.currentTarget);
+            await createItem({
+              title: formData.get("title")!.toString(),
+              body: formData.get("body")!.toString(),
+              collectionId,
+              createdById: ownerId,
+            });
+          }
 
           const params = new URLSearchParams(searchParams.toString());
           params.delete("create");
@@ -51,35 +70,69 @@ export default function AddItemFormClient({
           router.push(query ? `${basePath}?${query}` : basePath);
         }}
       >
-        <ModalDialogTitle>Add item to {getLabelOfCollectionType(collectionType)}</ModalDialogTitle>
+        <ModalDialogTitle>
+          {multiMode
+            ? `Add multiple items to ${getLabelOfCollectionType(collectionType)}`
+            : `Add item to ${getLabelOfCollectionType(collectionType)}`}
+        </ModalDialogTitle>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="create_form_title" className="font-medium">
-            Title <span className="text-red-500">*</span>
-          </label>
-          <Input
-            id="create_form_title"
-            name="title"
-            placeholder="Enter a title"
-            required
-            aria-required="true"
-            ref={titleInputRef}
-            disabled={loading}
-          />
-        </div>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => setMultiMode((v) => !v)}
+          className="self-end"
+          disabled={loading}
+        >
+          {multiMode ? "Single mode" : "Multi mode"}
+        </Button>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="create_form_body" className="font-medium">
-            Description <span className="text-gray-400 text-sm">(optional)</span>
-          </label>
-          <Textarea
-            id="create_form_body"
-            name="body"
-            placeholder="You can add details (optional)"
-            aria-required="false"
-            disabled={loading}
-          />
-        </div>
+        {multiMode ? (
+          <div className="flex flex-col gap-1">
+            <label htmlFor="multi_form_titles" className="font-medium">
+              One item per line <span className="text-red-500">*</span>
+            </label>
+            <Textarea
+              id="multi_form_titles"
+              name="multi_titles"
+              placeholder="Enter each item on a new line"
+              required
+              aria-required="true"
+              value={multiValue}
+              onChange={(e) => setMultiValue(e.target.value)}
+              disabled={loading}
+              rows={6}
+            />
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="create_form_title" className="font-medium">
+                Title <span className="text-red-500">*</span>
+              </label>
+              <Input
+                id="create_form_title"
+                name="title"
+                placeholder="Enter a title"
+                required
+                aria-required="true"
+                ref={titleInputRef}
+                disabled={loading}
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="create_form_body" className="font-medium">
+                Description <span className="text-gray-400 text-sm">(optional)</span>
+              </label>
+              <Textarea
+                id="create_form_body"
+                name="body"
+                placeholder="You can add details (optional)"
+                aria-required="false"
+                disabled={loading}
+              />
+            </div>
+          </>
+        )}
 
         <Button type="submit" loading={loading}>
           Submit
